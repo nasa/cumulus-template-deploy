@@ -1,0 +1,54 @@
+default:
+  stackName: template-cumulus
+  stackNameNoDash: TemplateCumulus
+  stackNoDash: TemplateCumulus
+  stageNoDash: dev
+  resourcePrefixNoDash: TemplateCumulus
+
+  buckets:
+    internal: template-cumulus-sandbox-deploy
+    private: template-cumulus-sandbox-private
+    protected: template-cumulus-sandbox-protected
+    public: template-cumulus-sandbox-public
+
+  # IAM configuration
+  iams:
+    ecsRoleArn: arn:aws:iam::596205514787:role/template-cumulus-ecs
+    lambdaApiGatewayRoleArn: arn:aws:iam::596205514787:role/template-cumulus-lambda-api-gateway
+    lambdaProcessingRoleArn: arn:aws:iam::596205514787:role/template-cumulus-lambda-processing
+    stepRoleArn: arn:aws:iam::596205514787:role/template-cumulus-steprole
+
+  users:
+  - username: cumulus
+    password: '{{cumulus_user_password}}'
+
+  stepFunctions: !!inc/file stepfunctions.yml
+
+  lambdas:
+    - name: CustomBootstrap
+      handler: daac-ops-api.bootstrap
+      timeout: 100
+      memory: 256
+      source: '../cumulus/daac-ops-api/dist/index.js'
+      envs:
+        internal: '{{buckets.internal}}'
+    - name: HelloWorld
+      handler: hello-world.handler
+      timeout: 300
+      memory: 256
+      source: '../cumulus/cumulus/tasks/hello-world-task/dist/index.js'
+    - name: ScheduleSF
+      handler: sf-starter.queue
+      timeout: 100
+      memory: 256
+      source: '../cumulus/cumulus/tasks/sf-starter/dist/index.js'
+    - name: sf2snsStart
+      handler: sf-sns-broadcast.start
+      timeout: 100
+      memory: 256
+      source: '../cumulus/cumulus/tasks/sf-sns-broadcast/dist/index.js'
+    - name: sf2snsEnd
+      handler: sf-sns-broadcast.end
+      timeout: 100
+      memory: 256
+      source: '../cumulus/cumulus/tasks/sf-sns-broadcast/dist/index.js'

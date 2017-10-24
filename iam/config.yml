@@ -1,0 +1,23 @@
+default:
+  prefix: template-cumulus
+  stackName: template-cumulus-iam
+  authorizor: false
+  capabilities:
+    - CAPABILITY_NAMED_IAM
+  buckets:
+    internal: template-cumulus-sandbox-deploy
+    private: template-cumulus-sandbox-private
+    protected: template-cumulus-sandbox-protected
+    public: template-cumulus-sandbox-public
+
+  params:
+     - name: ResourcePrefix
+       value: '{{prefix}}'
+     - name: InternalBucketName
+       value: '{{buckets.internal}}'
+     - name: PrivateBucketName
+       value: '{{buckets.private}}'
+     - name: ProtectedBucketName
+       value: '{{buckets.protected}}'
+     - name: PublicBucketName
+       value: '{{buckets.public}}'

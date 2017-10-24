@@ -1,0 +1,73 @@
+version: '2'
+
+# Directories for new projects will need to be set in Bamboo
+
+services:
+
+  update:
+    build:
+      context: .
+    command: kes cf update --kes-folder config --kes-class config/kes.js
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    working_dir: '/deploy/MyProject'
+    volumes:
+      - '../cumulus:/deploy/cumulus'
+      - './:/deploy/MyProject'
+
+  create:
+    build:
+      context: .
+    command: kes cf create --kes-folder config --kes-class config/kes.js
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    working_dir: '/deploy/MyProject'
+    volumes:
+      - '../cumulus:/deploy/cumulus'
+      - './:/deploy/MyProject'
+
+  iam-update:
+    build:
+      context: .
+    command: kes cf update --kes-folder iam
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    working_dir: '/deploy/MyProject'
+    volumes:
+      - './:/deploy/MyProject'
+
+  iam-create:
+    build:
+      context: .
+    command: kes cf create --kes-folder iam
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    working_dir: '/deploy/MyProject'
+    volumes:
+      - './:/deploy/MyProject'
+
+  deployer-update:
+    build:
+      context: .
+    command: kes cf update --kes-folder deployer
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    working_dir: '/deploy/MyProject'
+    volumes:
+      - './:/deploy/MyProject'
+
+  deployer-create:
+    build:
+      context: .
+    command: kes cf create --kes-folder deployer
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    working_dir: '/deploy/MyProject'
+    volumes:
+      - './:/deploy/MyProject'

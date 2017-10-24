@@ -1,0 +1,201 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'stack: template-cumulus | deployed by Kes'
+
+Resources:
+
+  #################################################
+  # Cumulus Custom Resource BEGIN
+  #################################################
+  CumulusCustomResource:
+    Type: Custom::Cumulus
+    Properties:
+      ServiceToken: !GetAtt CustomBootstrapLambdaFunction.Arn
+      Users:
+        records:
+          - username: cumulus
+            password: 34819d7beeabb9260a5c854bc85b3e44
+
+  #################################################
+  # Cumulus Custom Resource END
+  #################################################
+
+  #################################################
+  # SNS config BEGIN
+  #################################################
+  #################################################
+  # SNS config END
+  #################################################
+
+  #################################################
+  # Step Functions config BEGIN
+  #################################################
+  TemplateCumulusHelloWorldWorkflowStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString:
+        !Sub |
+          {"Comment":"Returns Hello World","StartAt":"StartStatus","States":{"StartStatus":{"Type":"Task","Resource":"${sf2snsStartLambdaFunction.Arn}","Next":"HelloWorld"},"HelloWorld":{"Type":"Task","Resource":"${HelloWorldLambdaFunction.Arn}","Next":"StopStatus"},"StopStatus":{"Type":"Task","Resource":"${sf2snsEndLambdaFunction.Arn}","Catch":[{"ErrorEquals":["States.ALL"],"Next":"WorkflowFailed"}],"End":true},"WorkflowFailed":{"Type":"Fail","Cause":"Workflow failed"}}}
+      RoleArn: arn:aws:iam::596205514787:role/template-cumulus-steprole
+
+  #################################################
+  # Step Functions config END
+  #################################################
+
+  #################################################
+  # SQS config BEGIN
+  #################################################
+  #################################################
+  # SQS config END
+  #################################################
+
+  #################################################
+  # CloudWatch RULE config BEGIN
+  #################################################
+
+
+## Generic lambda permission for custom rules
+## created in the dashboard
+  GenericLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - ScheduleSFLambdaFunction
+        - Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+
+  #################################################
+  # CloudWatch RULE config BEGIN
+  #################################################
+
+  #################################################
+  # DynamoDB config BEGIN
+  #################################################
+
+  #################################################
+  # DyanmoDB config END
+  #################################################
+
+  #################################################
+  # APIGateway config BEGIN
+  #################################################
+  #################################################
+  # APIGateway config END
+  #################################################
+
+  #################################################
+  # Lambda config BEGIN
+  #################################################
+  CustomBootstrapLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: template-cumulus-sandbox-deploy
+        S3Key: template-cumulus/lambdas/2a28b2e024a91f13789aee1e939f092a9b6933ca/daac-ops-api.zip
+      FunctionName: template-cumulus-CustomBootstrap
+      Environment:
+        Variables:
+          stackName: template-cumulus
+          internal: template-cumulus-sandbox-deploy
+      Handler: daac-ops-api.bootstrap
+      MemorySize: 256
+      Role: arn:aws:iam::596205514787:role/template-cumulus-lambda-processing
+      Runtime: nodejs6.10
+      Timeout: 100
+      Tags:
+        - Key: Project
+          Value: template-cumulus
+
+
+  HelloWorldLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: template-cumulus-sandbox-deploy
+        S3Key: template-cumulus/lambdas/75af6a2a86e4d50ed0fa95584900809abe2fb16f/hello-world.zip
+      FunctionName: template-cumulus-HelloWorld
+      Environment:
+        Variables:
+          stackName: template-cumulus
+      Handler: hello-world.handler
+      MemorySize: 256
+      Role: arn:aws:iam::596205514787:role/template-cumulus-lambda-processing
+      Runtime: nodejs6.10
+      Timeout: 300
+      Tags:
+        - Key: Project
+          Value: template-cumulus
+
+
+  ScheduleSFLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: template-cumulus-sandbox-deploy
+        S3Key: template-cumulus/lambdas/2adc9bc04b659190e28d225f3d86ef932d0a0c7f/sf-starter.zip
+      FunctionName: template-cumulus-ScheduleSF
+      Environment:
+        Variables:
+          stackName: template-cumulus
+      Handler: sf-starter.queue
+      MemorySize: 256
+      Role: arn:aws:iam::596205514787:role/template-cumulus-lambda-processing
+      Runtime: nodejs6.10
+      Timeout: 100
+      Tags:
+        - Key: Project
+          Value: template-cumulus
+
+
+  sf2snsStartLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: template-cumulus-sandbox-deploy
+        S3Key: template-cumulus/lambdas/66e52c5ad7524d29a1349faf1c1b861ebd371993/sf-sns-broadcast.zip
+      FunctionName: template-cumulus-sf2snsStart
+      Environment:
+        Variables:
+          stackName: template-cumulus
+      Handler: sf-sns-broadcast.start
+      MemorySize: 256
+      Role: arn:aws:iam::596205514787:role/template-cumulus-lambda-processing
+      Runtime: nodejs6.10
+      Timeout: 100
+      Tags:
+        - Key: Project
+          Value: template-cumulus
+
+
+  sf2snsEndLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: template-cumulus-sandbox-deploy
+        S3Key: template-cumulus/lambdas/66e52c5ad7524d29a1349faf1c1b861ebd371993/sf-sns-broadcast.zip
+      FunctionName: template-cumulus-sf2snsEnd
+      Environment:
+        Variables:
+          stackName: template-cumulus
+      Handler: sf-sns-broadcast.end
+      MemorySize: 256
+      Role: arn:aws:iam::596205514787:role/template-cumulus-lambda-processing
+      Runtime: nodejs6.10
+      Timeout: 100
+      Tags:
+        - Key: Project
+          Value: template-cumulus
+
+
+
+  #################################################
+  # Lambda config END
+  #################################################
+
+Outputs:
+  HelloWorldWorkflowStateMachine:
+    Value: !Ref TemplateCumulusHelloWorldWorkflowStateMachine
+
+
+

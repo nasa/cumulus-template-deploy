@@ -1,0 +1,17 @@
+default:
+  prefix: template-cumulus
+  stackName: template-cumulus-deployer
+  stackNameNoDash: TemplateCumulus
+  buckets:
+    internal: template-cumulus-sandbox-deploy
+  capabilities:
+    - CAPABILITY_IAM
+
+  params:
+    - name: Prefix
+      value: '{{prefix}}'
+    - name: StateMachinePrefix
+      value: '{{stackNameNoDash}}'
+    - name: InternalBucketName
+      value: '{{buckets.internal}}'
+

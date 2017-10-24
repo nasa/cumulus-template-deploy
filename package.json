@@ -1,0 +1,21 @@
+{
+  "name": "template-deploy",
+  "version": "1.0.0",
+  "description": "Cumulus Template Deployment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-deployer": "kes cf create --kes-folder deployer",
+    "update-deployer": "kes cf update --kes-folder deployer",
+    "create-iam": "kes cf create --kes-folder iam",
+    "update-iam": "kes cf update --kes-folder iam",
+    "create": "kes cf create --kes-folder config",
+    "update": "kes cf update --kes-folder config --kes-class config/kes.js --role arn:aws:iam::985962406024:role/lpdaac-cumulus-deployer-DeployerRole-1PCCES1GW83BC"
+  },
+  "author": "Cumulus Authors",
+  "license": "ISC",
+  "dependencies": {
+    "kes": "1.0.1",
+    "node-forge": "^0.7.1"
+  }
+}

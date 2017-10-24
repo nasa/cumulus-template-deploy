@@ -1,0 +1,381 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'stack: {{stackName}} | deployed by Kes'
+
+Resources:
+
+  #################################################
+  # Cumulus Custom Resource BEGIN
+  #################################################
+  CumulusCustomResource:
+    Type: Custom::Cumulus
+    Properties:
+      ServiceToken: !GetAtt CustomBootstrapLambdaFunction.Arn
+      Users:
+        records:
+        {{# each users}}
+          - username: {{username}}
+            password: {{ToMd5 password}}
+        {{/each}}
+
+  #################################################
+  # Cumulus Custom Resource END
+  #################################################
+
+  #################################################
+  # SNS config BEGIN
+  #################################################
+{{#each sns}}
+  {{name}}Sns:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      DisplayName: {{../stackName}}-{{name}}
+      Subscription:
+      {{#each subscriptions}}
+        - Endpoint: {{endpoint}}
+          Protocol: {{protocol}}
+      {{/each}}
+
+{{/each}}
+  #################################################
+  # SNS config END
+  #################################################
+
+  #################################################
+  # Step Functions config BEGIN
+  #################################################
+{{#each stepFunctions}}
+  {{../resourcePrefixNoDash}}{{name}}StateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString:
+        !Sub |
+          {{{ToJson definition}}}
+      RoleArn: {{../iams.stepRoleArn}}
+
+{{/each}}
+  #################################################
+  # Step Functions config END
+  #################################################
+
+  #################################################
+  # SQS config BEGIN
+  #################################################
+{{#each sqs}}
+  {{name}}SQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: {{../stackName}}-{{name}}
+      ReceiveMessageWaitTimeSeconds: 20
+    {{#if retry}}
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt [{{name}}FailedSQS, Arn]
+        maxReceiveCount: {{retry}}
+    {{/if}}
+      VisibilityTimeout: {{visibilityTimeout}}
+
+{{#if retry}}
+  {{name}}FailedSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: {{../stackName}}-{{name}}-failed
+
+{{/if}}
+
+{{# each consumer }}
+  {{../name}}WatcherRule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: {{schedule}}
+      State: {{# if state}}{{state}}{{ else }}DISABLED{{/if}}
+      Targets:
+        - Id: {{../name}}WatcherScheduler
+          Input: !Sub '{"queueUrl": "${ {{../name}}SQS}", "messageLimit": {{messageLimit}} }'
+          Arn:
+            Fn::GetAtt:
+            - {{lambda}}LambdaFunction
+            - Arn
+
+  {{../name}}InvokeLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - {{lambda}}LambdaFunction
+        - Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - {{../name}}WatcherRule
+          - Arn
+
+{{/each}}
+{{/each}}
+  #################################################
+  # SQS config END
+  #################################################
+
+  #################################################
+  # CloudWatch RULE config BEGIN
+  #################################################
+
+{{# each rules }}
+  {{name}}Rule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: {{schedule}}
+      State: {{# if state}}{{state}}{{ else }}DISABLED{{/if}}
+      Targets:
+        {{# each targets}}
+        - Id: {{../name}}WatcherScheduler
+          {{# if input}}
+          Input: {{input}}
+          {{/if}}
+          Arn:
+            Fn::GetAtt:
+            - {{lambda}}LambdaFunction
+            - Arn
+        {{/each}}
+
+  {{# each targets}}
+  {{../name}}RuleLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - {{lambda}}LambdaFunction
+        - Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - {{../name}}Rule
+          - Arn
+  {{/each}}
+{{/each}}
+
+## Generic lambda permission for custom rules
+## created in the dashboard
+  GenericLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - ScheduleSFLambdaFunction
+        - Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+
+  #################################################
+  # CloudWatch RULE config BEGIN
+  #################################################
+
+  #################################################
+  # DynamoDB config BEGIN
+  #################################################
+{{#each dynamos}}
+  {{name}}DynamoDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+    {{#each attributes}}
+      - AttributeName: {{name}}
+        AttributeType: {{type}}
+    {{/each}}
+      KeySchema:
+    {{#each schema}}
+      - AttributeName: {{name}}
+        KeyType: {{type}}
+    {{/each}}
+      ProvisionedThroughput:
+        ReadCapacityUnits: {{read}}
+        WriteCapacityUnits: {{write}}
+      TableName: {{../stackName}}-{{name}}
+      StreamSpecification:
+        StreamViewType: "NEW_IMAGE"
+
+{{/each}}
+
+  #################################################
+  # DyanmoDB config END
+  #################################################
+
+  #################################################
+  # APIGateway config BEGIN
+  #################################################
+{{# if apiMethods}}
+{{# each apiDependencies}}
+  ApiGatewayDeployment{{name}}:
+    DependsOn:
+  {{#each methods}}
+    - {{name}}
+  {{/each}}
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: {{name}}RestApi
+      StageName: {{../stageNoDash}}
+{{/each}}
+
+{{#each apiMethods}}
+  {{name}}:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ResourceId:
+        Ref: {{resource}}
+      RestApiId:
+        Ref: {{api}}RestApi
+      HttpMethod: {{method}}
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri:
+          Fn::Join:
+          - ''
+          - - 'arn:aws:apigateway:'
+            - Ref: AWS::Region
+            - :lambda:path/2015-03-31/functions/
+            - Fn::GetAtt:
+              - {{lambda}}LambdaFunction
+              - Arn
+            - /invocations
+
+{{/each}}
+
+{{#each apiMethodsOptions}}
+  {{name}}:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
+            method.response.header.Access-Control-Allow-Methods: '''OPTIONS,PUT,POST,GET,DELETE'''
+            method.response.header.Access-Control-Allow-Origin: '''*'''
+          ResponseTemplates:
+            application/json: ''
+          StatusCode: '200'
+        RequestTemplates:
+          application/json: '{statusCode:200}'
+        Type: MOCK
+      MethodResponses:
+      - ResponseModels: {}
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: true
+          method.response.header.Access-Control-Allow-Methods: true
+          method.response.header.Access-Control-Allow-Origin: true
+        StatusCode: '200'
+      RequestParameters:
+        method.request.header.Authorization: true
+      ResourceId:
+        Ref: {{resource}}
+      RestApiId:
+        Ref: {{api}}RestApi
+
+{{/each}}
+
+{{#each apiResources}}
+  {{name}}:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+      {{#each parents}}
+        {{this}}
+      {{/each}}
+      PathPart: '{{pathPart}}'
+      RestApiId:
+        Ref: {{api}}RestApi
+
+{{/each}}
+
+{{#each apis}}
+  {{name}}RestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: {{../stackName}}-{{name}}
+{{/each}}
+{{/if}}
+  #################################################
+  # APIGateway config END
+  #################################################
+
+  #################################################
+  # Lambda config BEGIN
+  #################################################
+{{#each lambdas}}
+  {{name}}LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: {{bucket}}
+        S3Key: {{remote}}
+      FunctionName: {{../stackName}}-{{name}}
+      Environment:
+        Variables:
+          stackName: {{../stackName}}
+        {{#each envs}}
+          {{@key}}: {{this}}
+        {{/each}}
+      Handler: {{handler}}
+      MemorySize: {{memory}}
+    {{# if apiGateway }}
+      Role: {{../iams.lambdaApiGatewayRoleArn}}
+      {{else}}
+      Role: {{../iams.lambdaProcessingRoleArn}}
+    {{/if}}
+      Runtime: {{# if runtime}}{{runtime}}{{else}}nodejs6.10{{/if}}
+      Timeout: {{timeout}}
+      Tags:
+        - Key: Project
+          Value: {{../stackName}}
+    {{# if ../lambdasNeedVpc }}
+    {{# if vpcSubnet }}
+      VpcConfig:
+        SecurityGroupIds:
+        {{#each ../vpc.securityGroupIds}}
+          - {{this}}
+        {{/each}}
+        SubnetIds:
+        {{#each ../vpc.subnets}}
+          - {{this}}
+        {{/each}}
+    {{/if}}
+    {{/if}}
+
+{{# if apiGateway }}
+  {{name}}LambdaPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - {{name}}LambdaFunction
+        - Arn
+      Principal: apigateway.amazonaws.com
+{{/if}}
+
+{{/each}}
+
+  #################################################
+  # Lambda config END
+  #################################################
+
+Outputs:
+{{#each stepFunctions}}
+  {{name}}StateMachine:
+    Value: !Ref {{../resourcePrefixNoDash}}{{name}}StateMachine
+{{/each}}
+
+{{#each sqs}}
+  {{name}}SQSOutput:
+    Value: !Ref {{name}}SQS
+{{/each}}
+
+{{#each sns}}
+  {{name}}SnsArn:
+    Value: !Ref {{name}}Sns
+{{/each}}
+
