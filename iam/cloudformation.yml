@@ -14,10 +14,10 @@ Parameters:
     Default: "n/a"
   ResourcePrefix:
     Type: String
-    Default: "lpdaac-cumulus"
+    Default: "template-cumulus"
   AlphaNumPrefix:
     Type: String
-    Default: "LpdaacCumulus"
+    Default: "TemplateCumulus"
   InternalBucketName:
     Type: String
     Default: "cumulus-internal"
