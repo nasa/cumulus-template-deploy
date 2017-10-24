@@ -18,9 +18,13 @@ default:
     lambdaProcessingRoleArn: arn:aws:iam::596205514787:role/template-cumulus-lambda-processing
     stepRoleArn: arn:aws:iam::596205514787:role/template-cumulus-steprole
 
-  users:
-  - username: cumulus
-    password: '{{cumulus_user_password}}'
+  es:
+    name: es5
+    elasticSearchMapping: 4
+    version: 5.3
+    instanceCount: 1
+    instanceType: m4.large.elasticsearch
+    volumeSize: 35
 
   stepFunctions: !!inc/file stepfunctions.yml
 
@@ -52,3 +56,9 @@ default:
       timeout: 100
       memory: 256
       source: '../cumulus/cumulus/tasks/sf-sns-broadcast/dist/index.js'
+    - name: log2elasticsearch
+      handler: daac-ops-api.logHandler
+      timeout: 100
+      memory: 256
+      passElasticSearchEndpoint: true
+      source: '../cumulus/daac-ops-api/dist/index.js'

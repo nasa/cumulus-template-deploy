@@ -10,12 +10,11 @@ Resources:
     Type: Custom::Cumulus
     Properties:
       ServiceToken: !GetAtt CustomBootstrapLambdaFunction.Arn
-      Users:
-        records:
-        {{# each users}}
-          - username: {{username}}
-            password: {{ToMd5 password}}
-        {{/each}}
+    {{# if es.name}}
+      ElasticSearch:
+        host: !GetAtt {{es.name}}Domain.DomainEndpoint
+        version: {{es.elasticSearchMapping}}
+    {{/if}}
 
   #################################################
   # Cumulus Custom Resource END
@@ -56,6 +55,48 @@ Resources:
   #################################################
   # Step Functions config END
   #################################################
+
+{{# if es.name}}
+  #################################################
+  # ElasticSearch config BEGIN
+  #################################################
+  {{es.name}}Domain:
+    Type: "AWS::Elasticsearch::Domain"
+    Properties:
+      DomainName: {{stackName}}-{{es.name}}
+      ElasticsearchVersion: {{# if version}}{{es.version}}{{ else }}5.3{{/if}}
+      ElasticsearchClusterConfig:
+        InstanceCount: {{# if instanceCount}}{{es.instanceCount}}{{ else }}'1'{{/if}}
+        InstanceType: {{# if instanceType}}{{es.instanceType}}{{ else }}"t2.small.elasticsearch"{{/if}}
+      SnapshotOptions:
+        AutomatedSnapshotStartHour: "0"
+      EBSOptions:
+        EBSEnabled: true
+        VolumeType: gp2
+        VolumeSize: {{es.volumeSize}}
+      AdvancedOptions:
+        rest.action.multi.allow_explicit_index: "true"
+      AccessPolicies:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              AWS: {{iams.lambdaProcessingRoleArn}}
+            Action: "es:*"
+            Resource:
+              - !Sub "arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/{{stackName}}-{{es.name}}/*"
+          - Effect: "Allow"
+            Principal:
+              AWS: {{iams.lambdaApiGatewayRoleArn}}
+            Action: "es:*"
+            Resource:
+              - !Sub "arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/{{stackName}}-{{es.name}}/*"
+
+
+  #################################################
+  # ElasticSearch config END
+  #################################################
+{{/if}}
 
   #################################################
   # SQS config BEGIN
@@ -319,6 +360,11 @@ Resources:
         {{#each envs}}
           {{@key}}: {{this}}
         {{/each}}
+      {{# if ../es.name}}
+        {{# if passElasticSearchEndpoint }}
+          ES_HOST: !GetAtt {{../es.name}}Domain.DomainEndpoint
+        {{/if}}
+      {{/if}}
       Handler: {{handler}}
       MemorySize: {{memory}}
     {{# if apiGateway }}
@@ -357,7 +403,35 @@ Resources:
       Principal: apigateway.amazonaws.com
 {{/if}}
 
+{{# if logToElasticSearch }}
+  {{name}}LogSubscription:
+    Type: AWS::Logs::SubscriptionFilter
+    DependsOn:
+      - {{name}}LogGroup
+      - log2elasticsearchLambdaPermissionLog
+    Properties:
+      DestinationArn: !GetAtt log2elasticsearchLambdaFunction.Arn
+      LogGroupName: '/aws/lambda/{{../stackName}}-{{name}}'
+      FilterPattern: '{ $.name = "cumulus" }'
+
+  {{name}}LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: '/aws/lambda/{{../stackName}}-{{name}}'
+      RetentionInDays: 30
+{{/if}}
+
 {{/each}}
+
+  log2elasticsearchLambdaPermissionLog:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - log2elasticsearchLambdaFunction
+        - Arn
+      Principal: !Sub 'logs.${AWS::Region}.amazonaws.com'
 
   #################################################
   # Lambda config END
@@ -373,6 +447,14 @@ Outputs:
   {{name}}SQSOutput:
     Value: !Ref {{name}}SQS
 {{/each}}
+
+{{# if es.name}}
+  {{es.name}}Domain:
+    Value:
+      Fn::GetAtt:
+        - {{es.name}}Domain
+        - DomainEndpoint
+{{/if}}
 
 {{#each sns}}
   {{name}}SnsArn:
