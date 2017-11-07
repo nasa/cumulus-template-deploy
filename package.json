@@ -13,7 +13,7 @@
     "update": "kes cf update --kes-folder config --kes-class config/kes.js --role arn:aws:iam::985962406024:role/lpdaac-cumulus-deployer-DeployerRole-1PCCES1GW83BC"
   },
   "author": "Cumulus Authors",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "kes": "1.0.1",
     "node-forge": "^0.7.1"
