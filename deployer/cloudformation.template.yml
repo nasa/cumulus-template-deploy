@@ -152,6 +152,7 @@ Resources:
               Action:
                 - states:CreateActivity
                 - states:CreateStateMachine
+                - states:DeleteStateMachine
               Resource:
                 "*"
 
