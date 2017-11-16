@@ -170,6 +170,15 @@ Resources:
 
             - Effect: Allow
               Action:
+                - sqs:CreateQueue
+                - sqs:DeleteQueue
+                - sqs:SetQueueAttributes
+                - sqs:GetQueueAttributes
+              Resource:
+                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${Prefix}*'
+
+            - Effect: Allow
+              Action:
                - lambda:RemovePermission
               Resource:
                - "*"
