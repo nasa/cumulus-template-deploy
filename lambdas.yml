@@ -3,10 +3,3 @@ HelloWorld:
   timeout: 300
   memory: 256
   source: '../cumulus/cumulus/tasks/hello-world-task/dist/index.js'
-
-# used as custom resource for cloudformation manipulation
-Authorizer:
-  handler: daac-ops-api.authorizer
-  timeout: 100
-  memory: 256
-  source: '../cumulus/daac-ops-api/dist/index.js'
