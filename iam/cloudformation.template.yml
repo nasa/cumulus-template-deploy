@@ -30,6 +30,9 @@ Parameters:
   PublicBucketName:
     Type: String
     Default: "cumulus-public"
+  SharedBucketName:
+    Type: String
+    Default: "cumulus-public"
 Resources:
   #DeploymentStack:
   #  Type: AWS::CloudFormation::Stack
@@ -133,6 +136,14 @@ Resources:
                   - events:PutTargets
                   - events:RemoveTargets
                 Resource: !Sub "arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/${ResourcePrefix}-*"
+
+              # Allow state machine interactions
+              - Effect: Allow
+                Action:
+                  - states:DescribeExecution
+                  - states:DescribeStateMachine
+                  - states:GetExecutionHistory
+                Resource: arn:aws:states:*:*:*
 
   # role for Lambdas that are NOT used with APIGateway
   LambdaProcessingRole:
@@ -315,7 +326,48 @@ Resources:
                   - logs:PutLogEvents
                 Resource: "*"
 
+              # Allow state machine interactions
+              - Effect: Allow
+                Action:
+                - states:SendTaskFailure
+                - states:SendTaskSuccess
+                - states:GetActivityTask
+                - states:DescribeActivity
+                Resource: arn:aws:states:*:*:*
+
+              # Allow writing to ingest buckets
+              - Effect: Allow
+                Action:
+                  - s3:AbortMultipartUpload
+                  - s3:Get*
+                  - s3:Put*
+                  - s3:List*
+                  - s3:DeleteObject
+                  - s3:DeleteObjectVersion
+                Resource:
+                  - !Sub "arn:aws:s3:::${InternalBucketName}"
+                  - !Sub "arn:aws:s3:::${InternalBucketName}/*"
+                  - !Sub "arn:aws:s3:::${PrivateBucketName}"
+                  - !Sub "arn:aws:s3:::${PrivateBucketName}/*"
+                  - !Sub "arn:aws:s3:::${ProtectedBucketName}"
+                  - !Sub "arn:aws:s3:::${ProtectedBucketName}/*"
+                  - !Sub "arn:aws:s3:::${PublicBucketName}"
+                  - !Sub "arn:aws:s3:::${PublicBucketName}/*"
+                  - !Sub "arn:aws:s3:::${SharedBucketName}"
+                  - !Sub "arn:aws:s3:::${SharedBucketName}/*"
+
+
+  CumulusInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${ResourcePrefix}-ecs"
+      Path: "/"
+      Roles:
+        - !Ref ECSRole
+
 Outputs:
+  CumulusInstanceProfileArn:
+    Value: !GetAtt CumulusInstanceProfile.Arn
   EcsRoleArn:
     Value: !GetAtt ECSRole.Arn
   LambdaApiGatewayRoleArn:
