@@ -152,6 +152,7 @@ Resources:
               Action:
                 - states:CreateActivity
                 - states:CreateStateMachine
+                - states:DeleteStateMachine
               Resource:
                 "*"
 
@@ -166,6 +167,15 @@ Resources:
                 - states:DeleteStateMachine
               Resource:
                 - !Sub "arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:${StateMachinePrefix}*"
+
+            - Effect: Allow
+              Action:
+                - sqs:CreateQueue
+                - sqs:DeleteQueue
+                - sqs:SetQueueAttributes
+                - sqs:GetQueueAttributes
+              Resource:
+                - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${Prefix}*'
 
             - Effect: Allow
               Action:
