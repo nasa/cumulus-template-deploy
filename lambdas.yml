@@ -2,4 +2,4 @@ HelloWorld:
   handler: hello-world.handler
   timeout: 300
   memory: 256
-  source: '../cumulus/cumulus/tasks/hello-world-task/dist/index.js'
+  source: 'node_modules/@cumulus/hello-world/dist/index.js'
