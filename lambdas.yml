@@ -2,4 +2,5 @@ HelloWorld:
   handler: index.handler
   timeout: 300
   memory: 256
-  source: 'node_modules/@cumulus/hello-world/dist/index.js'
+  source: 'node_modules/@cumulus/hello-world/dist/'
+  useMessageAdapter: true

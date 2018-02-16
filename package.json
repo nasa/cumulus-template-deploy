@@ -15,10 +15,14 @@
   "author": "Cumulus Authors",
   "license": "Apache-2.0",
   "dependencies": {
-    "@cumulus/api": "^1.0.0-beta.7",
-    "@cumulus/deployment": "^1.0.0-beta.7",
-    "@cumulus/hello-world": "^1.0.0-beta.7",
-    "kes": "^1.2.1",
+    "@cumulus/api": "^1.0.0-beta.19",
+    "@cumulus/deployment": "^1.0.0-beta.19",
+    "@cumulus/hello-world": "^1.0.0-beta.19",
+    "kes": "^2.1.1",
     "node-forge": "^0.7.1"
+  },
+  "devDependencies": {
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^1.9.0"
   }
 }
