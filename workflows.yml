@@ -9,8 +9,8 @@ HelloWorldWorkflow:
       Next: HelloWorld
     HelloWorld:
       CumulusConfig:
-        buckets: '{$.meta.buckets}',
-        provider: '{$.meta.provider}',
+        buckets: '{$.meta.buckets}'
+        provider: '{$.meta.provider}'
         collection: '{$.meta.collection}'
       Type: Task
       Resource: ${HelloWorldLambdaFunction.Arn}
