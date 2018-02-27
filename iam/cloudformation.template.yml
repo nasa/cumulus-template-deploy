@@ -1,3 +1,4 @@
+
 ---
 Parameters:
   CreateDeploymentRole:
@@ -90,6 +91,11 @@ Resources:
                   - logs:PutLogEvents
                   - lambda:GetFunction
                   - lambda:invokeFunction
+                  - lambda:CreateEventSourceMapping
+                  - lambda:UpdateEventSourceMapping 
+                  - lambda:DeleteEventSourceMapping 
+                  - lambda:GetEventSourceMapping 
+                  - lambda:ListEventSourceMappings 
                 Resource: "*"
 
               - Effect: Allow
@@ -112,10 +118,19 @@ Resources:
                   - s3:Get*
                   - s3:Put*
                 Resource:
-                  - !Sub "arn:aws:s3:::${InternalBucketName}"
-                  - !Sub "arn:aws:s3:::${InternalBucketName}/*"
                   - !Sub "arn:aws:s3:::${ProtectedBucketName}"
                   - !Sub "arn:aws:s3:::${ProtectedBucketName}/*"
+              
+              - Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:Put*
+                  - s3:List*
+                  - s3:DeleteObject
+                  - s3:DeleteObjectVersion
+                Resource:
+                  - !Sub "arn:aws:s3:::${InternalBucketName}"
+                  - !Sub "arn:aws:s3:::${InternalBucketName}/*"
 
               - Effect: Allow
                 Action:
@@ -172,6 +187,14 @@ Resources:
                   - logs:DescribeLogStreams
                   - logs:PutLogEvents
                 Resource: "*"
+              # Allow access to kinesis 
+              - Effect: Allow
+                Action:
+                  - kinesis:GetRecords
+                  - kinesis:GetShardIterator
+                  - kinesis:DescribeStream
+                  - kinesis:ListStreams
+                Resource: arn:aws:kinesis:*:*:*
               # Allow writing to ingest buckets
               - Effect: Allow
                 Action:
@@ -222,6 +245,7 @@ Resources:
                 - states:SendTaskFailure
                 - states:SendTaskSuccess
                 - states:GetActivityTask
+                - states:GetExecutionHistory
                 - states:DescribeActivity
                 - states:DescribeExecution
                 - states:StartExecution

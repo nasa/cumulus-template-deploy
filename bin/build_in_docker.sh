@@ -16,16 +16,7 @@ apt-get install -y \
   git \
   rsync
 
-rsync -a --exclude node_modules --exclude .git /source/cumulus/ /build/cumulus/
 rsync -a --exclude node_modules --exclude .git /source/template-deploy/ /build/template-deploy/
-
-(
-  set -evx
-  cd /build/cumulus
-  npm install
-  npm run ybootstrap
-  npm run build
-)
 
 (
   set -evx
@@ -33,7 +24,7 @@ rsync -a --exclude node_modules --exclude .git /source/template-deploy/ /build/t
   npm install
 )
 
-tar -czf /dist/release.tgz --exclude tmp/build.sh -C /build cumulus template-deploy
+tar -czf /dist/release.tgz --exclude tmp/build.sh -C /build template-deploy
 chown "${DOCKER_UID}:${DOCKER_GID}" /dist/release.tgz
 EOS
 chmod +x tmp/build.sh
