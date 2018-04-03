@@ -122,6 +122,7 @@ Resources:
               - lambda:ListTags
               - lambda:TagResource
               - lambda:UntagResource
+              - lambda:CreateEventSourceMapping
               Resource:
               - "*"
 
