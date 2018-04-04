@@ -35,35 +35,6 @@ Parameters:
     Type: String
     Default: "cumulus-public"
 Resources:
-  #DeploymentStack:
-  #  Type: AWS::CloudFormation::Stack
-  #  Properties:
-  #    Parameters:
-  #      CreateDeploymentRole: !Ref CreateDeploymentRole
-  #      DeploymentUserName: !Ref DeploymentUserName
-  #      ResourcePrefix: !Ref ResourcePrefix
-  #      AlphaNumPrefix: !Ref AlphaNumPrefix
-  #    TemplateURL: !Ref DeploymentStackTemplateUrl
-  # TODO this is a temporary hack
-  #DeploymentManagedPolicy:
-  #  Type: AWS::IAM::ManagedPolicy
-  #  Properties:
-  #    Users:
-  #      - !Ref DeploymentUserName
-  #    PolicyDocument:
-  #      Version: '2012-10-17'
-  #      Statement:
-  #          - Effect: Allow
-  #            Action: "s3:GetObject"
-  #            Resource: "arn:aws:s3:::cumulus-internal/*"
-          # - Effect: Allow
-          #   Action:
-          #     - "s3:Get*"
-          #     - "s3:List*"
-          #     - "s3:Put*"
-          #   Resource:
-          #     - "arn:aws:s3:::cumulus-internal"
-          #     - "arn:aws:s3:::cumulus-internal/*"
   LambdaApiGatewayRole:
     Type: AWS::IAM::Role
     Properties:
