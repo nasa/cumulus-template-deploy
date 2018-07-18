@@ -9,40 +9,7 @@ jobs:
     steps:
       - checkout
 
-      - add_ssh_keys:
-          fingerprints:
-             - "59:4f:72:77:7c:e8:43:23:62:aa:32:80:0d:dd:7f:fd"
-
-      - run:
-          name: checkout cumulus repo
-          command: |
-            git clone git@github.com:cumulus-nasa/cumulus.git /tmp/cumulus
-            cd /tmp/cumulus
-            if [[ ! -z "$CUMULUS_BRANCH" ]]; then
-              git fetch origin
-              git checkout ${CUMULUS_BRANCH}
-            fi
-            sudo npm install -g lerna
-            npm install
-            npm run ybootstrap
-            npm run build
-
       - run:
           name: Install
           command: |
-            cd ~/lpdaac-deploy
             npm install
-            sudo npm install -g kes
-            cp config/.env.sample config/.env
-
-      - run:
-          name: Test Examples
-          command: |
-            cp -r /tmp/cumulus ~/
-            cd ~/lpdaac-deploy
-            kes cf compile --kes-folder config --role ${IAM_ROLE_ARN}
-            kes cf validate --kes-folder config --role ${IAM_ROLE_ARN}
-
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              kes cf update --kes-folder config --kes-class config/kes.js --role ${IAM_ROLE_ARN}
-            fi
