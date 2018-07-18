@@ -19,21 +19,6 @@ Parameters:
   AlphaNumPrefix:
     Type: String
     Default: "TemplateCumulus"
-  InternalBucketName:
-    Type: String
-    Default: "cumulus-internal"
-  PrivateBucketName:
-    Type: String
-    Default: "cumulus-private"
-  ProtectedBucketName:
-    Type: String
-    Default: "cumulus-protected"
-  PublicBucketName:
-    Type: String
-    Default: "cumulus-public"
-  SharedBucketName:
-    Type: String
-    Default: "cumulus-public"
 Resources:
   LambdaApiGatewayRole:
     Type: AWS::IAM::Role
@@ -72,12 +57,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - dynamodb:DeleteItem
-                  - dynamodb:DescribeStream
                   - dynamodb:GetItem
-                  - dynamodb:GetRecords
-                  - dynamodb:GetShardIterator
-                  - dynamodb:ListStreams
-                  - dynamodb:ListTables
                   - dynamodb:PutItem
                   - dynamodb:Query
                   - dynamodb:Scan
@@ -86,22 +66,49 @@ Resources:
 
               - Effect: Allow
                 Action:
-                  - s3:Get*
-                  - s3:Put*
-                Resource:
-                  - !Sub "arn:aws:s3:::${ProtectedBucketName}"
-                  - !Sub "arn:aws:s3:::${ProtectedBucketName}/*"
-              
+                  - dynamodb:GetRecords
+                  - dynamodb:GetShardIterator
+                  - dynamodb:DescribeStream
+                  - dynamodb:ListStreams
+                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${ResourcePrefix}-*/stream/*"
+
               - Effect: Allow
                 Action:
-                  - s3:Get*
-                  - s3:Put*
-                  - s3:List*
+                  - dynamodb:ListTables
+                Resource: '*'
+
+              - Effect: Allow
+                Action:
+                  - s3:GetAccelerateConfiguration
+                  - s3:GetLifecycleConfiguration
+                  - s3:GetReplicationConfiguration
+                  - s3:GetBucket*
+                  - s3:PutAccelerateConfiguration
+                  - s3:PutLifecycleConfiguration
+                  - s3:PutReplicationConfiguration
+                  - s3:PutBucket*
+                  - s3:ListBucket*
+                Resource:
+                {{#each buckets}}
+                  - arn:aws:s3:::{{this.name}}
+                {{/each}}
+
+              - Effect: Allow
+                Action:
+                  - s3:GetObject*
+                  - s3:PutObject*
+                  - s3:ListMultipartUploadParts
                   - s3:DeleteObject
                   - s3:DeleteObjectVersion
-                Resource:
-                  - !Sub "arn:aws:s3:::${InternalBucketName}"
-                  - !Sub "arn:aws:s3:::${InternalBucketName}/*"
+                Resource: 
+                {{#each buckets}}
+                  - arn:aws:s3:::{{this.name}}/*
+                {{/each}}
+
+              - Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                Resource: '*'
 
               - Effect: Allow
                 Action:
@@ -158,6 +165,7 @@ Resources:
                   - logs:DescribeLogStreams
                   - logs:PutLogEvents
                 Resource: "*"
+
               # Allow access to kinesis 
               - Effect: Allow
                 Action:
@@ -165,40 +173,67 @@ Resources:
                   - kinesis:GetShardIterator
                   - kinesis:DescribeStream
                   - kinesis:ListStreams
-                Resource: arn:aws:kinesis:*:*:*
+                Resource: '*'
+
               # Allow writing to ingest buckets
               - Effect: Allow
                 Action:
+                  - s3:GetAccelerateConfiguration
+                  - s3:GetLifecycleConfiguration
+                  - s3:GetReplicationConfiguration
+                  - s3:GetBucket*
+                  - s3:PutAccelerateConfiguration
+                  - s3:PutLifecycleConfiguration
+                  - s3:PutReplicationConfiguration
+                  - s3:PutBucket*
+                  - s3:ListBucket*
+                Resource:
+                {{#each buckets}}
+                  - arn:aws:s3:::{{this.name}}
+                {{/each}}
+
+              - Effect: Allow
+                Action:
                   - s3:AbortMultipartUpload
-                  - s3:Get*
-                  - s3:Put*
-                  - s3:List*
+                  - s3:GetObject*
+                  - s3:PutObject*
+                  - s3:ListMultipartUploadParts
                   - s3:DeleteObject
                   - s3:DeleteObjectVersion
-                Resource:
-                  - !Sub "arn:aws:s3:::${InternalBucketName}"
-                  - !Sub "arn:aws:s3:::${InternalBucketName}/*"
-                  - !Sub "arn:aws:s3:::${PrivateBucketName}"
-                  - !Sub "arn:aws:s3:::${PrivateBucketName}/*"
-                  - !Sub "arn:aws:s3:::${ProtectedBucketName}"
-                  - !Sub "arn:aws:s3:::${ProtectedBucketName}/*"
-                  - !Sub "arn:aws:s3:::${PublicBucketName}"
-                  - !Sub "arn:aws:s3:::${PublicBucketName}/*"
+                Resource: 
+                {{#each buckets}}
+                  - arn:aws:s3:::{{this.name}}/*
+                {{/each}}
+
+              - Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                Resource: '*'
+
               # Allow access to dynamoDB
               - Effect: Allow
                 Action:
                   - dynamodb:DeleteItem
-                  - dynamodb:DescribeStream
                   - dynamodb:GetItem
-                  - dynamodb:GetRecords
-                  - dynamodb:GetShardIterator
-                  - dynamodb:ListStreams
-                  - dynamodb:ListTables
                   - dynamodb:PutItem
                   - dynamodb:Query
                   - dynamodb:Scan
                   - dynamodb:UpdateItem
                 Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${ResourcePrefix}-*"
+
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetRecords
+                  - dynamodb:GetShardIterator
+                  - dynamodb:DescribeStream
+                  - dynamodb:ListStreams
+                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${ResourcePrefix}-*/stream/*"
+              
+              - Effect: Allow
+                Action:
+                  - dynamodb:ListTables
+                Resource: '*'
+                 
               # Allow access to SQS
               - Effect: Allow
                 Action:
@@ -233,7 +268,7 @@ Resources:
                   - events:PutRule
                   - events:DeleteRule
                   - events:DescribeRule
-                Resource: !Sub "arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/${ResourcePrefix}-*"
+                Resource: '*'
 
               # this is needed for running Lambda in a VPC
               # This might not be needed in the NGAP environment
@@ -250,6 +285,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - sns:publish
+                  - sns:List*
                 Resource: '*'
 
   StepRole:
@@ -328,28 +364,43 @@ Resources:
                 - states:SendTaskSuccess
                 - states:GetActivityTask
                 - states:DescribeActivity
+                - states:GetExecutionHistory
                 Resource: arn:aws:states:*:*:*
 
               # Allow writing to ingest buckets
               - Effect: Allow
                 Action:
+                  - s3:GetAccelerateConfiguration
+                  - s3:GetLifecycleConfiguration
+                  - s3:GetReplicationConfiguration
+                  - s3:GetBucket*
+                  - s3:PutAccelerateConfiguration
+                  - s3:PutLifecycleConfiguration
+                  - s3:PutReplicationConfiguration
+                  - s3:PutBucket*
+                  - s3:ListBucket*
+                Resource:
+                {{#each buckets}}
+                  - arn:aws:s3:::{{this.name}}
+                {{/each}}
+
+              - Effect: Allow
+                Action:
                   - s3:AbortMultipartUpload
-                  - s3:Get*
-                  - s3:Put*
-                  - s3:List*
+                  - s3:GetObject*
+                  - s3:PutObject*
+                  - s3:ListMultipartUploadParts
                   - s3:DeleteObject
                   - s3:DeleteObjectVersion
-                Resource:
-                  - !Sub "arn:aws:s3:::${InternalBucketName}"
-                  - !Sub "arn:aws:s3:::${InternalBucketName}/*"
-                  - !Sub "arn:aws:s3:::${PrivateBucketName}"
-                  - !Sub "arn:aws:s3:::${PrivateBucketName}/*"
-                  - !Sub "arn:aws:s3:::${ProtectedBucketName}"
-                  - !Sub "arn:aws:s3:::${ProtectedBucketName}/*"
-                  - !Sub "arn:aws:s3:::${PublicBucketName}"
-                  - !Sub "arn:aws:s3:::${PublicBucketName}/*"
-                  - !Sub "arn:aws:s3:::${SharedBucketName}"
-                  - !Sub "arn:aws:s3:::${SharedBucketName}/*"
+                Resource: 
+                {{#each buckets}}
+                  - arn:aws:s3:::{{this.name}}/*
+                {{/each}}
+
+              - Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                Resource: '*'
 
 
   CumulusInstanceProfile:

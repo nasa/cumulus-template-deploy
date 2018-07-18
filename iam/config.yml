@@ -4,20 +4,23 @@ default:
   authorizor: false
   capabilities:
     - CAPABILITY_NAMED_IAM
+
+  system_bucket: template-cumulus-sandbox-deploy
+  
   buckets:
-    internal: template-cumulus-sandbox-deploy
-    private: template-cumulus-sandbox-private
-    protected: template-cumulus-sandbox-protected
-    public: template-cumulus-sandbox-public
+    internal: 
+      name: template-cumulus-sandbox-deploy
+      type: internal
+    private: 
+      name: template-cumulus-sandbox-private
+      type: private
+    protected: 
+      name: template-cumulus-sandbox-protected
+      type: protected
+    public: 
+      name: template-cumulus-sandbox-public
+      type: public
 
   params:
      - name: ResourcePrefix
        value: '{{prefix}}'
-     - name: InternalBucketName
-       value: '{{buckets.internal}}'
-     - name: PrivateBucketName
-       value: '{{buckets.private}}'
-     - name: ProtectedBucketName
-       value: '{{buckets.protected}}'
-     - name: PublicBucketName
-       value: '{{buckets.public}}'
