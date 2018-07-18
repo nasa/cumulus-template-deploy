@@ -184,6 +184,12 @@ Resources:
                   - !Sub "arn:aws:s3:::${ProtectedBucketName}/*"
                   - !Sub "arn:aws:s3:::${PublicBucketName}"
                   - !Sub "arn:aws:s3:::${PublicBucketName}/*"
+              # Allow read access to external s3 buckets
+              - Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:List*
+                Resource: arn:aws:s3:::*
               # Allow access to dynamoDB
               - Effect: Allow
                 Action:
