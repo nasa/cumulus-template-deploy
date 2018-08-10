@@ -1,23 +1,40 @@
-
-HelloWorldWorkflow:
-  Comment: 'Returns Hello World'
-  StartAt: StartStatus
+DiscoverGranules:
+  Comment: 'Discovers new Granules from a given provider'
+  StartAt: StatusReport
+  TimeoutSeconds: 18000 # 5 hours
   States:
-    StartStatus:
+    StatusReport:
       Type: Task
-      Resource: ${sf2snsStartLambdaFunction.Arn}
-      Next: HelloWorld
-    HelloWorld:
+      Resource: ${SfSnsReportLambdaFunction.Arn}
       CumulusConfig:
-        buckets: '{$.meta.buckets}'
+        cumulus_message:
+          input: '{$}'
+      Next: DiscoverGranules
+    DiscoverGranules:
+      CumulusConfig:
         provider: '{$.meta.provider}'
         collection: '{$.meta.collection}'
+        buckets: '{$.meta.buckets}'
+        stack: '{$.meta.stack}'
       Type: Task
-      Resource: ${HelloWorldLambdaFunction.Arn}
+      Resource: ${DiscoverGranulesLambdaFunction.Arn}
+      Catch:
+        - ErrorEquals:
+          - States.ALL
+          ResultPath: '$.exception'
+          Next: StopStatus
       Next: StopStatus
     StopStatus:
       Type: Task
-      Resource: ${sf2snsEndLambdaFunction.Arn}
+      Resource: ${SfSnsReportLambdaFunction.Arn}
+      CumulusConfig:
+        sfnEnd: true
+        stack: '{$.meta.stack}'
+        bucket: '{$.meta.buckets.internal.name}'
+        stateMachine: '{$.cumulus_meta.state_machine}'
+        executionName: '{$.cumulus_meta.execution_name}'
+        cumulus_message:
+          input: '{$}'
       Catch:
         - ErrorEquals:
           - States.ALL
