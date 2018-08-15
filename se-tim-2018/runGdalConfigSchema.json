@@ -1,0 +1,103 @@
+{
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "additional_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Bucket": {
+            "type": "string",
+            "title": "S3 bucket",
+            "examples": [
+              "lf-cumulus-demo"
+            ]
+          },
+          "Key": {
+            "type": "string",
+            "title": "S3 key",
+            "examples": [
+              "MOD11A2.A2018209.h08v05.006.2018218212536.hdf"
+            ]
+          }
+        }
+      }
+    },
+    "input_filenames": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "title": "filenames",
+        "examples": [
+          "MOD11A2.A2018209.h08v05.006.2018218212536.hdf",
+          "colortable.txt"
+        ]
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gdal_command": {
+            "type": "string",
+            "title": "Gdal command to run",
+            "examples": [
+              "gdal_translate"
+            ]
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "title": "Gdal command argument list",
+              "examples": [
+                "-of",
+                "GTiff",
+                "HDF4_EOS:EOS_GRID:\"MOD11A2.A2018209.h08v05.006.2018218212536.hdf\":MODIS_Grid_8Day_1km_LST:LST_Day_1km",
+                "out.tif"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "title": "file created by gdal",
+            "examples": [
+              "thumbnail.png"
+            ]
+          },
+          "dest": {
+            "type": "object",
+            "properties": {
+              "Bucket": {
+                "type": "string",
+                "title": "Destination S3 bucket",
+                "examples": [
+                  "cumulus-test-public"
+                ]
+              },
+              "Key": {
+                "type": "string",
+                "title": "Destination S3 key",
+                "default": "",
+                "examples": [
+                  "thumbnail.png"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
