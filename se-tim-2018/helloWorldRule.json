@@ -1,0 +1,11 @@
+{
+	"name": "HelloWorld",
+	"workflow": "HelloWorldWorkflow",
+	"collection": {
+		"name": "MOD09GQ",
+		"version": "006"
+	},
+	"rule": {
+		"type": "onetime"
+	}
+}

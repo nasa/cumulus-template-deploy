@@ -1,0 +1,29 @@
+commands:
+  - gdal_command: gdal_translate
+    args:
+    - "-of"
+    - GTiff
+    - "HDF4_EOS:EOS_GRID:\"MOD11A2.A2018209.h08v05.006.2018218212536.hdf\":MODIS_Grid_8Day_1km_LST:LST_Day_1km"
+    - out.tif
+  - gdal_command: gdaldem
+    args:
+    - "color-relief"
+    - "-alpha"
+    - out.tif
+    - colortable.txt
+    - color.tif
+  - gdal_command: gdalwarp
+    args:
+    - "-t_srs" 
+    - EPSG:4326 
+    - color.tif 
+    - reprojected.tif
+  - gdal_command: gdal_translate
+    args:
+    - "-outsize"
+    - 0
+    - 512
+    - "-of"
+    - png
+    - reprojected.tif
+    - thumbnail.png
