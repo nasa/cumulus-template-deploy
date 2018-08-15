@@ -4,3 +4,9 @@ DiscoverGranules:
   memory: 512
   source: node_modules/@cumulus/discover-granules/dist/
   useMessageAdapter: true
+
+SfSnsReport:
+  handler: index.handler
+  timeout: 300
+  source: node_modules/@cumulus/sf-sns-report/dist
+  useMessageAdapter: true

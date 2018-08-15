@@ -1,30 +1,17 @@
 default:
-  prefix: template-cumulus
-  stackName: template-cumulus-iam
+  prefix: nasa-map
+  stackName: '{{prefix}}-iam'
   authorizor: false
   capabilities:
     - CAPABILITY_NAMED_IAM
 
-  system_bucket: template-cumulus-sandbox-internal
+  system_bucket: cumulus-map-internal
 
   buckets:
     internal:
-      name: template-cumulus-sandbox-internal
+      name: cumulus-map-internal
       type: internal
-    private:
-      name: template-cumulus-sandbox-private
-      type: private
-    protected:
-      name: template-cumulus-sandbox-protected
-      type: protected
-    public:
-      name: template-cumulus-sandbox-public
-      type: public
-    protected-2:
-      name: template-cumulus-sandbox-protected-2
-      type: protected
 
   params:
      - name: ResourcePrefix
        value: '{{prefix}}'
-

@@ -10,7 +10,9 @@
     "create-iam": "kes cf create --kes-folder iam",
     "update-iam": "kes cf update --kes-folder iam",
     "create": "kes cf create --kes-folder config",
-    "update": "kes cf update --kes-folder config --kes-class config/kes.js --role arn:aws:iam::985962406024:role/lpdaac-cumulus-deployer-DeployerRole-1PCCES1GW83BC"
+    "update": "kes cf update --kes-folder config --kes-class config/kes.js --role arn:aws:iam::985962406024:role/lpdaac-cumulus-deployer-DeployerRole-1PCCES1GW83BC",
+    "deploy": "./node_modules/.bin/kes cf deploy --kes-folder app --region us-east-1 --template node_modules/@cumulus/deployment/app --profile $AWS_PROFILE",
+    "deploy-iam": "./node_modules/.bin/kes cf deploy --kes-folder iam --region us-east-1 --template node_modules/@cumulus/deployment/iam  --profile $AWS_PROFILE"    
   },
   "author": "Cumulus Authors",
   "license": "Apache-2.0",
@@ -18,6 +20,7 @@
     "@cumulus/api": "^1.9.0",
     "@cumulus/deployment": "^1.9.0",
     "@cumulus/discover-granules": "^1.9.0",
+    "@cumulus/sf-sns-report": "^1.9.0",    
     "kes": "^2.2.2",
     "node-forge": "^0.7.1"
   }

@@ -1,11 +1,12 @@
 build
 cloudformation.yml
 dist
-/app/.env
-/app/cloudformation.yml
+app/.env
+app/cloudformation.yml
 app/build
 app/dist
 node_modules
 .env
 package-lock.json
 /deployer/cloudformation.yml
+CumulusApiV1.yml
