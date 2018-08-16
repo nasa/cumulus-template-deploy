@@ -5,26 +5,24 @@ default:
   capabilities:
     - CAPABILITY_NAMED_IAM
 
-  system_bucket: template-cumulus-sandbox-internal
+  system_bucket: '{{buckets.internal.name}}'
 
   buckets:
     internal:
-      name: template-cumulus-sandbox-internal
+      name: se-tim-internal
       type: internal
-    private:
-      name: template-cumulus-sandbox-private
-      type: private
     protected:
-      name: template-cumulus-sandbox-protected
+      name: se-tim-protected
       type: protected
     public:
-      name: template-cumulus-sandbox-public
+      name: se-tim-public-data
       type: public
-    protected-2:
-      name: template-cumulus-sandbox-protected-2
-      type: protected
 
   params:
      - name: ResourcePrefix
        value: '{{prefix}}'
+
+lf-template: 
+  prefix: lf-template
+  stackName: lf-template-iam
 

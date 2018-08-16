@@ -7,5 +7,6 @@ HelloWorld:
 
 RunGdal: 
   handler: index.handler
-  source: ../gitc-deploy/tasks/run-gdal/dist
-  useMessageAdapter: true
+  s3Source:
+    bucket: 'se-tim-protected'
+    key: 'Lambda-RunGdal.zip'
