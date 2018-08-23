@@ -4,9 +4,7 @@ default:
   authorizor: false
   capabilities:
     - CAPABILITY_NAMED_IAM
-
   system_bucket: '{{buckets.internal.name}}'
-
   buckets:
     internal:
       name: se-tim-internal
@@ -17,12 +15,166 @@ default:
     public:
       name: se-tim-public-data
       type: public
-
   params:
-     - name: ResourcePrefix
-       value: '{{prefix}}'
+    - name: ResourcePrefix
+      value: '{{prefix}}'
 
-lf-template: 
+lf-template:
   prefix: lf-template
   stackName: lf-template-iam
 
+titan:
+  prefix: titan
+  stackName: titan-iam
+
+rhea:
+  prefix: rhea
+  stackName: rhea-iam
+
+dione:
+  prefix: dione
+  stackName: dione-iam
+
+tethys:
+  prefix: tethys
+  stackName: tethys-iam
+
+mimas:
+  prefix: mimas
+  stackName: mimas-iam
+
+hyperion:
+  prefix: hyperion
+  stackName: hyperion-iam
+
+phoebe:
+  prefix: phoebe
+  stackName: phoebe-iam
+
+janus:
+  prefix: janus
+  stackName: janus-iam
+
+pandora:
+  prefix: pandora
+  stackName: pandora-iam
+
+helene:
+  prefix: helene
+  stackName: helene-iam
+
+atlas:
+  prefix: atlas
+  stackName: atlas-iam
+
+telesto:
+  prefix: telesto
+  stackName: telesto-iam
+
+calypso:
+  prefix: calypso
+  stackName: calypso-iam
+
+ymir:
+  prefix: ymir
+  stackName: ymir-iam
+
+tarvos:
+  prefix: tarvos
+  stackName: tarvos-iam
+
+narvi:
+  prefix: narvi
+  stackName: narvi-iam
+
+thymr:
+  prefix: thymr
+  stackName: thymr-iam
+
+bestla:
+  prefix: bestla
+  stackName: bestla-iam
+
+kari:
+  prefix: kari
+  stackName: kari-iam
+
+greip:
+  prefix: greip
+  stackName: greip-iam
+
+skoll:
+  prefix: skoll
+  stackName: skoll-iam
+
+kati:
+  prefix: kati
+  stackName: kati-iam
+
+aegir:
+  prefix: aegir
+  stackName: aegir-iam
+
+surtur:
+  prefix: surtur
+  stackName: surtur-iam
+
+loge:
+  prefix: loge
+  stackName: loge-iam
+
+fenrir:
+  prefix: fenrir
+  stackName: fenrir-iam
+
+anthe:
+  prefix: anthe
+  stackName: anthe-iam
+
+triton:
+  prefix: triton
+  stackName: triton-iam
+
+neso:
+  prefix: neso
+  stackName: neso-iam
+
+despina:
+  prefix: despina
+  stackName: despina-iam
+
+europa:
+  prefix: europa
+  stackName: europa-iam
+
+thebe:
+  prefix: thebe
+  stackName: thebe-iam
+
+elara:
+  prefix: elara
+  stackName: elara-iam
+
+leda:
+  prefix: leda
+  stackName: leda-iam
+
+carpo:
+  prefix: carpo
+  stackName: carpo-iam
+
+carme:
+  prefix: carme
+  stackName: carme-iam
+
+kore:
+  prefix: kore
+  stackName: kore-iam
+
+oberon:
+  prefix: oberon
+  stackName: oberon-iam
+
+ariel:
+  prefix: ariel
+  stackName: ariel-iam
