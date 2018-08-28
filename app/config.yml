@@ -1,4 +1,3 @@
-
 default:
   stackName: <prefix>-cumulus
   stackNameNoDash: <Prefix>Cumulus
@@ -29,29 +28,175 @@ default:
       type: public
 
   iams:
-    ecsRoleArn: arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-ecs
-    lambdaApiGatewayRoleArn: arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-lambda-api-gateway
-    lambdaProcessingRoleArn: arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-lambda-processing
-    stepRoleArn: arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-steprole
-    instanceProfile: arn:aws:iam::{{AWS_ACCOUNT_ID}}:instance-profile/{{stackName}}-ecs
+    ecsRoleArn: 'arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-ecs'
+    lambdaApiGatewayRoleArn: 'arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-lambda-api-gateway'
+    lambdaProcessingRoleArn: 'arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-lambda-processing'
+    stepRoleArn: 'arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-steprole'
+    instanceProfile: 'arn:aws:iam::{{AWS_ACCOUNT_ID}}:instance-profile/{{stackName}}-ecs'
     distributionRoleArn: 'arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-distribution-api-lambda'
     scalingRoleArn: 'arn:aws:iam::{{AWS_ACCOUNT_ID}}:role/{{stackName}}-scaling-role'
 
-  urs_url: https://uat.urs.earthdata.nasa.gov/ #make sure to include the trailing slash
+  urs_url: 'https://uat.urs.earthdata.nasa.gov/'
 
-  # if not specified the value of the apigateway backend endpoint is used
-  # api_backend_url: https://apigateway-url-to-api-backend/ #make sure to include the trailing slash
-
-  # if not specified the value of the apigateway dist url is used
-  api_distribution_url: https://apigateway-url-to-distribution-app/ #make sure to include the trailing slash
-
-  # URS users who should have access to the dashboard application.
   users:
     - username: lfrederick
 
-lf-template: 
+lf-template:
   stackName: lf-template
   stackNameNoDash: LfTemplate
 
-  es: null
+titan:
+  stackName: titan
+  stackNameNoDash: titan
 
+rhea:
+  stackName: rhea
+  stackNameNoDash: rhea
+
+dione:
+  stackName: dione
+  stackNameNoDash: dione
+
+tethys:
+  stackName: tethys
+  stackNameNoDash: tethys
+
+mimas:
+  stackName: mimas
+  stackNameNoDash: mimas
+
+hyperion:
+  stackName: hyperion
+  stackNameNoDash: hyperion
+
+phoebe:
+  stackName: phoebe
+  stackNameNoDash: phoebe
+
+janus:
+  stackName: janus
+  stackNameNoDash: janus
+
+pandora:
+  stackName: pandora
+  stackNameNoDash: pandora
+
+helene:
+  stackName: helene
+  stackNameNoDash: helene
+
+atlas:
+  stackName: atlas
+  stackNameNoDash: atlas
+
+telesto:
+  stackName: telesto
+  stackNameNoDash: telesto
+
+calypso:
+  stackName: calypso
+  stackNameNoDash: calypso
+
+ymir:
+  stackName: ymir
+  stackNameNoDash: ymir
+
+tarvos:
+  stackName: tarvos
+  stackNameNoDash: tarvos
+
+narvi:
+  stackName: narvi
+  stackNameNoDash: narvi
+
+thymr:
+  stackName: thymr
+  stackNameNoDash: thymr
+
+bestla:
+  stackName: bestla
+  stackNameNoDash: bestla
+
+kari:
+  stackName: kari
+  stackNameNoDash: kari
+
+greip:
+  stackName: greip
+  stackNameNoDash: greip
+
+skoll:
+  stackName: skoll
+  stackNameNoDash: skoll
+
+kati:
+  stackName: kati
+  stackNameNoDash: kati
+
+aegir:
+  stackName: aegir
+  stackNameNoDash: aegir
+
+surtur:
+  stackName: surtur
+  stackNameNoDash: surtur
+
+fenrir:
+  stackName: fenrir
+  stackNameNoDash: fenrir
+
+anthe:
+  stackName: anthe
+  stackNameNoDash: anthe
+
+triton:
+  stackName: triton
+  stackNameNoDash: triton
+
+neso:
+  stackName: neso
+  stackNameNoDash: neso
+
+despina:
+  stackName: despina
+  stackNameNoDash: despina
+
+europa:
+  stackName: europa
+  stackNameNoDash: europa
+
+thebe:
+  stackName: thebe
+  stackNameNoDash: thebe
+
+elara:
+  stackName: elara
+  stackNameNoDash: elara
+
+leda:
+  stackName: leda
+  stackNameNoDash: leda
+
+carpo:
+  stackName: carpo
+  stackNameNoDash: carpo
+
+carme:
+  stackName: carme
+  stackNameNoDash: carme
+
+kore:
+  stackName: kore
+  stackNameNoDash: kore
+
+oberon:
+  stackName: oberon
+  stackNameNoDash: oberon
+
+ariel:
+  stackName: ariel
+  stackNameNoDash: ariel
+
+loge:
+  stackName: loge
+  stackNameNoDash: loge
