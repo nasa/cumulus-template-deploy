@@ -1,0 +1,14 @@
+{
+  "name": "RunGdalCmr",
+  "workflow": "RunGdalCmr",
+  "provider": "",
+  "collection": {
+    "name": "MODSETIM",
+    "version": "001"
+  },
+  "meta": {},
+  "rule": {
+    "type": "onetime",
+    "value": ""
+  }
+}

@@ -42,12 +42,12 @@ RunGdal:
       Type: Task
       Resource: ${RunGdalLambdaFunction.Arn}
       CumulusConfig:
-        additional_files: 
-         - Bucket: 'lf-cumulus-demo'
+        additional_files:
+         - Bucket: 'se-tim-protected'
            Key: 'MOD11A2.A2018209.h08v05.006.2018218212536.hdf'
-         - Bucket: 'lf-cumulus-demo'
+         - Bucket: 'se-tim-protected'
            Key: 'colortable.txt'
-        input_filenames: 
+        input_filenames:
          - 'MOD11A2.A2018209.h08v05.006.2018218212536.hdf'
          - 'colortable.txt'
         commands:
@@ -66,9 +66,9 @@ RunGdal:
             - color.tif
           - gdal_command: gdalwarp
             args:
-            - "-t_srs" 
-            - EPSG:4326 
-            - color.tif 
+            - "-t_srs"
+            - EPSG:4326
+            - color.tif
             - reprojected.tif
           - gdal_command: gdal_translate
             args:
@@ -82,7 +82,7 @@ RunGdal:
         outputs:
           - filename: thumbnail.png
             dest:
-              Bucket: cumulus-test-sandbox-internal
+              Bucket: se-tim-public-data
               Key: thumbnail.png
       Next: StopStatus
     StopStatus:
@@ -97,3 +97,97 @@ RunGdal:
       Type: Fail
       Cause: 'Workflow failed'
 
+RunGdalCmr:
+  Comment: 'Tests redeployment during workflow run and post to CMR'
+  StartAt: StartStatus
+  States:
+    StartStatus:
+      Type: Task
+      Resource: ${sf2snsStartLambdaFunction.Arn}
+      CumulusConfig:
+        cumulus_message:
+          input: '{$}'
+      Next: RunGdal
+    RunGdal:
+      Type: Task
+      Resource: ${RunGdalLambdaFunction.Arn}
+      CumulusConfig:
+        additional_files:
+         - Bucket: 'se-tim-protected'
+           Key: 'MOD11A2.A2018209.h08v05.006.2018218212536.hdf'
+         - Bucket: 'se-tim-protected'
+           Key: 'colortable.txt'
+        input_filenames:
+         - 'MOD11A2.A2018209.h08v05.006.2018218212536.hdf'
+         - 'colortable.txt'
+        commands:
+          - gdal_command: gdal_translate
+            args:
+            - "-of"
+            - GTiff
+            - "HDF4_EOS:EOS_GRID:\"MOD11A2.A2018209.h08v05.006.2018218212536.hdf\":MODIS_Grid_8Day_1km_LST:LST_Day_1km"
+            - out.tif
+          - gdal_command: gdaldem
+            args:
+            - "color-relief"
+            - "-alpha"
+            - out.tif
+            - colortable.txt
+            - color.tif
+          - gdal_command: gdalwarp
+            args:
+            - "-t_srs"
+            - EPSG:4326
+            - color.tif
+            - reprojected.tif
+          - gdal_command: gdal_translate
+            args:
+            - "-outsize"
+            - 0
+            - 512
+            - "-of"
+            - png
+            - reprojected.tif
+            - thumbnail.png
+        outputs:
+          - filename: thumbnail.png
+            dest:
+              Bucket: se-tim-public-data
+              Key: thumbnail.png
+      Next: ProcessingStep
+    ProcessingStep:
+      CumulusConfig:
+        bucket: se-tim-public-data
+        key: thumbnail.png
+        stack: '{$.meta.stack}'
+        collection: '{$.meta.collection}'
+      Type: Task
+      Resource: ${ProcessingStepLambdaFunction.Arn}
+      Next: CmrStep
+    CmrStep:
+      CumulusConfig:
+        bucket: '{$.meta.buckets.internal.name}'
+        stack: '{$.meta.stack}'
+        cmr: '{$.meta.cmr}'
+        process: '{$.meta.collection.process}'
+        input_granules: '{$.meta.input_granules}'
+        granuleIdExtraction: '{$.meta.collection.granuleIdExtraction}'
+      Type: Task
+      Resource: ${PostToCmrLambdaFunction.Arn}
+      Catch:
+        - ErrorEquals:
+          - States.ALL
+          ResultPath: '$.exception'
+          Next: StopStatus
+      Next: StopStatus
+    StopStatus:
+      Type: Task
+      Resource: ${sf2snsEndLambdaFunction.Arn}
+      Catch:
+        - ErrorEquals:
+          - States.ALL
+          Next: WorkflowFailed
+      End: true
+    WorkflowFailed:
+      Type: Fail
+      Cause: 'Workflow failed'

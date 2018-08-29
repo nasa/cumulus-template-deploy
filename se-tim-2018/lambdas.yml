@@ -5,8 +5,22 @@ HelloWorld:
   source: 'node_modules/@cumulus/hello-world/dist/'
   useMessageAdapter: true
 
-RunGdal: 
+RunGdal:
   handler: index.handler
   s3Source:
     bucket: 'se-tim-protected'
     key: 'Lambda-RunGdal.zip'
+
+ProcessingStep:
+  handler: index.handler
+  source: 'extract-metadata/dist/'
+  useMessageAdapter: true
+
+PostToCmr:
+  handler: index.handler
+  timeout: 300
+  memory: 256
+  source: node_modules/@cumulus/post-to-cmr/dist/
+  useMessageAdapter: true
+  envs:
+    internal: '{{buckets.internal.name}}'

@@ -1,0 +1,24 @@
+{
+	"name": "MODSETIM",
+	"version": "001",
+	"dataType": "MODSETIM",
+	"process": "setim",
+	"provider_path": "cumulus-test-data/pdrs",
+	"url_path": "{cmrMetadata.Granule.Collection.ShortName}___{cmrMetadata.Granule.Collection.VersionId}/{substring(file.name, 0, 3)}",
+	"duplicateHandling": "replace",
+	"granuleId": "^MODSETIM-[\\w]+$",
+	"granuleIdExtraction": "(MODSETIM-.*)(\\.hdf|\\.cmr|\\.png)",
+	"sampleFileName": "MODSETIM-lfrederick.hdf",
+	"files": [
+		{
+			"bucket": "public",
+			"regex": "^MODSETIM-[\\w]+\\.png$",
+			"sampleFileName": "MODSETIM-lfrederick.png"
+		},
+		{
+			"bucket": "public",
+			"regex": "^MODSETIM-[\\w]+\\.cmr\\.xml$",
+			"sampleFileName": "MODSETIM-lfrederick.cmr.xml"
+		}
+	]
+}

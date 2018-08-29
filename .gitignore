@@ -1,6 +1,5 @@
 build
 cloudformation.yml
-dist
 /app/.env
 /app/cloudformation.yml
 app/build

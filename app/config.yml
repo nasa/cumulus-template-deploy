@@ -16,6 +16,12 @@ default:
 
   system_bucket: '{{buckets.internal.name}}'
 
+  cmr:
+    username: '{{CMR_USERNAME}}'
+    provider: SETIM
+    clientId: SETIM
+    password: '{{CMR_PASSWORD}}'
+
   buckets:
     internal:
       name: se-tim-internal
