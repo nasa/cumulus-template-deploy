@@ -2,8 +2,8 @@
 	"name": "HelloWorld",
 	"workflow": "HelloWorldWorkflow",
 	"collection": {
-		"name": "MOD09GQ",
-		"version": "006"
+		"name": "MODSETIM",
+		"version": "001"
 	},
 	"rule": {
 		"type": "onetime"
