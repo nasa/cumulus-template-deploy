@@ -14,17 +14,11 @@ ARG APPNAME
 ENV APPNAME $APPNAME
 ENV AWSPROFILE defualt
 
-#-- Clone Deployment from Git and install
-RUN git clone https://github.com/nasa/template-deploy $APPNAME-deploy && \
-    cd $APPNAME-deploy && \
-    npm install && \
-    cp -r ./node_modules/@cumulus/deployment/app.example ./app 
-
 #-- Object creation script
 RUN echo '#!/bin/bash'                                                                    >  create_aws_objects.sh && \
-    echo 'if [ ! -d git/ ]; then mkdir git/; fi'                                          >> create_aws_objects.sh && \
+    echo 'if [ ! -d /git/ ]; then mkdir /git/; fi'                                          >> create_aws_objects.sh && \
     echo 'echo "... Cloning Cumulus Repo"'                                                >> create_aws_objects.sh && \
-    echo 'cd git/ && git clone https://github.com/nasa/template-deploy $APPNAME-deploy'   >> create_aws_objects.sh && \
+    echo 'cd /git/ && git clone https://github.com/nasa/template-deploy $APPNAME-deploy'   >> create_aws_objects.sh && \
     echo 'cd $APPNAME-deploy && npm install'                                              >> create_aws_objects.sh && \
     echo 'cp -r ./node_modules/@cumulus/deployment/app.example ./app'                     >> create_aws_objects.sh && \
     echo 'RUN=$(base64 /dev/urandom | tr -d '/+' |  fold -w 8 | head -1)'                 >> create_aws_objects.sh && \
