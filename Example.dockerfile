@@ -54,7 +54,7 @@ RUN echo '#!/bin/bash'                                                          
     echo 'echo "... Deploying Cumulus to AWS!"'                                           >> create_aws_objects.sh && \
     echo '$KES cf deploy --kes-folder app --template node_modules/@cumulus/deployment/app --deployment ${STACKNAME}-deployment $AWSENV'             >> create_aws_objects.sh && \
     echo 'echo "... getting API path"'                                                    >> create_aws_objects.sh && \
-    echo 'API=$(aws --profile=cumulus --region=us-east-1 apigateway get-rest-apis --query "items[?name=='"'"'${STACKNAME}-cumulus-backend'"'"'].id" --output=text)' >> create_aws_objects.sh && \
+    echo 'API=$(aws $AWSENV apigateway get-rest-apis --query "items[?name=='"'"'${STACKNAME}-cumulus-backend'"'"'].id" --output=text)' >> create_aws_objects.sh && \
     echo 'APIROOT=$(echo "https://${API}.execute-api.us-east-1.amazonaws.com/dev/")'      >> create_aws_objects.sh && \
     echo 'echo "... Creating Dashboard Website"'                                          >> create_aws_objects.sh && \
     echo 'aws s3 $AWSENV mb s3://${STACKNAME}-dashboard'                                  >> create_aws_objects.sh && \
