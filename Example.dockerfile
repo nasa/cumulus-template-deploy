@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y awscli curl gnupg vim git virtualenv py
 
 ARG APPNAME
 ENV APPNAME $APPNAME
-ENV AWSPROFILE defualt
+ENV AWSPROFILE default
 
 #-- Object creation script
 RUN echo '#!/bin/bash'                                                                    >  create_aws_objects.sh && \
