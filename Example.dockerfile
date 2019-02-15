@@ -103,7 +103,7 @@ CMD tail -f /dev/null
 #   ... Potentially mount *local* git directory to save/reuse code
 # 
 #   > mkdir -p ~/git/
-#   > IMG=$(docker run --env-file docker.env -v ~/git/:/git/ ~/.aws/:/root/.aws -p 3000:3000/tcp -p 3001:3001/tcp -d cumex)
+#   > IMG=$(docker run --env-file docker.env -v ~/git/:/git/ -v ~/.aws/:/root/.aws -p 3000:3000/tcp -p 3001:3001/tcp -d cumex)
 # 
 # Visit it:
 # 
