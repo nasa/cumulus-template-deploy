@@ -1,6 +1,42 @@
-HelloWorld:
+ReportToCmr:
   handler: index.handler
   timeout: 300
   memory: 256
-  source: 'node_modules/@cumulus/hello-world/dist/'
+  source: 'node_modules/@cumulus/post-to-cmr/dist/'
   useMessageAdapter: true
+
+QueueGranules:
+  handler: index.handler
+  timeout: 300
+  source: node_modules/@cumulus/queue-granules/dist/
+  useMessageAdapter: true
+
+ReadEvent:
+  handler: process_sqs.read_handler
+  timeout: 300
+  source: './python_modules'
+  useMessageAdapter: true
+  logToElasticSearch: true
+  runtime: python2.7
+  memory: 256
+  env: 
+    QUEUE_NAME: {{sqs.ingest_queue_name}}
+
+DeleteEvent:
+  handler: process_sqs.delete_handler
+  timeout: 300
+  source: './python_modules'
+  useMessageAdapter: true
+  logToElasticSearch: true
+  runtime: python2.7
+  memory: 256
+
+ProcessSircGranule:
+  handler: process_sirc.handler
+  timeout: 300
+  source: './python_modules'
+  useMessageAdapter: true
+  logToElasticSearch: true
+  runtime: python2.7
+  memory: 256
+

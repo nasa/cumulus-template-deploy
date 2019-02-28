@@ -1,0 +1,92 @@
+<Granule xmlns:html="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
+    <GranuleUR>{{ granuleur }}</GranuleUR>
+    <InsertTime>{{ insert_time }}</InsertTime>
+    <LastUpdate>{{ last_update }}</LastUpdate>
+    <Collection>
+        <DataSetId>{{ datasetid }}</DataSetId>
+    </Collection>
+    <DataGranule>
+        <SizeMBDataGranule>{{ product_size_mb }}</SizeMBDataGranule>
+        <ProducerGranuleId>{{ product_name }}</ProducerGranuleId>
+        <DayNightFlag>UNSPECIFIED</DayNightFlag>
+        <ProductionDateTime>{{ start_time }}</ProductionDateTime>
+    </DataGranule>
+    <Temporal>
+        <RangeDateTime>
+            <BeginningDateTime>{{ start_time }}</BeginningDateTime>
+            <EndingDateTime>{{ end_time }}</EndingDateTime>
+        </RangeDateTime>
+    </Temporal>
+    <Spatial>
+        <HorizontalSpatialDomain>
+            <Geometry>
+               {% for points in boundingbox %}
+                <GPolygon>
+                  <Boundary>
+                  {% for point in points %}
+                    <Point>
+                    <PointLongitude>{{ point.1 }}</PointLongitude>
+                    <PointLatitude>{{ point.0 }}</PointLatitude>
+                    </Point>
+                  {% endfor %}
+                </Boundary>
+                </GPolygon>
+               {% endfor %}
+            </Geometry>
+        </HorizontalSpatialDomain>
+    </Spatial>
+    {% if not revolution == 'None' %}
+    <OrbitCalculatedSpatialDomains>
+
+        <OrbitCalculatedSpatialDomain>
+          <OrbitNumber>{{ revolution }}</OrbitNumber>
+        </OrbitCalculatedSpatialDomain>
+
+    </OrbitCalculatedSpatialDomains>
+    {% endif %}
+    <Platforms>
+        {% for platform in platforms %}
+        <Platform>
+            <ShortName>{{ platform.platform_name }}</ShortName>
+            <Instruments>
+                <Instrument>
+                    <ShortName>{{ platform.instrument_name }}</ShortName>
+                    <Sensors>
+                        <Sensor>
+                            <ShortName>{{ platform.sensor_short_name }}</ShortName>
+                        </Sensor>
+                    </Sensors>
+                </Instrument>
+            </Instruments>
+        </Platform>
+        {% endfor %}
+    </Platforms>
+    {% if additional_attributes %}
+    <AdditionalAttributes>
+        {% for name, value in additional_attributes.items()|sort() %}
+        <AdditionalAttribute>
+            <Name>{{ name }}</Name>
+            <Values>
+                <Value>{{ value }}</Value>
+            </Values>
+        </AdditionalAttribute>
+        {% endfor %}
+    </AdditionalAttributes>
+    {% endif %}
+    {% if online_access_url %}
+    <OnlineAccessURLs>
+        <OnlineAccessURL>
+            <URL>{{ online_access_url }}</URL>
+        </OnlineAccessURL>
+    </OnlineAccessURLs>
+    {% endif %}
+    <Orderable>{{ orderable }}</Orderable>
+    <Visible>{{ visible }}</Visible>
+    {% if browse_url %}
+    <AssociatedBrowseImageUrls>
+        <ProviderBrowseUrl>
+            <URL>{{ browse_url }}</URL>
+        </ProviderBrowseUrl>
+    </AssociatedBrowseImageUrls>
+    {% endif %}
+</Granule>

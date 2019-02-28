@@ -1,0 +1,15 @@
+cumulus_message_adapter-1.0.13.dist-info/DESCRIPTION.rst,sha256=H7fLGmUlCqFwIBEsCiDqAHQW_3Qg3CciJa5ueMrrTis,2301
+cumulus_message_adapter-1.0.13.dist-info/METADATA,sha256=azo9iIbWJyc4ppmJK-cGp6cmGvkJOXTlMdOL4TmS9Ns,2968
+cumulus_message_adapter-1.0.13.dist-info/RECORD,,
+cumulus_message_adapter-1.0.13.dist-info/WHEEL,sha256=BtVfdXUcEYLcFjOkbIrCFRyXU4qszVPt-E9o3RWkSNw,93
+cumulus_message_adapter-1.0.13.dist-info/metadata.json,sha256=hZdHx-BOCALChjsMgXr1lPnOTHguO9dXTOCWpcaEnTg,840
+cumulus_message_adapter-1.0.13.dist-info/top_level.txt,sha256=1eB8dcSJIDCtCUpGgMEAmX_33-3LOPLz9znMDEn6wUo,16
+message_adapter/__init__.py,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
+message_adapter/aws.py,sha256=xJwhCIpV7e82-KgHZtHFb8rqko3IfIX-GecMNkxbV_k,1338
+message_adapter/message_adapter.py,sha256=R2v_23aqbzpmI9yt_JxqbOgoOi-kxBybyJIVTE_OxKo,19986
+message_adapter/version.py,sha256=GMhBSnn3klwlilFqSw05QsoTMbvEFQiGxeszBLcS-xs,24
+cumulus_message_adapter-1.0.13.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+message_adapter/message_adapter.pyc,,
+message_adapter/aws.pyc,,
+message_adapter/__init__.pyc,,
+message_adapter/version.pyc,,

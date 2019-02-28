@@ -1,0 +1,11 @@
+MANIFEST.in
+README.md
+cumulus_logger.py
+requirements.txt
+run_cumulus_task.py
+version.py
+cumulus_message_adapter_python.egg-info/PKG-INFO
+cumulus_message_adapter_python.egg-info/SOURCES.txt
+cumulus_message_adapter_python.egg-info/dependency_links.txt
+cumulus_message_adapter_python.egg-info/requires.txt
+cumulus_message_adapter_python.egg-info/top_level.txt

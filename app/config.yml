@@ -1,0 +1,70 @@
+sirc-e5orlnb7-deployment:
+  stackName: sirc-e5orlnb7-cumulus
+
+
+  apiStage: dev
+
+  sqs:
+    ingest_queue_name: sirc-e5orlnb7-ingest-queue
+
+  vpc:
+    vpcId: vpc-0550893a78102f3f4
+    subnets:
+      - subnet-0a6e7042da5ecb980
+
+  ecs:
+    instanceType: t2.micro
+    desiredInstances: 0
+    availabilityZone: us-east-1b
+
+  collections:
+    granuleIdExtraction: '(.*)'
+    types:
+      METADATA: 
+        bucket: public
+        collection: C1225813360-ASF
+      SLC: 
+        bucket: protected
+        collection: C1225813330-ASF 
+      GRD: 
+        bucket: protected
+        collection: C1225813361-ASF
+      BROWSE:
+        bucket: public
+
+  buckets:
+    internal:
+      name: sirc-e5orlnb7-internal
+      type: internal
+    private:
+      name: sirc-e5orlnb7-private
+      type: private
+    protected:
+      name: sirc-e5orlnb7-protected
+      type: protected
+    public:
+      name: sirc-e5orlnb7-public
+      type: public
+
+  iams:
+    ecsRoleArn: arn:aws:iam::206609214770:role/sirc-e5orlnb7-ecs
+    lambdaApiGatewayRoleArn: arn:aws:iam::206609214770:role/sirc-e5orlnb7-lambda-api-gateway
+    lambdaProcessingRoleArn: arn:aws:iam::206609214770:role/sirc-e5orlnb7-lambda-processing
+    stepRoleArn: arn:aws:iam::206609214770:role/sirc-e5orlnb7-steprole
+    instanceProfile: arn:aws:iam::206609214770:instance-profile/sirc-e5orlnb7-ecs
+    distributionRoleArn: arn:aws:iam::206609214770:role/sirc-e5orlnb7-distribution-api-lambda
+    scalingRoleArn: arn:aws:iam::206609214770:role/sirc-e5orlnb7-scaling-role
+    migrationRoleArn: arn:aws:iam::206609214770:role/sirc-e5orlnb7-migration-processing
+
+
+  urs_url: https://uat.urs.earthdata.nasa.gov/ #make sure to include the trailing slash
+
+  # if not specified the value of the apigateway backend endpoint is used
+  # api_backend_url: https://apigateway-url-to-api-backend/ #make sure to include the trailing slash
+
+  # if not specified the value of the apigateway dist url is used
+  # api_distribution_url: https://apigateway-url-to-distribution-app/ #make sure to include the trailing slash
+
+  # URS users who should have access to the dashboard application.
+  users:
+    - username: bbuechle

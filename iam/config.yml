@@ -1,30 +1,18 @@
-default:
-  prefix: template-cumulus
-  stackName: template-cumulus-iam
-  authorizor: false
-  capabilities:
-    - CAPABILITY_NAMED_IAM
-
-  system_bucket: template-cumulus-sandbox-internal
-
+sirc-e5orlnb7-IAM:
+  prefix: sirc-e5orlnb7
+  stackName: sirc-e5orlnb7-iams
+  system_bucket: {{buckets.internal.name}}
+  useNgapPermissionBoundary: true
   buckets:
     internal:
-      name: template-cumulus-sandbox-internal
-      type: internal
+        name: sirc-e5orlnb7-internal
+        type: internal
     private:
-      name: template-cumulus-sandbox-private
-      type: private
-    protected:
-      name: template-cumulus-sandbox-protected
-      type: protected
+        name: sirc-e5orlnb7-private
+        type: private
+    protected: 
+        name: sirc-e5orlnb7-protected
+        type: protected
     public:
-      name: template-cumulus-sandbox-public
-      type: public
-    protected-2:
-      name: template-cumulus-sandbox-protected-2
-      type: protected
-
-  params:
-     - name: ResourcePrefix
-       value: '{{prefix}}'
-
+        name: sirc-e5orlnb7-public
+        type: public
