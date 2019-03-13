@@ -4,6 +4,6 @@
 
 Documentation for the cumulus template project can be read online
 
-[https://nasa.github.io/cumulus/deployment/](https://nasa.github.io/cumulus/deployment/)
+[https://nasa.github.io/cumulus/docs/deployment/deployment-readme](https://nasa.github.io/cumulus/docs/deployment/deployment-readme)
 
 **Note:** Please check [the cumulus core repository](https://github.com/nasa/cumulus/) against [`package.json`](./package.json) to verify this project is using up-to-date Cumulus NPM packages.
