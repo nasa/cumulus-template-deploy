@@ -1,4 +1,4 @@
-#  Cumulus Template Deployment Project
+# Cumulus Template Deployment Project
 
 [![CircleCI](https://circleci.com/gh/nasa/cumulus-template-deploy.svg?style=svg)](https://circleci.com/gh/nasa/cumulus-template-deploy)
 
