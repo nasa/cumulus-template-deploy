@@ -7,5 +7,4 @@ app/build
 app/dist
 node_modules
 .env
-package-lock.json
 /deployer/cloudformation.yml
