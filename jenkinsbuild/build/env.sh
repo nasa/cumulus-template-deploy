@@ -1,7 +1,7 @@
 # Create some required ENV to be used as part of the deployment
 
 # Cumulus Deployment
-export STACKNAME=sirc-ingest-${MATURITY}
+export STACKNAME=projectname-${MATURITY}
 export KES=$(echo "./node_modules/.bin/kes")
 export deploy=$(echo "$KES cf deploy --kes-folder app --template node_modules/@cumulus/deployment/app --deployment ${STACKNAME}-deployment $AWSENV")
 
