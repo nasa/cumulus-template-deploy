@@ -1,0 +1,18 @@
+{
+	"name": "SIRCSLCMETADATA",
+	"version": "001",
+	"dataType": "SIRCSLCMETADATA",
+	"process": "METADATA",
+	"provider_path": "/",
+	"duplicateHandling": "replace",
+	"granuleId": "^SIRC1_\\w*SLC\\w*\\.xml$",
+	"granuleIdExtraction": "(.+)",
+	"sampleFileName": "SIRC1_11_SLC_ALL_088_040_08_19940414T202148_19940414T202202.xml",
+	"files": [
+		{
+			"bucket": "protected",
+			"regex": "^SIRC1_\\w*SLC\\w*\\.xml$",
+			"sampleFileName": "SIRC1_11_SLC_ALL_088_040_08_19940414T202148_19940414T202202.xml"
+		}
+	]
+}

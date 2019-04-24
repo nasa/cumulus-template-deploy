@@ -1,0 +1,18 @@
+{
+	"name": "SIRCGRD",
+	"version": "001",
+	"dataType": "SIRCGRD",
+	"process": "GRD",
+	"provider_path": "/",
+	"duplicateHandling": "replace",
+	"granuleId": "^SIRC1_\\w*GRD\\w*\\.zip$",
+	"granuleIdExtraction": "(.+)",
+	"sampleFileName": "SIRC1_11_GRD_ALL_088_040_08_19940414T202148_19940414T202202.zip",
+	"files": [
+		{
+			"bucket": "protected",
+			"regex": "^SIRC1_\\w*GRD\\w*\\.zip$",
+			"sampleFileName": "SIRC1_11_GRD_ALL_088_040_08_19940414T202148_19940414T202202.zip"
+		}
+	]
+}

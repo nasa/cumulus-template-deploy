@@ -1,0 +1,16 @@
+{
+	"name": "MonitorSircQueueOneTime",
+	"workflow": "MonitorSircQueue",
+	"provider": "ASFDAAC",
+	"collection": {
+		"name": "SIRCGRD",
+		"version": "001"
+	},
+	"rule": {
+		"type": "onetime"
+	},
+	"state": "ENABLED",
+	"tags": [
+		"test"
+	]
+}

@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# 
+# This is the script generated inside Docker. Should be used ONLY as inspiration
+# 
+
+if [ ! -d git/ ]; then mkdir git/; fi
+echo "... Cloning Cumulus Repo"
+cd git/ && git clone https://github.com/nasa/template-deploy $APPNAME-deploy
+cd $APPNAME-deploy && npm install
+cp -r ./node_modules/@cumulus/deployment/app.example ./app
+RUN=$(base64 /dev/urandom | tr -d /+ |  fold -w 8 | head -1)
+STACKNAME=$(echo "${APPNAME}-${RUN}" | tr "[:upper:]" "[:lower:]")
+JWTTOKEN=$(base64 /dev/urandom | tr -d /+ |  fold -w 32 | head -1)
+cd $APPNAME-deploy
+echo "... Run will be $STACKNAME"
+IF=U1RBQ0tOQU1FLUlBTToKICBwcmVmaXg6IFNUQUNLTkFNRQogIHN0YWNrTmFtZTogU1RBQ0tOQU1FLWlhbXMKICBzeXN0ZW1fYnVja2V0OiB7e2J1Y2tldHMuaW50ZXJuYWwubmFtZX19CiAgdXNlTmdhcFBlcm1pc3Npb25Cb3VuZGFyeTogdHJ1ZQogIGJ1Y2tldHM6CiAgICBpbnRlcm5hbDoKICAgICAgICBuYW1lOiBTVEFDS05BTUUtaW50ZXJuYWwKICAgICAgICB0eXBlOiBpbnRlcm5hbAogICAgcHJpdmF0ZToKICAgICAgICBuYW1lOiBTVEFDS05BTUUtcHJpdmF0ZQogICAgICAgIHR5cGU6IHByaXZhdGUKICAgIHByb3RlY3RlZDogCiAgICAgICAgbmFtZTogU1RBQ0tOQU1FLXByb3RlY3RlZAogICAgICAgIHR5cGU6IHByb3RlY3RlZAogICAgcHVibGljOgogICAgICAgIG5hbWU6IFNUQUNLTkFNRS1wdWJsaWMKICAgICAgICB0eXBlOiBwdWJsaWMK
+CF="U1RBQ0tOQU1FLWRlcGxveW1lbnQ6CiAgc3RhY2tOYW1lOiBTVEFDS05BTUUtY3VtdWx1cwogIHN0YWNrTmFtZU5vRGFzaDogU1RBQ0tOQU1FQ3VtdWx1cwoKICBhcGlTdGFnZTogZGV2CgogIHZwYzoKICAgIHZwY0lkOiBWUENJRAogICAgc3VibmV0czoKICAgICAgLSBTVUJORVRJRAoKICBlY3M6CiAgICBpbnN0YW5jZVR5cGU6IHQyLm1pY3JvCiAgICBkZXNpcmVkSW5zdGFuY2VzOiAwCiAgICBhdmFpbGFiaWxpdHlab25lOiBTVUJORVRaT05FCgogIGJ1Y2tldHM6CiAgICBpbnRlcm5hbDoKICAgICAgbmFtZTogU1RBQ0tOQU1FLWludGVybmFsCiAgICAgIHR5cGU6IGludGVybmFsCiAgICBwcml2YXRlOgogICAgICBuYW1lOiBTVEFDS05BTUUtcHJpdmF0ZQogICAgICB0eXBlOiBwcml2YXRlCiAgICBwcm90ZWN0ZWQ6CiAgICAgIG5hbWU6IFNUQUNLTkFNRS1wcm90ZWN0ZWQKICAgICAgdHlwZTogcHJvdGVjdGVkCiAgICBwdWJsaWM6CiAgICAgIG5hbWU6IFNUQUNLTkFNRS1wdWJsaWMKICAgICAgdHlwZTogcHVibGljCgogIGlhbXM6CiAgICBlY3NSb2xlQXJuOiBhcm46YXdzOmlhbTo6QUNDT1VOVElEOnJvbGUvU1RBQ0tOQU1FLWVjcwogICAgbGFtYmRhQXBpR2F0ZXdheVJvbGVBcm46IGFybjphd3M6aWFtOjpBQ0NPVU5USUQ6cm9sZS9TVEFDS05BTUUtbGFtYmRhLWFwaS1nYXRld2F5CiAgICBsYW1iZGFQcm9jZXNzaW5nUm9sZUFybjogYXJuOmF3czppYW06OkFDQ09VTlRJRDpyb2xlL1NUQUNLTkFNRS1sYW1iZGEtcHJvY2Vzc2luZwogICAgc3RlcFJvbGVBcm46IGFybjphd3M6aWFtOjpBQ0NPVU5USUQ6cm9sZS9TVEFDS05BTUUtc3RlcHJvbGUKICAgIGluc3RhbmNlUHJvZmlsZTogYXJuOmF3czppYW06OkFDQ09VTlRJRDppbnN0YW5jZS1wcm9maWxlL1NUQUNLTkFNRS1lY3MKICAgIGRpc3RyaWJ1dGlvblJvbGVBcm46IGFybjphd3M6aWFtOjpBQ0NPVU5USUQ6cm9sZS9TVEFDS05BTUUtZGlzdHJpYnV0aW9uLWFwaS1sYW1iZGEKICAgIHNjYWxpbmdSb2xlQXJuOiBhcm46YXdzOmlhbTo6QUNDT1VOVElEOnJvbGUvU1RBQ0tOQU1FLXNjYWxpbmctcm9sZQogICAgbWlncmF0aW9uUm9sZUFybjogYXJuOmF3czppYW06OkFDQ09VTlRJRDpyb2xlL1NUQUNLTkFNRS1taWdyYXRpb24tcHJvY2Vzc2luZwoKCiAgdXJzX3VybDogaHR0cHM6Ly91YXQudXJzLmVhcnRoZGF0YS5uYXNhLmdvdi8gI21ha2Ugc3VyZSB0byBpbmNsdWRlIHRoZSB0cmFpbGluZyBzbGFzaAoKICAjIGlmIG5vdCBzcGVjaWZpZWQgdGhlIHZhbHVlIG9mIHRoZSBhcGlnYXRld2F5IGJhY2tlbmQgZW5kcG9pbnQgaXMgdXNlZAogICMgYXBpX2JhY2tlbmRfdXJsOiBodHRwczovL2FwaWdhdGV3YXktdXJsLXRvLWFwaS1iYWNrZW5kLyAjbWFrZSBzdXJlIHRvIGluY2x1ZGUgdGhlIHRyYWlsaW5nIHNsYXNoCgogICMgaWYgbm90IHNwZWNpZmllZCB0aGUgdmFsdWUgb2YgdGhlIGFwaWdhdGV3YXkgZGlzdCB1cmwgaXMgdXNlZAogICMgYXBpX2Rpc3RyaWJ1dGlvbl91cmw6IGh0dHBzOi8vYXBpZ2F0ZXdheS11cmwtdG8tZGlzdHJpYnV0aW9uLWFwcC8gI21ha2Ugc3VyZSB0byBpbmNsdWRlIHRoZSB0cmFpbGluZyBzbGFzaAoKICAjIFVSUyB1c2VycyB3aG8gc2hvdWxkIGhhdmUgYWNjZXNzIHRvIHRoZSBkYXNoYm9hcmQgYXBwbGljYXRpb24uCiAgdXNlcnM6CiAgICAtIHVzZXJuYW1lOiBVUlNJRAo="
+EF="Q01SX1VTRVJOQU1FPUNNUlVTUk5BTUUKQ01SX1BBU1NXT1JEPUNNUlBBU1NXT1JECkVBUlRIREFUQV9DTElFTlRfSUQ9RURMQ0xJRU5USUQKRUFSVEhEQVRBX0NMSUVOVF9QQVNTV09SRD1FRExDTElFTlRQV0QKVlBDX0lEPVZQQ0lECkFXU19TVUJORVQ9U1VCTkVUSUQKQVdTX0FDQ09VTlRfSUQ9QUNDT1VOVElEClRPS0VOX1NFQ1JFVD1KV1RUT0tFTgo="
+echo "... Making Buckets"
+AWSENV=$(echo "--profile $AWSPROFILE --region us-east-1")
+KES=$(echo "./node_modules/.bin/kes")
+for BN in internal private protected public ; do aws s3 $AWSENV mb s3://${STACKNAME}-${BN}; done
+echo "... Building IAM template iam/config.yml"
+echo $IF | base64 --decode | sed "s/STACKNAME/${STACKNAME}/g" > iam/config.yml
+echo "... Deploying IAM Template to AWS"
+$KES cf deploy --kes-folder iam --deployment ${STACKNAME}-IAM --template node_modules/@cumulus/deployment/iam $AWSENV
+echo "... Getting AWS Environment info"
+VPCID=$(aws $AWSENV ec2 describe-vpcs --query "Vpcs[*].VpcId" --filters "Name=tag:Name,Values=Application VPC" --output text)
+SUBNETID=$(aws $AWSENV ec2 describe-subnets --query "Subnets[?VpcId=='$VPCID'].{ID:SubnetId}[0]" --filters "Name=tag:Name,Values=Private*" --output=text)
+SUBNETZONE=$(aws $AWSENV ec2 describe-subnets --query "Subnets[?VpcId=='$VPCID'].{AV:AvailabilityZone}[0]" --filters "Name=tag:Name,Values=Private*" --output=text )
+ACCOUNTID=$(aws $AWSENV sts get-caller-identity --query "Account" --output=text)
+echo "... Writing out Config file"
+echo $CF | base64 --decode | sed "s/STACKNAME/${STACKNAME}/g" | sed "s/VPCID/${VPCID}/g" | sed "s/ACCOUNTID/${ACCOUNTID}/g" | sed "s/SUBNETID/${SUBNETID}/g" | sed "s/SUBNETZONE/${SUBNETZONE}/g" | sed "s/URSID/${URSID}/g" | sed "s/\(.*stackNameNoDash.*\)-\(.*\)//g" > app/config.yml
+echo "Writing out URS Auth ENV File"
+echo $EF | base64 --decode | sed "s/VPCID/${VPCID}/g" | sed "s/SUBNETID/${SUBNETID}/g" | sed "s/ACCOUNTID/${ACCOUNTID}/g" | sed "s/CMRUSRNAME/${CMR_USERNAME}/g" | sed "s/CMRPASSWORD/${CMR_PASSWORD}/g" | sed "s/EDLCLIENTID/${EARTHDATA_CLIENT_ID}/g"| sed "s/EDLCLIENTPWD/$EARTHDATA_CLIENT_PASSWORD/g" | sed "s/JWTTOKEN/${JWTTOKEN}/g" > app/.env
+echo "... Deploying Cumulus to AWS!"
+$KES cf deploy --kes-folder app --template node_modules/@cumulus/deployment/app --deployment ${STACKNAME}-deployment $AWSENV
+echo "... getting API path"
+API=$(aws --profile=cumulus --region=us-east-1 apigateway get-rest-apis --query "items[?name=='${STACKNAME}-cumulus-backend'].id" --output=text)
+APIROOT=$(echo "https://${API}.execute-api.us-east-1.amazonaws.com/dev/")
+echo "... Creating Dashboard Website"
+aws s3 $AWSENV mb s3://${STACKNAME}-dashboard
+aws s3 $AWSENV website s3://${STACKNAME}-dashboard --index-document index.html
+git clone https://github.com/nasa/cumulus-dashboard
+echo "... Building Dashboard"
+cd cumulus-dashboard && nvm use && npm install -g yarn && npm install
+sed -i "s|https.*com|$APIROOT|g" app/scripts/config/config.js
+npm run build
+echo "... Pushing dashboard to S3"
+aws $AWSENV s3 sync dist s3://${STACKNAME}-dashboard --acl public-read
+echo "... Starting LOCAL Dashboard"
+yarn serve &
+echo "Done!"

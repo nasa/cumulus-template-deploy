@@ -1,0 +1,18 @@
+{
+	"name": "SIRCSLC",
+	"version": "001",
+	"dataType": "SIRCSLC",
+	"process": "SLC",
+	"provider_path": "/",
+	"duplicateHandling": "replace",
+	"granuleId": "^SIRC1_\\w*SLC\\w*\\.zip$",
+	"granuleIdExtraction": "(.+)",
+	"sampleFileName": "SIRC1_11_SLC_ALL_088_040_08_19940414T202148_19940414T202202.zip",
+	"files": [
+		{
+			"bucket": "protected",
+			"regex": "^SIRC1_\\w*SLC\\w*\\.zip$",
+			"sampleFileName": "SIRC1_11_SLC_ALL_088_040_08_19940414T202148_19940414T202202.zip"
+		}
+	]
+}

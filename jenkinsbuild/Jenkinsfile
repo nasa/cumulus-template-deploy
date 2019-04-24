@@ -1,0 +1,85 @@
+// Jenkins build pipeline definition
+
+pipeline {
+
+  // Environment Setup
+  environment {
+    AWS_DEFAULT_REGION="us-east-1"
+    AWSENV=""
+  }
+
+  // Build on a slave with nodejs
+  agent { label 'nodejs' } 
+
+  stages {
+    
+    // just sort of asess the enviroment
+    stage('Setup Env') {
+      steps { 
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${env.AWSCREDS}"]]) { 
+          sh 'tree'
+          sh 'pwd'
+          sh 'env'
+        }
+      }
+    }
+
+    // Check that our cumulus is fresh! 
+    stage('Freshen Cumulus') {
+      steps { 
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${env.AWSCREDS}"]]) {
+          sh 'bash ${PWD}/build/setup-cumulus.sh'
+        }
+      }
+    }
+
+    stage('Deploy Cumulus') {
+      steps { 
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${env.AWSCREDS}"]])  {
+          sh 'bash ${PWD}/build/deploy-cumulus.sh'
+        }
+      }
+    }
+
+    stage('Deploy Dashboard') {
+      steps { 
+
+        // Checkout repo
+        sh 'bash ${PWD}/build/config-dash.sh'
+
+        // Use NVM Plugin
+        nvm(nvmInstallURL: 'https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh', 
+            nvmIoJsOrgMirror: 'https://iojs.org/dist', nvmNodeJsOrgMirror: 'https://nodejs.org/dist', version: '8.11') 
+              {
+                sh "cd ${WORKSPACE}/dash && npm install -g yarn && yarn install"
+              }
+        
+        // HACKY FIX:
+        //    jenkins-aws-072417 is a Cred set already created in Jenkins. 
+        //    Eventually, when NGAP allows S3 Websites, this should be changed back to ${env.AWSCREDS}.
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "asf-aws"]])  {
+          sh 'bash -l ${PWD}/build/deploy-dash.sh'
+        }
+      }
+    }
+
+    stage('Tag Build'){
+      steps {
+
+        // withCredentials([sshUserPrivateKey(credentialsId: 'fdc7a89b-13b0-4a73-9c40-76faf87eb607',
+        //                                    keyFileVariable: '', passphraseVariable: '',
+        //                                    usernameVariable: '')]) {
+
+          sh("git config user.email 'jenkins@jenkins.asf.alaska.edu'")
+          sh("git config user.name 'jenkins'")
+
+          // tags current changeset
+          sh ("git tag -a sirc-ingest-build.${BUILD_ID} -m \"versioning build.${BUILD_ID}\"")
+    
+          // pushes the tags
+          sh ("git push origin sirc-ingest-build.${BUILD_ID}")
+       // }
+      }
+    }
+  }
+}
