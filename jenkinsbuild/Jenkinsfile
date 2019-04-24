@@ -1,4 +1,15 @@
 // Jenkins build pipeline definition
+//
+// pipline should provide the following params:
+//   MATURITY		
+//   AWSCREDS	
+//   CMR_USERNAME	
+//   CMR_PASSWORD	
+//   TOKEN_SECRET	
+//   EARTHDATA_CLIENT_PASSWORD	
+//   EARTHDATA_CLIENT_ID	
+//   CMR_ENVIRONMENT	
+//   URS_URL
 
 pipeline {
 
@@ -70,14 +81,14 @@ pipeline {
         //                                    keyFileVariable: '', passphraseVariable: '',
         //                                    usernameVariable: '')]) {
 
-          sh("git config user.email 'jenkins@jenkins.asf.alaska.edu'")
+          sh("git config user.email 'jenkins@jenkins.email.com'")
           sh("git config user.name 'jenkins'")
 
           // tags current changeset
-          sh ("git tag -a sirc-ingest-build.${BUILD_ID} -m \"versioning build.${BUILD_ID}\"")
+          sh ("git tag -a projectname-build.${BUILD_ID} -m \"versioning build.${BUILD_ID}\"")
     
           // pushes the tags
-          sh ("git push origin sirc-ingest-build.${BUILD_ID}")
+          sh ("git push origin projectname-build.${BUILD_ID}")
        // }
       }
     }
