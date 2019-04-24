@@ -5,7 +5,7 @@
 source ../app/.env
 
 # Stack Setup
-STACKNAME=sirc-ingest-${MATURITY}
+STACKNAME=projectname-${MATURITY}
 if [ -z "$MATURITY" ]; then echo "No MATURITY Provided"; exit 1; fi
 if [ -z "$AWSPROFILE" ]; then echo "No AWSPROFILE Provided"; exit 1; fi
 AWSENV="--profile=$AWSPROFILE --region=$AWS_DEFAULT_REGION"
