@@ -9,7 +9,7 @@
 |   |   
 |   ├── env.sh                            Called by setup-cumulus.sh & deploy-cumulus.sh
 |   |    
-│   └── deploy_config.sh                  Deploy resources (rules, collections, providers). Requires TIC access.
+│   └── deploy-config.sh                  Deploy resources (rules, collections, providers). Requires TIC access.
 │    
 ├── config                                Resources to be deployed by deploy_config.sh 
 │   ├── collections
