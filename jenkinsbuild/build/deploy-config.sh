@@ -81,7 +81,7 @@ for TYPE in providers rules collections; do
             TH2='--header "Content-Type: application/json"'
             # echo curl -s --request POST $TH $TH2 $URL -d @${T_PATH}$OBJECT
             NEWOBJECT=$(eval $( echo curl -s --request POST $TH $TH2 $URL -d @${T_PATH}$OBJECT ) )
-            if [[ $NEWOBJECGT =~ .*createdAt.* ]]; then
+            if [[ $NEWOBJECT =~ .*createdAt.* ]]; then
                 echo ">>> $ID Successfully Created: $NEWOBJECT"
             else
                 echo ">>> Failed to create $TYPE $ID: $NEWOBJECT"
