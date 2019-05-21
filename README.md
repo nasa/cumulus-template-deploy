@@ -2,6 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/nasa/cumulus-template-deploy.svg?style=svg)](https://circleci.com/gh/nasa/cumulus-template-deploy)
 
+## How To Deploy
+
 Documentation for how to use the Cumulus template project can be read online:
 
 [https://nasa.github.io/cumulus/docs/deployment/deployment-readme#prepare-daac-deployment-repository](https://nasa.github.io/cumulus/docs/deployment/deployment-readme#prepare-daac-deployment-repository)
