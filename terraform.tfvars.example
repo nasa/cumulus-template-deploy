@@ -1,0 +1,3 @@
+key_name   = "my_key_name"
+subnet_ids = ["subnet-1234567890"]
+vpc_id     = "vpc-1234567890"
