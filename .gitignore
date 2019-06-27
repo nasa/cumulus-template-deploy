@@ -8,3 +8,5 @@ app/dist
 node_modules
 .env
 /deployer/cloudformation.yml
+/terraform.tf
+*.tfvars
