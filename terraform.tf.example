@@ -1,7 +1,0 @@
-terraform {
-  backend "s3" {
-    bucket         = "my-tf-state-bucket"
-    key            = "my-project/DEV/terraform.tfstate"
-    dynamodb_table = "my-tf-locks-table"
-  }
-}
