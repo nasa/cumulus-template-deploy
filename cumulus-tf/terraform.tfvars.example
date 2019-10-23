@@ -2,6 +2,8 @@ region = "us-east-1"
 
 cumulus_message_adapter_lambda_layer_arn = "arn:aws:lambda:us-east-1:12345:layer:Cumulus_Message_Adapter:4"
 
+archive_api_users = [ 'some_user' ]
+
 permissions_boundary_arn = "arn:aws:iam::12345:policy/NGAPShNonProdRoleBoundary"
 prefix                   = "PREFIX"
 buckets = {
