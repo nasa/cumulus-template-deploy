@@ -1,7 +1,11 @@
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/{changeme}/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/jkovarik/cumulus/releases/download/v1.27.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_arn = var.cumulus_message_adapter_lambda_layer_arn
+
+  archive_api_port            = var.archive_api_port
+  private_archive_api_gateway = var.private_archive_api_gateway
+  api_gateway_stage = var.api_gateway_stage
 
   prefix = var.prefix
   region = var.region
@@ -44,7 +48,6 @@ module "cumulus" {
   distribution_url = var.distribution_url
 
   sts_credentials_lambda_function_arn = data.aws_lambda_function.sts_credentials.arn
-
   archive_api_port = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
 }
