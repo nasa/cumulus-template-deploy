@@ -3,10 +3,6 @@ module "cumulus" {
 
   cumulus_message_adapter_lambda_layer_arn = var.cumulus_message_adapter_lambda_layer_arn
 
-  archive_api_port            = var.archive_api_port
-  private_archive_api_gateway = var.private_archive_api_gateway
-  api_gateway_stage = var.api_gateway_stage
-
   prefix = var.prefix
   region = var.region
 
@@ -23,11 +19,35 @@ module "cumulus" {
   urs_client_id       = var.urs_client_id
   urs_client_password = var.urs_client_password
 
+  ems_host              = var.ems_host
+  ems_port              = var.ems_port
+  ems_path              = var.ems_path
+  ems_datasource        = var.ems_datasource
+  ems_private_key       = var.ems_private_key
+  ems_provider          = var.ems_provider
+  ems_retention_in_days = var.ems_retention_in_days
+  ems_submit_report     = var.ems_submit_report
+  ems_username          = var.ems_username
+
   cmr_client_id   = var.cmr_client_id
   cmr_environment = "UAT"
   cmr_username    = var.cmr_username
   cmr_password    = var.cmr_password
   cmr_provider    = var.cmr_provider
+
+  cmr_oauth_provider = var.cmr_oauth_provider
+
+  launchpad_api         = var.launchpad_api
+  launchpad_certificate = var.launchpad_certificate
+  launchpad_passphrase  = var.launchpad_passphrase
+
+  oauth_provider   = var.oauth_provider
+  oauth_user_group = var.oauth_user_group
+
+  saml_entity_id                  = var.saml_entity_id
+  saml_assertion_consumer_service = var.saml_assertion_consumer_service
+  saml_idp_login                  = var.saml_idp_login
+  saml_launchpad_metadata_path    = var.saml_launchpad_metadata_path
 
   permissions_boundary_arn = var.permissions_boundary_arn
 
@@ -48,13 +68,24 @@ module "cumulus" {
   distribution_url = var.distribution_url
 
   sts_credentials_lambda_function_arn = data.aws_lambda_function.sts_credentials.arn
-  archive_api_port = var.archive_api_port
+
+  archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
+  api_gateway_stage = var.api_gateway_stage
+  log_api_gateway_to_cloudwatch = var.log_api_gateway_to_cloudwatch
+  log_destination_arn = var.log_destination_arn
 }
 
 locals {
   default_tags = {
     Deployment = var.prefix
+  }
+}
+
+terraform {
+  required_providers {
+    aws  = ">= 2.31.0"
+    null = "~> 2.1"
   }
 }
 
