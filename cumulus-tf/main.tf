@@ -1,5 +1,5 @@
 module "cumulus" {
-  source = "https://github.com/jkovarik/cumulus/releases/download/v1.27.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.16.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_arn = var.cumulus_message_adapter_lambda_layer_arn
 
