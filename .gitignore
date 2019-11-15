@@ -10,4 +10,4 @@ node_modules
 /deployer/cloudformation.yml
 terraform.tf
 terraform.tfvars
-.terraform
+.terraform*
