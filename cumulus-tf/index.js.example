@@ -1,0 +1,17 @@
+'use strict';
+
+/**
+ * Handler function for the sample ByeWorld 
+ * function defined in `additions.tf.example`.
+ * Rename this file to `index.js` to use it
+ * with that deployment.
+ * 
+ * @returns {String} "Bye World!"
+ */
+function handler() {
+  return "Bye World!";
+}
+
+module.exports = {
+  handler
+}
