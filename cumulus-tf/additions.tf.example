@@ -1,0 +1,171 @@
+# This file shows a sample deployment of a workflow
+# with a new workflow task and associated resources.
+# These will be deployed in addition to the resources
+# deployed by the Cumulus module and represent a starting
+# point/reference for integrators to start defining their
+# own resources. 
+# Included comments attempt to explain the resources and
+# point out different ways of referencing things in Terraform.
+# Rename this file by removing the `.example` extension to
+# deploy the resources specified in this file.
+
+locals {
+  tags = {
+    Deployment = var.prefix
+  }
+}
+
+data "archive_file" "sample_code" {
+  # arguments of the archive file
+  # rename index.js.example to use this deployment
+  source_file = "${path.module}/index.js"
+  output_path = "${path.module}/build/sample_code.zip"
+  type        = "zip"
+}
+
+resource "aws_lambda_function" "bye_world" {
+  # tfvar interpolation
+  function_name = "${var.prefix}-ByeWorld"
+  # referencing an argument (i.e. input) of the data source
+  filename      = data.archive_file.sample_code.output_path
+  # referencing the IAM Role's `arn` attribute
+  role          = aws_iam_role.sample_role.arn
+  # static configuration
+  handler       = "index.handler"
+  runtime       = "nodejs10.x"
+  timeout       = 300
+
+  # referencing an attribute (i.e. output) of the data source
+  source_code_hash = "${data.archive_file.sample_code.output_base64sha256}"
+
+  vpc_config {
+    # subnet_ids references the tfvars
+    subnet_ids         = var.subnet_ids
+    # referencing an attribute of the SG resource defined in this config
+    security_group_ids = [aws_security_group.sample_egress_only.id]
+  }
+  # tags reference the local value.
+  tags = local.tags
+}
+
+resource "aws_security_group" "sample_egress_only" {
+  # tfvar interpolation
+  name   = "${var.prefix}-sample-egress-only"
+  # vpc_id references the tfvars
+  vpc_id = var.vpc_id
+  # static configuration
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  # tags reference the local value.
+  tags = local.tags
+}
+
+# Policy to allow lambda to assume the role
+data "aws_iam_policy_document" "lambda_assume_role_policy" {
+  statement {
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+# Example IAM policy document
+data "aws_iam_policy_document" "sample_document" {
+  # Statement with all needed permissions to deploy any lambda in a VPC
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface"
+    ]
+    resources = ["*"]
+  }
+}
+
+# Example IAM policy
+resource "aws_iam_role_policy" "sample_policy" {
+  role   = aws_iam_role.sample_role.id
+  policy = data.aws_iam_policy_document.sample_document.json
+}
+
+# Example IAM role
+resource "aws_iam_role" "sample_role" {
+  name                 = "${var.prefix}-sample-role"
+  assume_role_policy   = data.aws_iam_policy_document.lambda_assume_role_policy.json
+  permissions_boundary = var.permissions_boundary_arn
+}
+
+module "hello_and_bye_world_workflow" {
+  source = "https://github.com/nasa/cumulus/releases/download/v1.16.0/terraform-aws-cumulus-workflow.zip"
+
+  prefix                                = var.prefix
+  name                                  = "HelloAndByeWorldWorkflow"
+  # Fetching an output of the cumulus module.
+  # Modules have inputs and outputs but arguments/attributes of resources
+  # that are internal to the module cannot be referenced from outside of it. 
+  workflow_config                       = module.cumulus.workflow_config
+  system_bucket                         = var.system_bucket
+  tags                                  = local.tags
+
+  # JSON State Machine definition
+  # Example includes fetching the task_arn output from the Cumulus module
+  # and referencing the lambda ARN of the locally defined resource.
+  state_machine_definition = <<JSON
+{
+  "Comment": "Returns Hello World",
+  "StartAt": "HelloWorld",
+  "States": {
+    "HelloWorld": {
+      "Parameters": {
+        "cma": {
+          "event.$": "$",
+          "task_config": {
+            "buckets": "{$.meta.buckets}",
+            "provider": "{$.meta.provider}",
+            "collection": "{$.meta.collection}"
+          }
+        }
+      },
+      "Type": "Task",
+      "Resource": "${module.cumulus.hello_world_task.task_arn}",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "ByeWorld"
+    },
+    "ByeWorld": {
+      "Type": "Task",
+      "Resource": "${aws_lambda_function.bye_world.arn}",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "End": true
+    }
+  }
+}
+JSON
+}
