@@ -120,6 +120,12 @@ variable "api_gateway_stage" {
   description = "The archive API Gateway stage to create"
 }
 
+variable "archive_api_users" {
+  description = "Earthdata (URS) usernames that should be allowed to access the archive API"
+  type    = list(string)
+  default = []
+}
+
 variable "buckets" {
   type    = map(object({ name = string, type = string }))
   default = {}
@@ -246,4 +252,10 @@ variable "metrics_es_username" {
 variable "api_users" {
   type = list(string)
   default = []
+}
+
+variable "urs_url" {
+  description = "The URL of the Earthdata login (URS) site"
+  type        = string
+  default     = "https://uat.urs.earthdata.nasa.gov/"
 }
