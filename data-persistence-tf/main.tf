@@ -3,7 +3,6 @@ module "data_persistence" {
 
   prefix                     = var.prefix
   subnet_ids                 = var.subnet_ids
-  create_service_linked_role = var.create_service_linked_role
   include_elasticsearch      = var.include_elasticsearch
 }
 
@@ -18,11 +17,6 @@ variable "subnet_ids" {
 variable "aws_region" {
   type    = string
   default = "us-east-1"
-}
-
-variable "create_service_linked_role" {
-  type    = bool
-  default = false
 }
 
 variable "include_elasticsearch" {
