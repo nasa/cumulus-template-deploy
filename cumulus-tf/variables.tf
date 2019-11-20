@@ -120,12 +120,6 @@ variable "api_gateway_stage" {
   description = "The archive API Gateway stage to create"
 }
 
-variable "archive_api_users" {
-  description = "Earthdata (URS) usernames that should be allowed to access the archive API"
-  type    = list(string)
-  default = []
-}
-
 variable "buckets" {
   type    = map(object({ name = string, type = string }))
   default = {}
