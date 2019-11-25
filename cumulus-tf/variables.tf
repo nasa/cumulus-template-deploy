@@ -247,3 +247,9 @@ variable "api_users" {
   type = list(string)
   default = []
 }
+
+variable "urs_url" {
+  description = "The URL of the Earthdata login (URS) site"
+  type        = string
+  default     = "https://uat.urs.earthdata.nasa.gov/"
+}
