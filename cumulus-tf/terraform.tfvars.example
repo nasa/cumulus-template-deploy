@@ -47,7 +47,7 @@ token_secret = "asdf"
 data_persistence_remote_state_config = {
   bucket = "PREFIX-tf-state"
   key    = "PREFIX/data-persistence/terraform.tfstate"
-  region = "us-east-1"ar
+  region = "us-east-1"
 }
 
 cmr_oauth_provider = "earthdata"
