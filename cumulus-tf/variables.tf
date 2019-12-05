@@ -253,3 +253,9 @@ variable "urs_url" {
   type        = string
   default     = "https://uat.urs.earthdata.nasa.gov/"
 }
+
+variable "deploy_distribution_s3_credentials_endpoint" {
+  description = "Whether or not to include the S3 credentials endpoint in the Thin Egress App"
+  type        = bool
+  default     = true
+}
