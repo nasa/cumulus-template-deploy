@@ -79,6 +79,8 @@ module "cumulus" {
   api_gateway_stage = var.api_gateway_stage
   log_api_gateway_to_cloudwatch = var.log_api_gateway_to_cloudwatch
   log_destination_arn = var.log_destination_arn
+
+  deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
 }
 
 locals {
