@@ -3,7 +3,7 @@
 # These will be deployed in addition to the resources
 # deployed by the Cumulus module and represent a starting
 # point/reference for integrators to start defining their
-# own resources. 
+# own resources.
 # Included comments attempt to explain the resources and
 # point out different ways of referencing things in Terraform.
 # Rename this file by removing the `.example` extension to
@@ -102,13 +102,13 @@ resource "aws_iam_role" "sample_role" {
 }
 
 module "hello_and_bye_world_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v1.16.0/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.16.1/terraform-aws-cumulus-workflow.zip"
 
   prefix                                = var.prefix
   name                                  = "HelloAndByeWorldWorkflow"
   # Fetching an output of the cumulus module.
   # Modules have inputs and outputs but arguments/attributes of resources
-  # that are internal to the module cannot be referenced from outside of it. 
+  # that are internal to the module cannot be referenced from outside of it.
   workflow_config                       = module.cumulus.workflow_config
   system_bucket                         = var.system_bucket
   tags                                  = local.tags
