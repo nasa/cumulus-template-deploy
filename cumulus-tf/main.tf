@@ -69,6 +69,7 @@ module "cumulus" {
 
   archive_api_users = var.api_users
 
+  deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
   distribution_url = var.distribution_url
 
   archive_api_port            = var.archive_api_port
