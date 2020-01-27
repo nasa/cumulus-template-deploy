@@ -1,10 +1,9 @@
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v1.16.1/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.17.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_arn = var.cumulus_message_adapter_lambda_layer_arn
 
   prefix = var.prefix
-  region = var.region
 
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.subnet_ids
@@ -70,9 +69,8 @@ module "cumulus" {
 
   archive_api_users = var.api_users
 
+  deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
   distribution_url = var.distribution_url
-
-  sts_credentials_lambda_function_arn = data.aws_lambda_function.sts_credentials.arn
 
   archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
@@ -108,11 +106,6 @@ data "terraform_remote_state" "data_persistence" {
   backend = "s3"
   config  = var.data_persistence_remote_state_config
 }
-
-data "aws_lambda_function" "sts_credentials" {
-  function_name = "gsfc-ngap-sh-s3-sts-get-keys"
-}
-
 
 resource "aws_security_group" "no_ingress_all_egress" {
   name   = "${var.prefix}-cumulus-tf-no-ingress-all-egress"
