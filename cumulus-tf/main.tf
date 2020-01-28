@@ -8,6 +8,7 @@ module "cumulus" {
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.subnet_ids
 
+  ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
   ecs_cluster_instance_subnet_ids = var.subnet_ids
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
