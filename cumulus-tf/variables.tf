@@ -25,22 +25,22 @@ variable "cumulus_message_adapter_lambda_layer_arn" {
 }
 
 variable "cmr_oauth_provider" {
-  type = string
+  type    = string
   default = "earthdata"
 }
 
 variable "launchpad_api" {
-  type = string
+  type    = string
   default = "launchpadApi"
 }
 
 variable "launchpad_certificate" {
-  type = string
+  type    = string
   default = "launchpad.pfx"
 }
 
 variable "launchpad_passphrase" {
-  type = string
+  type    = string
   default = ""
 }
 
@@ -88,9 +88,7 @@ variable "saml_launchpad_metadata_path" {
   default = "N/A"
 }
 
-variable "subnet_ids" {
-  type = list(string)
-}
+
 
 variable "system_bucket" {
   type = string
@@ -108,9 +106,6 @@ variable "urs_client_password" {
   type = string
 }
 
-variable "vpc_id" {
-  type = string
-}
 
 # Optional
 
@@ -127,8 +122,8 @@ variable "buckets" {
 
 variable "deploy_distribution_s3_credentials_endpoint" {
   description = "Whether or not to include the S3 credentials endpoint in the Thin Egress App"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "distribution_url" {
@@ -174,7 +169,7 @@ variable "ems_private_key" {
 variable "ems_provider" {
   type        = string
   description = "the provider used for sending reports to EMS"
-  default = null
+  default     = null
 }
 
 variable "ems_retention_in_days" {
@@ -192,7 +187,7 @@ variable "ems_submit_report" {
 variable "ems_username" {
   type        = string
   description = "the username used for sending reports to EMS"
-  default = null
+  default     = null
 
 }
 
@@ -234,27 +229,27 @@ variable "archive_api_port" {
 }
 
 variable "private_archive_api_gateway" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "metrics_es_host" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "metrics_es_password" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "metrics_es_username" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "api_users" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 

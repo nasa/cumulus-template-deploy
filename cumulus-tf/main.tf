@@ -1,3 +1,8 @@
+module "ngap" {
+  source = "../aws-data-sources-tf"
+}
+
+
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v1.17.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
@@ -5,11 +10,11 @@ module "cumulus" {
 
   prefix = var.prefix
 
-  vpc_id            = var.vpc_id
-  lambda_subnet_ids = var.subnet_ids
+  vpc_id            = module.ngap.application_vpc.id
+  lambda_subnet_ids = list(module.ngap.subnets_ids[0])
 
   ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
-  ecs_cluster_instance_subnet_ids = var.subnet_ids
+  ecs_cluster_instance_subnet_ids = list(module.ngap.subnets_ids[0])
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
   ecs_cluster_max_size            = 2
@@ -30,7 +35,7 @@ module "cumulus" {
   ems_username          = var.ems_username
 
 
-  metrics_es_host = var.metrics_es_host
+  metrics_es_host     = var.metrics_es_host
   metrics_es_password = var.metrics_es_password
   metrics_es_username = var.metrics_es_username
 
@@ -70,13 +75,14 @@ module "cumulus" {
 
   archive_api_users = var.api_users
 
-  distribution_url = var.distribution_url
+  distribution_url                    = var.distribution_url
+  sts_credentials_lambda_function_arn = module.ngap.lambda_sts_credentials.arn
 
-  archive_api_port            = var.archive_api_port
-  private_archive_api_gateway = var.private_archive_api_gateway
-  api_gateway_stage = var.api_gateway_stage
+  archive_api_port              = var.archive_api_port
+  private_archive_api_gateway   = var.private_archive_api_gateway
+  api_gateway_stage             = var.api_gateway_stage
   log_api_gateway_to_cloudwatch = var.log_api_gateway_to_cloudwatch
-  log_destination_arn = var.log_destination_arn
+  log_destination_arn           = var.log_destination_arn
 
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
 }
@@ -109,7 +115,7 @@ data "terraform_remote_state" "data_persistence" {
 
 resource "aws_security_group" "no_ingress_all_egress" {
   name   = "${var.prefix}-cumulus-tf-no-ingress-all-egress"
-  vpc_id = var.vpc_id
+  vpc_id = module.ngap.application_vpc.id
 
   egress {
     from_port   = 0
