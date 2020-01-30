@@ -1,4 +1,4 @@
-module "ngap" {
+module "aws-data-source" {
   source = "../aws-data-sources-tf"
 }
 
@@ -10,11 +10,11 @@ module "cumulus" {
 
   prefix = var.prefix
 
-  vpc_id            = module.ngap.application_vpc.id
-  lambda_subnet_ids = list(module.ngap.subnets_ids[0])
+  vpc_id            = module.aws-data-source.application_vpc.id
+  lambda_subnet_ids = list(module.aws-data-source.subnets_ids[0])
 
   ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
-  ecs_cluster_instance_subnet_ids = list(module.ngap.subnets_ids[0])
+  ecs_cluster_instance_subnet_ids = list(module.aws-data-source.subnets_ids[0])
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
   ecs_cluster_max_size            = 2
@@ -77,7 +77,7 @@ module "cumulus" {
 
 
   distribution_url                    = var.distribution_url
-  sts_credentials_lambda_function_arn = module.ngap.lambda_sts_credentials.arn
+  sts_credentials_lambda_function_arn = module.aws-data-source.lambda_sts_credentials.arn
 
 
   archive_api_port              = var.archive_api_port
@@ -117,7 +117,7 @@ data "terraform_remote_state" "data_persistence" {
 
 resource "aws_security_group" "no_ingress_all_egress" {
   name   = "${var.prefix}-cumulus-tf-no-ingress-all-egress"
-  vpc_id = module.ngap.application_vpc.id
+  vpc_id = module.aws-data-source.application_vpc.id
 
   egress {
     from_port   = 0
