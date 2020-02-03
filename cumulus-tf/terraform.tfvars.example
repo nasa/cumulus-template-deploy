@@ -98,3 +98,10 @@ oauth_provider = "earthdata"
 
 ## Optional
 deploy_distribution_s3_credentials_endpoint = false
+
+## Optional. Required to send logs to Metrics' ELK stack
+# log_api_gateway_to_cloudwatch = true
+# log_destination_arn = "arn:aws:logs:us-east-1:123456789012:destination:MyDestination"
+# additional_log_groups_to_elk = {
+# "MyLogs" = "/aws/lambda/my-logs"
+# }
