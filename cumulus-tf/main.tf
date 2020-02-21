@@ -1,3 +1,43 @@
+locals {
+  tags = {
+    Deployment = var.prefix
+  }
+}
+
+terraform {
+  required_providers {
+    aws  = ">= 2.31.0"
+    null = "~> 2.1"
+  }
+}
+
+provider "aws" {
+  region  = var.region
+  profile = var.aws_profile
+}
+
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
+data "terraform_remote_state" "data_persistence" {
+  backend = "s3"
+  config  = var.data_persistence_remote_state_config
+}
+
+resource "aws_security_group" "no_ingress_all_egress" {
+  name   = "${var.prefix}-cumulus-tf-no-ingress-all-egress"
+  vpc_id = var.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = local.tags
+}
+
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v1.17.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
@@ -79,44 +119,6 @@ module "cumulus" {
   log_destination_arn = var.log_destination_arn
 
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
-}
 
-locals {
-  default_tags = {
-    Deployment = var.prefix
-  }
-}
-
-terraform {
-  required_providers {
-    aws  = ">= 2.31.0"
-    null = "~> 2.1"
-  }
-}
-
-provider "aws" {
-  region  = var.region
-  profile = var.aws_profile
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
-data "terraform_remote_state" "data_persistence" {
-  backend = "s3"
-  config  = var.data_persistence_remote_state_config
-}
-
-resource "aws_security_group" "no_ingress_all_egress" {
-  name   = "${var.prefix}-cumulus-tf-no-ingress-all-egress"
-  vpc_id = var.vpc_id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = local.default_tags
+  tags = local.tags
 }
