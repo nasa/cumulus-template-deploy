@@ -46,6 +46,9 @@ api_users = [
 
 token_secret = "asdf"
 
+# Name of secret in AWS secrets manager containing SSH keys for signing JWTs
+thin_egress_jwt_secret_name = "secret_name"
+
 data_persistence_remote_state_config = {
   bucket = "PREFIX-tf-state"
   key    = "PREFIX/data-persistence/terraform.tfstate"
