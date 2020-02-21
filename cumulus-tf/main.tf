@@ -71,6 +71,7 @@ module "cumulus" {
   archive_api_users = var.api_users
 
   distribution_url = var.distribution_url
+  thin_egress_jwt_secret_name = var.thin_egress_jwt_secret_name
 
   archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
