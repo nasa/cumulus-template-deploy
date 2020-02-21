@@ -4,6 +4,10 @@ module "data_persistence" {
   prefix                     = var.prefix
   subnet_ids                 = var.subnet_ids
   include_elasticsearch      = var.include_elasticsearch
+
+  tags = {
+    Deployment = var.prefix
+  }
 }
 
 variable "prefix" {
@@ -47,4 +51,3 @@ output "elasticsearch_security_group_id" {
 output "elasticsearch_alarms" {
   value = module.data_persistence.elasticsearch_alarms
 }
-

@@ -79,10 +79,12 @@ module "cumulus" {
   log_destination_arn = var.log_destination_arn
 
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
+
+  tags = local.tags
 }
 
 locals {
-  default_tags = {
+  tags = {
     Deployment = var.prefix
   }
 }
@@ -118,5 +120,5 @@ resource "aws_security_group" "no_ingress_all_egress" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = local.default_tags
+  tags = local.tags
 }
