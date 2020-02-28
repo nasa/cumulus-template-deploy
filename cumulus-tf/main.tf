@@ -109,7 +109,7 @@ data "terraform_remote_state" "data_persistence" {
 
 resource "aws_security_group" "no_ingress_all_egress" {
   name   = "${var.prefix}-cumulus-tf-no-ingress-all-egress"
-  vpc_id = var.vpc_id
+  vpc_id = module.aws-data-source.application_vpc.id
 
   egress {
     from_port   = 0
