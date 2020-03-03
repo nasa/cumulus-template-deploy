@@ -1,5 +1,5 @@
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v1.17.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.19.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_arn = var.cumulus_message_adapter_lambda_layer_arn
 
@@ -71,6 +71,7 @@ module "cumulus" {
   archive_api_users = var.api_users
 
   distribution_url = var.distribution_url
+  thin_egress_jwt_secret_name = var.thin_egress_jwt_secret_name
 
   archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
@@ -79,10 +80,12 @@ module "cumulus" {
   log_destination_arn = var.log_destination_arn
 
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
+
+  tags = local.tags
 }
 
 locals {
-  default_tags = {
+  tags = {
     Deployment = var.prefix
   }
 }
@@ -118,5 +121,5 @@ resource "aws_security_group" "no_ingress_all_egress" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = local.default_tags
+  tags = local.tags
 }

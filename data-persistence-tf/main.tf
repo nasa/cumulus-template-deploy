@@ -1,9 +1,13 @@
 module "data_persistence" {
-  source = "https://github.com/nasa/cumulus/releases/download/v1.17.0/terraform-aws-cumulus.zip//tf-modules/data-persistence"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.19.0/terraform-aws-cumulus.zip//tf-modules/data-persistence"
 
   prefix                     = var.prefix
   subnet_ids                 = var.subnet_ids
   include_elasticsearch      = var.include_elasticsearch
+
+  tags = {
+    Deployment = var.prefix
+  }
 }
 
 variable "prefix" {
@@ -47,4 +51,3 @@ output "elasticsearch_security_group_id" {
 output "elasticsearch_alarms" {
   value = module.data_persistence.elasticsearch_alarms
 }
-

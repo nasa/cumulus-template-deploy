@@ -1,11 +1,11 @@
 module "hello_world_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v1.17.0/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v1.19.0/terraform-aws-cumulus-workflow.zip"
 
   prefix                                = var.prefix
   name                                  = "HelloWorldWorkflow"
   workflow_config                       = module.cumulus.workflow_config
   system_bucket                         = var.system_bucket
-  tags                                  = local.default_tags
+  tags                                  = local.tags
 
   state_machine_definition = <<JSON
 {
