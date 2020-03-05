@@ -208,7 +208,7 @@ variable "key_name" {
 
 variable "region" {
   type    = string
-  default = "us-east-1"
+  default = "us-west-2"
 }
 
 variable "permissions_boundary_arn" {
