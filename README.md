@@ -11,3 +11,5 @@ Documentation for how to use the Cumulus template project can be read online:
 * for sandbox, the JWT secrets are named `nsidc-sb_jwt_secret_for_tea`; see the
   [AWS Secrets
   page](https://us-west-2.console.aws.amazon.com/secretsmanager/home?region=us-west-2#/listSecrets)
+* Several `.example` files use a prefix of `nsidc-sb`; update that to a prefix
+  appropriate for your deployment environment (e.g., `nsidc-sit`)
