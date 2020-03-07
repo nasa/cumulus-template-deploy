@@ -1,3 +1,13 @@
+locals {
+  tags = {
+    Deployment = var.prefix
+  }
+  elasticsearch_alarms            = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_alarms", [])
+  elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
+  elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
+  elasticsearch_security_group_id = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_security_group_id", "")
+}
+
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v1.19.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
@@ -59,10 +69,10 @@ module "cumulus" {
   system_bucket = var.system_bucket
   buckets       = var.buckets
 
-  elasticsearch_alarms            = data.terraform_remote_state.data_persistence.outputs.elasticsearch_alarms
-  elasticsearch_domain_arn        = data.terraform_remote_state.data_persistence.outputs.elasticsearch_domain_arn
-  elasticsearch_hostname          = data.terraform_remote_state.data_persistence.outputs.elasticsearch_hostname
-  elasticsearch_security_group_id = data.terraform_remote_state.data_persistence.outputs.elasticsearch_security_group_id
+  elasticsearch_alarms            = local.elasticsearch_alarms
+  elasticsearch_domain_arn        = local.elasticsearch_domain_arn
+  elasticsearch_hostname          = local.elasticsearch_hostname
+  elasticsearch_security_group_id = local.elasticsearch_security_group_id
 
   dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
 
@@ -82,12 +92,6 @@ module "cumulus" {
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
 
   tags = local.tags
-}
-
-locals {
-  tags = {
-    Deployment = var.prefix
-  }
 }
 
 terraform {
