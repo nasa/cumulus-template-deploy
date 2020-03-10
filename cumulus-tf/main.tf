@@ -15,6 +15,9 @@ module "cumulus" {
 
   prefix = var.prefix
 
+  # DO NOT CHANGE THIS VARIABLE UNLESS DEPLOYING OUTSIDE NGAP
+  deploy_to_ngap = true
+
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.subnet_ids
 
