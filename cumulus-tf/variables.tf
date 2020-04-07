@@ -30,7 +30,8 @@ variable "cmr_oauth_provider" {
 }
 
 variable "ecs_cluster_instance_subnet_ids" {
-  type = list(string)
+  type    = list(string)
+  default = null
 }
 
 variable "lambda_subnet_ids" {
