@@ -83,7 +83,7 @@ variable "saml_idp_login" {
   default = "N/A"
 }
 
-variable "saml_launchpad_metadata_path" {
+variable "saml_launchpad_metadata_url" {
   type    = string
   default = "N/A"
 }
@@ -208,7 +208,7 @@ variable "key_name" {
 
 variable "region" {
   type    = string
-  default = "us-east-1"
+  default = "us-west-2"
 }
 
 variable "permissions_boundary_arn" {
@@ -266,5 +266,5 @@ variable "api_users" {
 variable "urs_url" {
   description = "The URL of the Earthdata login (URS) site"
   type        = string
-  default     = "https://uat.urs.earthdata.nasa.gov/"
+  default     = "https://uat.urs.earthdata.nasa.gov"
 }

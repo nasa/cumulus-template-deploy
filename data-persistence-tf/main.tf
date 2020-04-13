@@ -20,7 +20,7 @@ variable "subnet_ids" {
 
 variable "aws_region" {
   type    = string
-  default = "us-east-1"
+  default = "us-west-2"
 }
 
 variable "include_elasticsearch" {
