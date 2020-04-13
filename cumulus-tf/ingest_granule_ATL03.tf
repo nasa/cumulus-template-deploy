@@ -1,15 +1,32 @@
-module "discover_granules_browse_example_workflow" {
-  source = "../../tf-modules/workflow"
+resource "aws_lambda_function" "atl03_extract_browse" {
+  function_name    = "${var.prefix}-browse-imagery-atl03"
+  filename         = "${path.module}/../lambdas/lambda-browse-imagery-from-hdf5/lambda.zip"
+  source_code_hash = filebase64sha256("${path.module}/../lambdas/lambda-browse-imagery-from-hdf5/lambda.zip")
+  handler          = "ingest_granule_ATL03.lambda_handler"
+  role             = module.cumulus.lambda_processing_role_arn
+  runtime          = "python3.6"
+  timeout          = 60
+
+  layers = [var.cumulus_message_adapter_lambda_layer_arn]
+
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [aws_security_group.no_ingress_all_egress.id]
+  }
+}
+
+module "discover_granules_workflow" {
+  source = "https://github.com/nasa/cumulus/releases/download/v1.19.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = var.prefix
-  name            = "DiscoverGranulesBrowseExample"
+  name            = "DiscoverGranules"
   workflow_config = module.cumulus.workflow_config
   system_bucket   = var.system_bucket
   tags            = local.tags
 
   state_machine_definition = <<JSON
 {
-  "Comment": "Example for Browse Generation Data Cookbook",
+  "Comment": "Taken from for Browse Generation Data Cookbook",
   "StartAt": "DiscoverGranules",
   "TimeoutSeconds": 18000,
   "States": {
@@ -58,8 +75,7 @@ module "discover_granules_browse_example_workflow" {
             "provider": "{$.meta.provider}",
             "internalBucket": "{$.meta.buckets.internal.name}",
             "stackName": "{$.meta.stack}",
-            "granuleIngestMessageTemplateUri": "{$.meta.template}",
-            "granuleIngestWorkflow": "CookbookBrowseExample",
+            "granuleIngestWorkflow": "IngestATL03GranuleWithBrowse",
             "queueUrl": "{$.meta.queues.startSF}"
           }
         }
@@ -98,11 +114,11 @@ module "discover_granules_browse_example_workflow" {
 JSON
 }
 
-module "cookbook_browse_example_workflow" {
-  source = "../../tf-modules/workflow"
+module "ingest_atl03_granule_with_browse_workflow" {
+  source = "https://github.com/nasa/cumulus/releases/download/v1.19.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = var.prefix
-  name            = "CookbookBrowseExample"
+  name            = "IngestATL03GranuleWithBrowse"
   workflow_config = module.cumulus.workflow_config
   system_bucket   = var.system_bucket
   tags            = local.tags
@@ -175,6 +191,7 @@ module "cookbook_browse_example_workflow" {
             "cmrMetadataFormat": "{$.meta.cmrMetadataFormat}",
             "additionalUrls": "{$.meta.additionalUrls}",
             "generateFakeBrowse": true,
+            "provider": "{$.meta.provider}",
             "cumulus_message": {
               "outputs": [
                 {
@@ -191,7 +208,7 @@ module "cookbook_browse_example_workflow" {
         }
       },
       "Type": "Task",
-      "Resource": "${module.cumulus.fake_processing_task.task_arn}",
+      "Resource": "${aws_lambda_function.atl03_extract_browse.arn}",
       "Catch": [
         {
           "ErrorEquals": [
@@ -207,7 +224,7 @@ module "cookbook_browse_example_workflow" {
             "States.ALL"
           ],
           "IntervalSeconds": 2,
-          "MaxAttempts": 3
+          "MaxAttempts": 1
         }
       ],
       "Next": "FilesToGranulesStep"
@@ -262,45 +279,6 @@ module "cookbook_browse_example_workflow" {
       },
       "Type": "Task",
       "Resource": "${module.cumulus.move_granules_task.task_arn}",
-      "Retry": [
-        {
-          "ErrorEquals": [
-            "Lambda.ServiceException",
-            "Lambda.AWSLambdaException",
-            "Lambda.SdkClientException"
-          ],
-          "IntervalSeconds": 2,
-          "MaxAttempts": 6,
-          "BackoffRate": 2
-        }
-      ],
-      "Catch": [
-        {
-          "ErrorEquals": [
-            "States.ALL"
-          ],
-          "ResultPath": "$.exception",
-          "Next": "WorkflowFailed"
-        }
-      ],
-      "Next": "CmrStep"
-    },
-    "CmrStep": {
-      "Parameters": {
-        "cma": {
-          "event.$": "$",
-          "task_config": {
-            "bucket": "{$.meta.buckets.internal.name}",
-            "stack": "{$.meta.stack}",
-            "cmr": "{$.meta.cmr}",
-            "launchpad": "{$.meta.launchpad}",
-            "input_granules": "{$.meta.input_granules}",
-            "granuleIdExtraction": "{$.meta.collection.granuleIdExtraction}"
-          }
-        }
-      },
-      "Type": "Task",
-      "Resource": "${module.cumulus.post_to_cmr_task.task_arn}",
       "Retry": [
         {
           "ErrorEquals": [

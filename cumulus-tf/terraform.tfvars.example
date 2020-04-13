@@ -29,6 +29,7 @@ subnet_ids    = ["subnet-12345"]
 system_bucket = "nsidc-sb-internal"
 vpc_id        = "vpc-12345"
 
+# get this from https://vault.apps.int.nsidc.org:8200/ui/vault/secrets/nsidc/show/devops/cumulus_metadata_export_uat_user
 cmr_client_id   = "CHANGEME"
 cmr_environment = "UAT"
 cmr_password    = "password"

@@ -13,3 +13,10 @@ Documentation for how to use the Cumulus template project can be read online:
   page](https://us-west-2.console.aws.amazon.com/secretsmanager/home?region=us-west-2#/listSecrets)
 * Several `.example` files use a prefix of `nsidc-sb`; update that to a prefix
   appropriate for your deployment environment (e.g., `nsidc-sit`)
+
+To create the zipped code for the browse imagery lambda:
+
+```
+cd lambdas/lambda-browse-imagery-from-hdf5
+./bin/zip.sh
+```
