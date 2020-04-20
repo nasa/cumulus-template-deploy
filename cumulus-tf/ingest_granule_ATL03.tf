@@ -179,7 +179,7 @@ module "ingest_atl03_granule_with_browse_workflow" {
           "Next": "WorkflowFailed"
         }
       ],
-      "Next": "ProcessingStep"
+      "Next": "FilesToGranulesStep"
     },
     "ProcessingStep": {
       "Parameters": {
