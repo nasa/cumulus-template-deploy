@@ -116,56 +116,15 @@ module "hello_and_bye_world_workflow" {
   # JSON State Machine definition
   # Example includes fetching the task_arn output from the Cumulus module
   # and referencing the lambda ARN of the locally defined resource.
-  state_machine_definition = <<JSON
-{
-  "Comment": "Returns Hello World",
-  "StartAt": "HelloWorld",
-  "States": {
-    "HelloWorld": {
-      "Parameters": {
-        "cma": {
-          "event.$": "$",
-          "task_config": {
-            "buckets": "{$.meta.buckets}",
-            "provider": "{$.meta.provider}",
-            "collection": "{$.meta.collection}"
-          }
-        }
-      },
-      "Type": "Task",
-      "Resource": "${module.cumulus.hello_world_task.task_arn}",
-      "Retry": [
-        {
-          "ErrorEquals": [
-            "Lambda.ServiceException",
-            "Lambda.AWSLambdaException",
-            "Lambda.SdkClientException"
-          ],
-          "IntervalSeconds": 2,
-          "MaxAttempts": 6,
-          "BackoffRate": 2
-        }
-      ],
-      "Next": "ByeWorld"
-    },
-    "ByeWorld": {
-      "Type": "Task",
-      "Resource": "${aws_lambda_function.bye_world.arn}",
-      "Retry": [
-        {
-          "ErrorEquals": [
-            "Lambda.ServiceException",
-            "Lambda.AWSLambdaException",
-            "Lambda.SdkClientException"
-          ],
-          "IntervalSeconds": 2,
-          "MaxAttempts": 6,
-          "BackoffRate": 2
-        }
-      ],
-      "End": true
+  # Example also shows using a separate .asl.json file for the state
+  # machine definition, which allows JSON validation and integration
+  # with the AWS toolkit plugin for VScode.
+  state_machine_definition = templatefile(
+    # rename hello_bye_world_workflow.asl.json.example to use this definition
+    "${path.module}/hello_bye_world_workflow.asl.json",
+    {
+      hello_world_task_arn: module.cumulus.hello_world_task.task_arn,
+      bye_world_task_arn: aws_lambda_function.bye_world.arn
     }
-  }
-}
-JSON
+  )
 }
