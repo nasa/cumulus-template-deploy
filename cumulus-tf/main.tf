@@ -22,7 +22,7 @@ module "cumulus" {
   lambda_subnet_ids = var.lambda_subnet_ids
 
   ecs_cluster_instance_image_id = var.ecs_cluster_instance_image_id
-  ecs_cluster_instance_subnet_ids = (var.ecs_cluster_instance_subnet_ids == null
+  ecs_cluster_instance_subnet_ids = (length(var.ecs_cluster_instance_subnet_ids) == 0
     ? var.lambda_subnet_ids
     : var.ecs_cluster_instance_subnet_ids
   )
