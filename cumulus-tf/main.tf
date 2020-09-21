@@ -97,12 +97,16 @@ module "cumulus" {
   api_gateway_stage = var.api_gateway_stage
 
   # Thin Egress App settings
-  tea_stack_name =  local.tea_stack_name # must match stack name for thin-egress-app
-  distribution_api_gateway_stage = local.tea_stage_name # must match stage name for thin-egress-app
-  distribution_url = var.distribution_url
+  # must match stack_name variable for thin-egress-app module
+  tea_stack_name = local.tea_stack_name
+  # must match stage_name variable for thin-egress-app module
+  tea_api_gateway_stage = local.tea_stage_name
   thin_egress_jwt_secret_name = var.thin_egress_jwt_secret_name
-  distribution_url            = var.distribution_url
-  thin_egress_jwt_secret_name = var.thin_egress_jwt_secret_name
+  tea_rest_api_id = module.thin_egress_app.rest_api.id
+  tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
+  tea_internal_api_endpoint = module.thin_egress_app.internal_api_endpoint
+  tea_external_api_endpoint = module.thin_egress_app.api_endpoint
+  tea_api_egress_log_group = module.thin_egress_app.egress_log_group
 
   log_destination_arn           = var.log_destination_arn
 
