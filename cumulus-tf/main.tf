@@ -25,14 +25,17 @@ module "cumulus" {
   deploy_to_ngap = true
 
   vpc_id            = var.vpc_id
-  lambda_subnet_ids = var.subnet_ids
+  lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
-  ecs_cluster_instance_subnet_ids = var.subnet_ids
-  ecs_cluster_min_size            = 1
-  ecs_cluster_desired_size        = 1
-  ecs_cluster_max_size            = 2
-  key_name                        = var.key_name
+  ecs_cluster_instance_image_id = var.ecs_cluster_instance_image_id
+  ecs_cluster_instance_subnet_ids = (length(var.ecs_cluster_instance_subnet_ids) == 0
+    ? var.lambda_subnet_ids
+    : var.ecs_cluster_instance_subnet_ids
+  )
+  ecs_cluster_min_size     = 1
+  ecs_cluster_desired_size = 1
+  ecs_cluster_max_size     = 2
+  key_name                 = var.key_name
 
   urs_url             = var.urs_url
   urs_client_id       = var.urs_client_id
@@ -49,7 +52,7 @@ module "cumulus" {
   ems_username          = var.ems_username
 
 
-  metrics_es_host = var.metrics_es_host
+  metrics_es_host     = var.metrics_es_host
   metrics_es_password = var.metrics_es_password
   metrics_es_username = var.metrics_es_username
 
@@ -87,8 +90,8 @@ module "cumulus" {
 
   token_secret = var.token_secret
 
+  # Archive API settings
   archive_api_users = var.api_users
-
   archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
   api_gateway_stage = var.api_gateway_stage
@@ -98,7 +101,9 @@ module "cumulus" {
   distribution_api_gateway_stage = local.tea_stage_name # must match stage name for thin-egress-app
   distribution_url = var.distribution_url
   thin_egress_jwt_secret_name = var.thin_egress_jwt_secret_name
-  log_api_gateway_to_cloudwatch = var.log_api_gateway_to_cloudwatch
+  distribution_url            = var.distribution_url
+  thin_egress_jwt_secret_name = var.thin_egress_jwt_secret_name
+
   log_destination_arn           = var.log_destination_arn
 
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
@@ -149,14 +154,6 @@ module "thin_egress_app" {
   stage_name                 = local.tea_stage_name
   urs_auth_creds_secret_name = aws_secretsmanager_secret.thin_egress_urs_creds.name
   vpc_subnet_ids             = var.subnet_ids
-
-  # Optional
-  # cookie_domain                      = var.thin_egress_cookie_domain
-  # domain_cert_arn                    = var.thin_egress_domain_cert_arn
-  # download_role_in_region_arn        = var.thin_egress_download_role_in_region_arn
-  # jwt_algo                           = var.thin_egress_jwt_algo
-  # lambda_code_dependency_archive_key = var.thin_egress_lambda_code_dependency_archive_key
-  # log_api_gateway_to_cloudwatch      = var.log_api_gateway_to_cloudwatch
 }
 
 terraform {

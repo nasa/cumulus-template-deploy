@@ -3,11 +3,11 @@ region = "us-east-1"
 # Replace 12345 with your actual AWS account ID
 cumulus_message_adapter_lambda_layer_arn = "arn:aws:lambda:us-east-1:12345:layer:Cumulus_Message_Adapter:4"
 permissions_boundary_arn                 = "arn:aws:iam::12345:policy/NGAPShRoleBoundary"
-
 ecs_cluster_instance_image_id            = "ami-12345abcde"
 
 # Replace all instances of PREFIX with your deployment prefix
 prefix  = "PREFIX"
+
 buckets = {
   internal = {
     name = "PREFIX-internal"
@@ -16,19 +16,21 @@ buckets = {
   private = {
     name = "PREFIX-private"
     type = "private"
-  },
+  }
   protected = {
     name = "PREFIX-protected"
     type = "protected"
-  },
+  }
   public = {
     name = "PREFIX-public"
     type = "public"
   }
 }
-subnet_ids    = ["subnet-12345"]
-system_bucket = "PREFIX-internal"
-vpc_id        = "vpc-12345"
+
+lambda_subnet_ids               = ["subnet-12345"]
+ecs_cluster_instance_subnet_ids = ["subnet-12345"]
+system_bucket                   = "PREFIX-internal"
+vpc_id                          = "vpc-12345"
 
 cmr_client_id   = "CHANGEME"
 cmr_environment = "UAT"
