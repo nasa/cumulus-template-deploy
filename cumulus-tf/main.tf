@@ -51,7 +51,7 @@ module "cumulus" {
   metrics_es_username = var.metrics_es_username
 
   cmr_client_id   = var.cmr_client_id
-  cmr_environment = "UAT"
+  cmr_environment = var.cmr_environment
   cmr_username    = var.cmr_username
   cmr_password    = var.cmr_password
   cmr_provider    = var.cmr_provider
