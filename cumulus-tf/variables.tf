@@ -227,6 +227,11 @@ variable "aws_profile" {
   default = null
 }
 
+variable "lambda_subnet_ids" {
+  type = list(string)
+  default = []
+}
+
 variable "log_api_gateway_to_cloudwatch" {
   type        = bool
   default     = false
@@ -237,6 +242,17 @@ variable "log_destination_arn" {
   type        = string
   default     = null
   description = "Remote kinesis/destination arn for delivering logs. Requires log_api_gateway_to_cloudwatch set to true."
+}
+
+variable "api_users" {
+  type    = list(string)
+  default = []
+}
+
+variable "urs_url" {
+  description = "The URL of the Earthdata login (URS) site"
+  type        = string
+  default     = "https://uat.urs.earthdata.nasa.gov"
 }
 
 variable "archive_api_port" {
@@ -264,13 +280,25 @@ variable "metrics_es_username" {
   default = null
 }
 
-variable "api_users" {
-  type    = list(string)
-  default = []
+variable "additional_log_groups_to_elk" {
+  type    = map(string)
+  default = {}
 }
 
-variable "urs_url" {
-  description = "The URL of the Earthdata login (URS) site"
-  type        = string
-  default     = "https://uat.urs.earthdata.nasa.gov"
+variable "tags" {
+  description = "Tags to be applied to Cumulus resources that support tags"
+  type        = map(string)
+  default     = {}
+}
+
+variable "es_index_shards" {
+  description = "The number of shards for the Elasticsearch index"
+  type        = number
+  default     = 2
+}
+
+variable "ems_deploy" {
+  description = "If true, deploys the EMS reporting module"
+  type        = bool
+  default     = true
 }

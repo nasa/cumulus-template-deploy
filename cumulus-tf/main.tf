@@ -1,7 +1,21 @@
-locals {
-  tags = {
-    Deployment = var.prefix
+terraform {
+  required_providers {
+    aws  = ">= 3.5.0"
+    null = "~> 2.1"
   }
+}
+
+provider "aws" {
+  region  = var.region
+  profile = var.aws_profile
+
+  ignore_tags {
+    key_prefixes = ["gsfc-ngap"]
+  }
+}
+
+locals {
+  tags = merge(var.tags, { Deployment = var.prefix })
   elasticsearch_alarms            = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_alarms", [])
   elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
   elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
@@ -12,6 +26,15 @@ locals {
 
   tea_stack_name = "${var.prefix}-thin-egress-app"
   tea_stage_name = "DEV"
+}
+
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
+data "terraform_remote_state" "data_persistence" {
+  backend   = "s3"
+  config    = var.data_persistence_remote_state_config
+  workspace = terraform.workspace
 }
 
 module "cumulus" {
@@ -51,7 +74,6 @@ module "cumulus" {
   ems_submit_report     = var.ems_submit_report
   ems_username          = var.ems_username
 
-
   metrics_es_host     = var.metrics_es_host
   metrics_es_password = var.metrics_es_password
   metrics_es_username = var.metrics_es_username
@@ -85,32 +107,33 @@ module "cumulus" {
   elasticsearch_domain_arn        = local.elasticsearch_domain_arn
   elasticsearch_hostname          = local.elasticsearch_hostname
   elasticsearch_security_group_id = local.elasticsearch_security_group_id
+  es_index_shards                 = var.es_index_shards
 
   dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
 
-  token_secret = var.token_secret
-
   # Archive API settings
-  archive_api_users = var.api_users
+  token_secret                = var.token_secret
+  archive_api_users           = var.api_users
   archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
-  api_gateway_stage = var.api_gateway_stage
+  api_gateway_stage           = var.api_gateway_stage
 
   # Thin Egress App settings
   # must match stack_name variable for thin-egress-app module
   tea_stack_name = local.tea_stack_name
   # must match stage_name variable for thin-egress-app module
   tea_api_gateway_stage = local.tea_stage_name
-  thin_egress_jwt_secret_name = var.thin_egress_jwt_secret_name
+
   tea_rest_api_id = module.thin_egress_app.rest_api.id
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
   tea_internal_api_endpoint = module.thin_egress_app.internal_api_endpoint
   tea_external_api_endpoint = module.thin_egress_app.api_endpoint
   tea_api_egress_log_group = module.thin_egress_app.egress_log_group
 
-  log_destination_arn           = var.log_destination_arn
+  log_destination_arn = var.log_destination_arn
+  additional_log_groups_to_elk  = var.additional_log_groups_to_elk
 
-  deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
+  ems_deploy = var.ems_deploy
 
   tags = local.tags
 }
@@ -157,43 +180,5 @@ module "thin_egress_app" {
   stack_name                 = local.tea_stack_name
   stage_name                 = local.tea_stage_name
   urs_auth_creds_secret_name = aws_secretsmanager_secret.thin_egress_urs_creds.name
-  vpc_subnet_ids             = var.subnet_ids
-}
-
-terraform {
-  required_providers {
-    aws  = ">= 3.5.0"
-    null = "~> 2.1"
-  }
-}
-
-provider "aws" {
-  region  = var.region
-  profile = var.aws_profile
-
-  ignore_tags {
-    key_prefixes = ["gsfc-ngap"]
-  }
-}
-
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
-data "terraform_remote_state" "data_persistence" {
-  backend = "s3"
-  config  = var.data_persistence_remote_state_config
-}
-
-resource "aws_security_group" "no_ingress_all_egress" {
-  name   = "${var.prefix}-cumulus-tf-no-ingress-all-egress"
-  vpc_id = var.vpc_id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = local.tags
+  vpc_subnet_ids             = var.lambda_subnet_ids
 }
