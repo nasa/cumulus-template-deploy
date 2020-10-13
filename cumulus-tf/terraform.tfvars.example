@@ -32,10 +32,10 @@ lambda_subnet_ids    = ["subnet-12345"]
 system_bucket = "PREFIX-internal"
 vpc_id        = "vpc-12345"
 
-cmr_client_id   = "cumulus-PREFIX"
+cmr_client_id   = "CHANGEME"
 cmr_environment = "UAT"
 cmr_password    = "password"
-cmr_provider    = "CUMULUS"
+cmr_provider    = "CHANGEME"
 cmr_username    = "username"
 
 # Earthdata application client ID/password for authentication

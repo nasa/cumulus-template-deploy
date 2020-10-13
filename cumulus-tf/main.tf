@@ -130,8 +130,11 @@ module "cumulus" {
   tea_external_api_endpoint = module.thin_egress_app.api_endpoint
   tea_api_egress_log_group = module.thin_egress_app.egress_log_group
 
+  log_api_gateway_to_cloudwatch = var.log_api_gateway_to_cloudwatch
   log_destination_arn = var.log_destination_arn
   additional_log_groups_to_elk  = var.additional_log_groups_to_elk
+
+  deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
 
   ems_deploy = var.ems_deploy
 
@@ -169,7 +172,7 @@ resource "aws_s3_bucket_object" "bucket_map_yaml" {
 module "thin_egress_app" {
   source = "s3::https://s3.amazonaws.com/asf.public.code/thin-egress-app/tea-terraform-build.88.zip"
 
-  auth_base_url              = "https://uat.urs.earthdata.nasa.gov"
+  auth_base_url              = var.urs_url
   bucket_map_file            = aws_s3_bucket_object.bucket_map_yaml.id
   bucketname_prefix          = ""
   config_bucket              = var.system_bucket
