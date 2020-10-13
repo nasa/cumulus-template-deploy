@@ -291,12 +291,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "es_index_shards" {
-  description = "The number of shards for the Elasticsearch index"
-  type        = number
-  default     = 2
-}
-
 variable "ems_deploy" {
   description = "If true, deploys the EMS reporting module"
   type        = bool
