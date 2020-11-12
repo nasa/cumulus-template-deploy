@@ -1,7 +1,7 @@
 region = "us-east-1"
 
 # Replace 12345 with your actual AWS account ID
-cumulus_message_adapter_lambda_layer_arn = "arn:aws:lambda:us-east-1:12345:layer:Cumulus_Message_Adapter:4"
+cumulus_message_adapter_lambda_layer_version_arn = "arn:aws:lambda:us-east-1:12345:layer:Cumulus_Message_Adapter:4"
 permissions_boundary_arn                 = "arn:aws:iam::12345:policy/NGAPShRoleBoundary"
 ecs_cluster_instance_image_id            = "ami-12345abcde"
 
@@ -111,7 +111,6 @@ deploy_distribution_s3_credentials_endpoint = false
 # ems_username          = "user"
 
 ## Optional. Required to send logs to the Metrics ELK stack
-# log_api_gateway_to_cloudwatch = false
 # log_destination_arn = "arn:aws:logs:us-east-1:1234567890:destination:LogsDestination"
 # additional_log_groups_to_elk = {
 #  "MyLogs" = "/aws/lambda/my-logs"
