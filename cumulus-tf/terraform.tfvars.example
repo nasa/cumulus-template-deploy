@@ -111,6 +111,7 @@ deploy_distribution_s3_credentials_endpoint = false
 # ems_username          = "user"
 
 ## Optional. Required to send logs to the Metrics ELK stack
+# log_api_gateway_to_cloudwatch = false
 # log_destination_arn = "arn:aws:logs:us-east-1:1234567890:destination:LogsDestination"
 # additional_log_groups_to_elk = {
 #  "MyLogs" = "/aws/lambda/my-logs"
