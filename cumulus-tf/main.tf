@@ -37,6 +37,10 @@ data "terraform_remote_state" "data_persistence" {
   workspace = terraform.workspace
 }
 
+data "aws_lambda_function" "sts_credentials" {
+  function_name = "gsfc-ngap-sh-s3-sts-get-keys"
+}
+
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v3.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
@@ -46,6 +50,7 @@ module "cumulus" {
 
   # DO NOT CHANGE THIS VARIABLE UNLESS DEPLOYING OUTSIDE NGAP
   deploy_to_ngap = true
+  sts_credentials_lambda_function_arn = data.aws_lambda_function.sts_credentials.arn
 
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
@@ -129,7 +134,6 @@ module "cumulus" {
   tea_external_api_endpoint = module.thin_egress_app.api_endpoint
   tea_api_egress_log_group = module.thin_egress_app.egress_log_group
 
-  log_api_gateway_to_cloudwatch = var.log_api_gateway_to_cloudwatch
   log_destination_arn = var.log_destination_arn
   additional_log_groups_to_elk  = var.additional_log_groups_to_elk
 
