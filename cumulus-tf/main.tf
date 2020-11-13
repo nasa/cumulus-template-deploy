@@ -127,7 +127,6 @@ module "cumulus" {
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
   tea_internal_api_endpoint = module.thin_egress_app.internal_api_endpoint
   tea_external_api_endpoint = module.thin_egress_app.api_endpoint
-  tea_api_egress_log_group = module.thin_egress_app.egress_log_group
 
   log_destination_arn = var.log_destination_arn
   additional_log_groups_to_elk  = var.additional_log_groups_to_elk
@@ -182,4 +181,14 @@ module "thin_egress_app" {
   stage_name                 = local.tea_stage_name
   urs_auth_creds_secret_name = aws_secretsmanager_secret.thin_egress_urs_creds.name
   vpc_subnet_ids             = var.lambda_subnet_ids
+  log_api_gateway_to_cloudwatch = var.log_api_gateway_to_cloudwatch
+}
+
+resource "aws_cloudwatch_log_subscription_filter" "egress_api_gateway_log_subscription_filter" {
+  count           = (var.log_api_gateway_to_cloudwatch && var.log_destination_arn != null) ? 1 : 0
+  name            = "${var.prefix}-EgressApiGatewayCloudWatchLogSubscriptionToSharedDestination"
+  distribution    = "ByLogStream"
+  destination_arn = var.log_destination_arn
+  filter_pattern  = ""
+  log_group_name  = module.thin_egress_app.egress_log_group
 }
