@@ -37,6 +37,10 @@ data "terraform_remote_state" "data_persistence" {
   workspace = terraform.workspace
 }
 
+data "aws_ssm_parameter" "ecs_image_id" {
+  name = "image_id_ecs_amz2"
+}
+
 data "aws_lambda_function" "sts_credentials" {
   function_name = "gsfc-ngap-sh-s3-sts-get-keys"
 }
@@ -55,7 +59,7 @@ module "cumulus" {
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id = var.ecs_cluster_instance_image_id
+  ecs_cluster_instance_image_id   = data.aws_ssm_parameter.ecs_image_id.value
   ecs_cluster_instance_subnet_ids = (length(var.ecs_cluster_instance_subnet_ids) == 0
     ? var.lambda_subnet_ids
     : var.ecs_cluster_instance_subnet_ids

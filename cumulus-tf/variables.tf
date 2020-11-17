@@ -147,11 +147,6 @@ variable "distribution_url" {
   default = null
 }
 
-variable "ecs_cluster_instance_image_id" {
-  type        = string
-  description = "AMI ID of ECS instances"
-}
-
 variable "ems_datasource" {
   type        = string
   description = "the data source of EMS reports"
