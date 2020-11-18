@@ -48,7 +48,7 @@ data "aws_lambda_function" "sts_credentials" {
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v4.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
-  cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_arn
+  cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
   prefix = var.prefix
 
