@@ -2,8 +2,7 @@ region = "us-east-1"
 
 # Replace 12345 with your actual AWS account ID
 cumulus_message_adapter_lambda_layer_arn = "arn:aws:lambda:us-east-1:12345:layer:Cumulus_Message_Adapter:4"
-permissions_boundary_arn                 = "arn:aws:iam::12345:policy/NGAPShRoleBoundary"
-ecs_cluster_instance_image_id            = "ami-12345abcde"
+permissions_boundary_arn                 = "arn:aws:iam::12345:policy/NGAPShNonProdRoleBoundary"
 
 # Replace all instances of PREFIX with your deployment prefix
 prefix  = "PREFIX"
