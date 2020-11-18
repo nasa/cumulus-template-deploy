@@ -20,7 +20,7 @@ variable "cmr_username" {
   type = string
 }
 
-variable "cumulus_message_adapter_lambda_layer_arn" {
+variable "cumulus_message_adapter_lambda_layer_version_arn" {
   type = string
 }
 
