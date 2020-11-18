@@ -19,6 +19,14 @@ module "data_persistence" {
   subnet_ids                 = var.subnet_ids
   include_elasticsearch      = var.include_elasticsearch
 
+  elasticsearch_config = {
+    domain_name    = "es"
+    instance_count = 2
+    instance_type  = "t2.small.elasticsearch"
+    version        = "5.3"
+    volume_size    = 10
+  }
+
   tags = {
     Deployment = var.prefix
   }
