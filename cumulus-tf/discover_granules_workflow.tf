@@ -1,5 +1,5 @@
 module "discover_granules_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v3.0.1/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v4.0.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = var.prefix
   name            = "DiscoverGranules"
