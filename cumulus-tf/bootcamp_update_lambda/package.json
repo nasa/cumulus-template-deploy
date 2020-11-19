@@ -1,0 +1,19 @@
+{
+  "name": "@cumulus/bootcamp-update-lambda",
+  "version": "3.0.0",
+  "description": "Example task",
+  "main": "index.js",
+  "engines": {
+    "node": ">=12.18.0"
+  },
+  "scripts": {
+    "build": "rm -rf dist && mkdir dist && cp -R node_modules ./dist && chmod -R +r ./dist/node_modules && cp index.js ./dist",
+    "package": "npm run build && (cd dist && /usr/bin/zip -r lambda.zip index.js node_modules)"
+  },
+  "author": "Cumulus Authors",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@cumulus/common": "2.0.0",
+    "@cumulus/cumulus-message-adapter-js": "2.0.0"
+  }
+}
