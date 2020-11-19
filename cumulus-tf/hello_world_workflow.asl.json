@@ -1,5 +1,5 @@
 {
-  "Comment": "Returns Hello World",
+  "Comment": "Bootcamp Example",
   "StartAt": "HelloWorld",
   "States": {
     "HelloWorld": {
@@ -27,7 +27,57 @@
           "BackoffRate": 2
         }
       ],
-      "End": true
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "WorkflowFailed",
+          "ResultPath": "$.exception"
+        }
+      ],
+      "Next": "BootcampUpdateOutput"
+    },
+   "BootcampUpdateOutput": {
+      "Parameters": {
+        "cma": {
+          "event.$": "$",
+          "task_config": {
+            "buckets": "{$.meta.buckets}"
+          }
+        }
+      },
+      "Type": "Task",
+      "Resource": "${bootcamp_arn}",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "WorkflowFailed",
+          "ResultPath": "$.exception"
+        }
+      ],
+      "Next": "WorkflowSucceeded"
+    },
+    "WorkflowSucceeded": {
+      "Type": "Succeed"
+    },
+    "WorkflowFailed": {
+      "Cause": "Workflow failed",
+      "Type": "Fail"
     }
   }
 }
