@@ -8,6 +8,9 @@ terraform {
       source  = "hashicorp/null"
       version = "~> 2.1"
     }
+    archive = {
+      source = "hashicorp/archive"
+    }
   }
 }
 
@@ -56,12 +59,12 @@ module "cumulus" {
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id = var.ecs_cluster_instance_image_id
-  ecs_cluster_instance_subnet_ids = (length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
-  ) ecs_cluster_min_size   = 1
-  ecs_cluster_desired_size = 1
-  ecs_cluster_max_size     = 2
-  key_name                 = var.key_name
+  ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
+  ecs_cluster_instance_subnet_ids = length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
+  ecs_cluster_min_size            = 1
+  ecs_cluster_desired_size        = 1
+  ecs_cluster_max_size            = 2
+  key_name                        = var.key_name
 
   urs_url             = var.urs_url
   urs_client_id       = var.urs_client_id

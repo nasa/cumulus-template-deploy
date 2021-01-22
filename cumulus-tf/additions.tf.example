@@ -36,7 +36,7 @@ resource "aws_lambda_function" "bye_world" {
   timeout       = 300
 
   # referencing an attribute (i.e. output) of the data source
-  source_code_hash = "${data.archive_file.sample_code.output_base64sha256}"
+  source_code_hash = data.archive_file.sample_code.output_base64sha256
 
   vpc_config {
     # subnet_ids references the tfvars
