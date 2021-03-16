@@ -1,7 +1,16 @@
 terraform {
   required_providers {
-    aws  = ">= 3.5.0"
-    null = "~> 2.1"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.5.0"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 2.1"
+    }
+    archive = {
+      source = "hashicorp/archive"
+    }
   }
 }
 
@@ -15,7 +24,7 @@ provider "aws" {
 }
 
 locals {
-  tags = merge(var.tags, { Deployment = var.prefix })
+  tags                            = merge(var.tags, { Deployment = var.prefix })
   elasticsearch_alarms            = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_alarms", [])
   elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
   elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
@@ -44,15 +53,12 @@ module "cumulus" {
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id = var.ecs_cluster_instance_image_id
-  ecs_cluster_instance_subnet_ids = (length(var.ecs_cluster_instance_subnet_ids) == 0
-    ? var.lambda_subnet_ids
-    : var.ecs_cluster_instance_subnet_ids
-  )
-  ecs_cluster_min_size     = 1
-  ecs_cluster_desired_size = 1
-  ecs_cluster_max_size     = 2
-  key_name                 = var.key_name
+  ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
+  ecs_cluster_instance_subnet_ids = length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
+  ecs_cluster_min_size            = 1
+  ecs_cluster_desired_size        = 1
+  ecs_cluster_max_size            = 2
+  key_name                        = var.key_name
 
   urs_url             = var.urs_url
   urs_client_id       = var.urs_client_id
@@ -115,13 +121,13 @@ module "cumulus" {
   # must match stage_name variable for thin-egress-app module
   tea_api_gateway_stage = local.tea_stage_name
 
-  tea_rest_api_id = module.thin_egress_app.rest_api.id
+  tea_rest_api_id               = module.thin_egress_app.rest_api.id
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
-  tea_internal_api_endpoint = module.thin_egress_app.internal_api_endpoint
-  tea_external_api_endpoint = module.thin_egress_app.api_endpoint
+  tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
+  tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
 
-  log_destination_arn = var.log_destination_arn
-  additional_log_groups_to_elk  = var.additional_log_groups_to_elk
+  log_destination_arn          = var.log_destination_arn
+  additional_log_groups_to_elk = var.additional_log_groups_to_elk
 
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
 
@@ -129,4 +135,3 @@ module "cumulus" {
 
   tags = local.tags
 }
-
