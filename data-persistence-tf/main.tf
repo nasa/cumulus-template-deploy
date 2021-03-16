@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 3.5.0"
+      version = ">= 3.14.1"
     }
   }
 }
@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 module "data_persistence" {
-  source = "https://github.com/nasa/cumulus/releases/download/v5.0.0/terraform-aws-cumulus.zip//tf-modules/data-persistence"
+  source = "https://github.com/nasa/cumulus/releases/download/v7.0.0/terraform-aws-cumulus.zip//tf-modules/data-persistence"
 
   prefix                = var.prefix
   subnet_ids            = var.subnet_ids

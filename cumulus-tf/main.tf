@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 3.5.0"
+      version = ">= 3.14.1"
     }
     null = {
       source  = "hashicorp/null"
@@ -41,7 +41,7 @@ data "terraform_remote_state" "data_persistence" {
 }
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v5.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v7.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
