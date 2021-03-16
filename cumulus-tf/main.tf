@@ -1,7 +1,16 @@
 terraform {
   required_providers {
-    aws  = ">= 3.5.0"
-    null = "~> 2.1"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.14.1"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 2.1"
+    }
+    archive = {
+      source = "hashicorp/archive"
+    }
   }
 }
 
@@ -15,7 +24,7 @@ provider "aws" {
 }
 
 locals {
-  tags = merge(var.tags, { Deployment = var.prefix })
+  tags                            = merge(var.tags, { Deployment = var.prefix })
   elasticsearch_alarms            = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_alarms", [])
   elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
   elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
@@ -40,7 +49,7 @@ data "aws_lambda_function" "sts_credentials" {
 }
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v5.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v7.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
@@ -124,13 +133,13 @@ module "cumulus" {
   # must match stage_name variable for thin-egress-app module
   tea_api_gateway_stage = local.tea_stage_name
 
-  tea_rest_api_id = module.thin_egress_app.rest_api.id
+  tea_rest_api_id               = module.thin_egress_app.rest_api.id
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
-  tea_internal_api_endpoint = module.thin_egress_app.internal_api_endpoint
-  tea_external_api_endpoint = module.thin_egress_app.api_endpoint
+  tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
+  tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
 
-  log_destination_arn = var.log_destination_arn
-  additional_log_groups_to_elk  = var.additional_log_groups_to_elk
+  log_destination_arn          = var.log_destination_arn
+  additional_log_groups_to_elk = var.additional_log_groups_to_elk
 
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
 
@@ -138,4 +147,3 @@ module "cumulus" {
 
   tags = local.tags
 }
-
