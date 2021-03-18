@@ -14,6 +14,7 @@ const log = require('@cumulus/common/log');
  */
 async function bootcampExample(event) {
   return {
+    inputKey: event.config.someKey,
     buckets: event.config.buckets,
     input: event.input,
   };

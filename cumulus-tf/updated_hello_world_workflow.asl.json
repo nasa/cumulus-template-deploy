@@ -30,8 +30,17 @@
       "Next": "ByeWorld"
     },
     "ByeWorld": {
+      "Parameters": {
+        "cma": {
+          "event.$": "$",
+          "task_config": {
+            "buckets": "{$.meta.buckets}",
+            "someKey": "SomeValue"
+          }
+        }
+      },
       "Type": "Task",
-      "Resource": "${bye_world_task_arn}",
+      "Resource": "${bootcamp_arn}",
       "Retry": [
         {
           "ErrorEquals": [
