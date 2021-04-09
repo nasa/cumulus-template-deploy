@@ -1,0 +1,8 @@
+terraform {
+  backend "s3" {
+    region         = "<region>"
+    bucket         = "<state-bucket>>"
+    key            = "<state-path>/terraform.tfstate"
+    dynamodb_table = "<lock-table-name>"
+  }
+}
