@@ -20,7 +20,7 @@ module "rds_cluster" {
   vpc_id                   = var.vpc_id
   subnets                  = var.subnets
   engine_version           = var.engine_version
-  deletion_protection      = true
+  deletion_protection      = var.deletion_protection
   cluster_identifier       = var.cluster_identifier
   tags                     = var.tags
   snapshot_identifier      = var.snapshot_identifier
