@@ -41,7 +41,7 @@ data "terraform_remote_state" "data_persistence" {
 }
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v7.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v9.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
@@ -59,6 +59,10 @@ module "cumulus" {
   ecs_cluster_desired_size        = 1
   ecs_cluster_max_size            = 2
   key_name                        = var.key_name
+
+  rds_security_group         = var.rds_security_group
+  rds_user_access_secret_arn = var.rds_user_access_secret_arn
+  rds_connection_heartbeat   = var.rds_connection_heartbeat
 
   urs_url             = var.urs_url
   urs_client_id       = var.urs_client_id

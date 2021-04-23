@@ -24,6 +24,17 @@ variable "cumulus_message_adapter_lambda_layer_version_arn" {
   type = string
 }
 
+variable "rds_connection_heartbeat" {
+  description = "If true, send a query to verify database connection is live on connection creation and retry on initial connection timeout.  Set to false if not using serverless RDS"
+  type        = bool
+  default     = false
+}
+
+variable "rds_user_access_secret_arn" {
+  description = "AWS Secrets Manager secret ARN containing a JSON string of DB credentials (containing at least host, password, port as keys)"
+  type        = string
+}
+
 variable "cmr_oauth_provider" {
   type    = string
   default = "earthdata"
@@ -290,4 +301,10 @@ variable "ems_deploy" {
   description = "If true, deploys the EMS reporting module"
   type        = bool
   default     = true
+}
+
+variable "rds_security_group" {
+  description = "RDS Security Group used for access to RDS cluster"
+  type        = string
+  default     = null
 }
