@@ -33,7 +33,7 @@ module "data_migration1" {
   dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
 
   rds_security_group_id = data.terraform_remote_state.data_persistence.outputs.rds_security_group_id
-  rds_user_access_secret_arn = data.terraform_remote_state.data_persistence.rds_user_access_secret_arn
+  rds_user_access_secret_arn = data.terraform_remote_state.data_persistence.outputs.rds_user_access_secret_arn
   rds_connection_heartbeat = var.rds_connection_heartbeat
 
   provider_kms_key_id = var.provider_kms_key_id
