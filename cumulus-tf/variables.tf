@@ -30,11 +30,6 @@ variable "rds_connection_heartbeat" {
   default     = false
 }
 
-variable "rds_user_access_secret_arn" {
-  description = "AWS Secrets Manager secret ARN containing a JSON string of DB credentials (containing at least host, password, port as keys)"
-  type        = string
-}
-
 variable "cmr_oauth_provider" {
   type    = string
   default = "earthdata"
@@ -301,10 +296,4 @@ variable "ems_deploy" {
   description = "If true, deploys the EMS reporting module"
   type        = bool
   default     = true
-}
-
-variable "rds_security_group" {
-  description = "RDS Security Group used for access to RDS cluster"
-  type        = string
-  default     = null
 }

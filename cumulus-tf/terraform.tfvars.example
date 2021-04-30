@@ -1,7 +1,5 @@
 region = "us-east-1"
 
-rds_security_group = "sg-1234567890xxxxx"
-rds_user_access_secret_arn = "arn:aws:secretsmanager:us-east-1:xxxxxxxxx:secret:SECRETID-VERSION"
 rds_connection_heartbeat = true
 
 # Replace 12345 with your actual AWS account ID
