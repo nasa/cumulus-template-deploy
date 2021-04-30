@@ -29,6 +29,8 @@ locals {
   elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
   elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
   elasticsearch_security_group_id = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_security_group_id", "")
+  rds_security_group              = lookup(data.terraform_remote_state.data_persistence.outputs, "rds_security_group", "")
+  rds_credentials_secret_arn      = lookup(data.terraform_remote_state.data_persistence.outputs, "rds_user_access_secret_arn", "")
 }
 
 data "aws_caller_identity" "current" {}
@@ -60,8 +62,8 @@ module "cumulus" {
   ecs_cluster_max_size            = 2
   key_name                        = var.key_name
 
-  rds_security_group         = var.rds_security_group
-  rds_user_access_secret_arn = var.rds_user_access_secret_arn
+  rds_security_group         = local.rds_security_group
+  rds_user_access_secret_arn = local.rds_user_access_secret_arn
   rds_connection_heartbeat   = var.rds_connection_heartbeat
 
   urs_url             = var.urs_url
