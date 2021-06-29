@@ -15,8 +15,7 @@ terraform {
 }
 
 locals {
-  common_vars = jsondecode(file(find_in_parent_folders("common-vars.json")))
-  tags                            = merge(var.tags, { Deployment = local.common_vars.prefix })
+  tags                            = merge(var.tags, { Deployment = var.prefix })
   elasticsearch_alarms            = lookup(var.data_persistence_outputs, "elasticsearch_alarms", [])
   elasticsearch_domain_arn        = lookup(var.data_persistence_outputs, "elasticsearch_domain_arn", null)
   elasticsearch_hostname          = lookup(var.data_persistence_outputs, "elasticsearch_hostname", null)
@@ -24,7 +23,7 @@ locals {
 }
 
 provider "aws" {
-  region  = local.common_vars.aws_region
+  region  = var.aws_region
   profile = var.aws_profile
 
   ignore_tags {
@@ -46,7 +45,7 @@ module "cumulus" {
 
   cumulus_message_adapter_lambda_layer_version_arn = aws_lambda_layer_version.cma_layer.arn
 
-  prefix = local.common_vars.prefix
+  prefix = var.prefix
 
   # DO NOT CHANGE THIS VARIABLE UNLESS DEPLOYING OUTSIDE NGAP
   deploy_to_ngap = var.deploy_to_ngap
