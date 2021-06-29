@@ -25,23 +25,23 @@ provider "aws" {
 
 locals {
   tags                            = merge(var.tags, { Deployment = var.prefix })
-  elasticsearch_alarms            = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_alarms", [])
-  elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
-  elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
-  elasticsearch_security_group_id = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_security_group_id", "")
+  elasticsearch_alarms            = lookup(var.data_persistence_outputs, "elasticsearch_alarms", [])
+  elasticsearch_domain_arn        = lookup(var.data_persistence_outputs, "elasticsearch_domain_arn", null)
+  elasticsearch_hostname          = lookup(var.data_persistence_outputs, "elasticsearch_hostname", null)
+  elasticsearch_security_group_id = lookup(var.data_persistence_outputs, "elasticsearch_security_group_id", "")
 }
 
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
-data "terraform_remote_state" "data_persistence" {
-  backend   = "s3"
-  config    = var.data_persistence_remote_state_config
-  workspace = terraform.workspace
-}
+# data "terraform_remote_state" "data_persistence" {
+#   backend   = "s3"
+#   config    = var.data_persistence_remote_state_config
+#   workspace = terraform.workspace
+# }
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v7.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v8.1.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
@@ -108,7 +108,7 @@ module "cumulus" {
   elasticsearch_hostname          = local.elasticsearch_hostname
   elasticsearch_security_group_id = local.elasticsearch_security_group_id
 
-  dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
+  dynamo_tables = var.data_persistence_outputs.dynamo_tables
 
   # Archive API settings
   token_secret                = var.token_secret

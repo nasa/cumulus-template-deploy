@@ -64,7 +64,7 @@ variable "oauth_user_group" {
   default = "N/A"
 }
 
-variable "data_persistence_remote_state_config" {
+variable "data_persistence_outputs" {
   type = object({ bucket = string, key = string, region = string })
 }
 
