@@ -14,21 +14,22 @@ terraform {
   }
 }
 
+locals {
+  common_vars = jsondecode(file(find_in_parent_folders("common-vars.json")))
+  tags                            = merge(var.tags, { Deployment = local.common_vars.prefix })
+  elasticsearch_alarms            = lookup(var.data_persistence_outputs, "elasticsearch_alarms", [])
+  elasticsearch_domain_arn        = lookup(var.data_persistence_outputs, "elasticsearch_domain_arn", null)
+  elasticsearch_hostname          = lookup(var.data_persistence_outputs, "elasticsearch_hostname", null)
+  elasticsearch_security_group_id = lookup(var.data_persistence_outputs, "elasticsearch_security_group_id", "")
+}
+
 provider "aws" {
-  region  = var.region
+  region  = local.common_vars.aws_region
   profile = var.aws_profile
 
   ignore_tags {
     key_prefixes = ["gsfc-ngap"]
   }
-}
-
-locals {
-  tags                            = merge(var.tags, { Deployment = var.prefix })
-  elasticsearch_alarms            = lookup(var.data_persistence_outputs, "elasticsearch_alarms", [])
-  elasticsearch_domain_arn        = lookup(var.data_persistence_outputs, "elasticsearch_domain_arn", null)
-  elasticsearch_hostname          = lookup(var.data_persistence_outputs, "elasticsearch_hostname", null)
-  elasticsearch_security_group_id = lookup(var.data_persistence_outputs, "elasticsearch_security_group_id", "")
 }
 
 data "aws_caller_identity" "current" {}
@@ -45,7 +46,7 @@ module "cumulus" {
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
-  prefix = var.prefix
+  prefix = local.common_vars.prefix
 
   # DO NOT CHANGE THIS VARIABLE UNLESS DEPLOYING OUTSIDE NGAP
   deploy_to_ngap = true

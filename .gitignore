@@ -11,3 +11,4 @@ node_modules
 terraform.tf
 terraform.tfvars
 .terraform/
+common-vars.json

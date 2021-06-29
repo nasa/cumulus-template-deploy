@@ -74,10 +74,6 @@ variable "s3_replicator_config" {
   description = "Configuration for the s3-replicator module. Items with prefix of source_prefix in the source_bucket will be replicated to the target_bucket with target_prefix."
 }
 
-variable "prefix" {
-  type = string
-}
-
 variable "saml_entity_id" {
   type    = string
   default = "N/A"
@@ -212,7 +208,7 @@ variable "key_name" {
   default = null
 }
 
-variable "region" {
+variable "aws_region" {
   type    = string
   default = "us-east-1"
 }

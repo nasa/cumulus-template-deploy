@@ -7,8 +7,12 @@ terraform {
   }
 }
 
+locals {
+  common_vars = jsondecode(file(find_in_parent_folders("common-vars.json")))
+}
+
 provider "aws" {
-  region = var.aws_region
+  region = local.common_vars.aws_region
 
   ignore_tags {
     key_prefixes = ["gsfc-ngap"]
