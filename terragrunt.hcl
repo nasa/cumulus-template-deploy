@@ -6,11 +6,11 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket = "nncpp-dev-tf-state"
+    bucket = get_env("BUCKET")
     key = "${get_env("prefix")}/${path_relative_to_include()}/terraform.tfstate"
     region         = "${get_env("AWS_REGION")}"
     encrypt        = true
-    dynamodb_table = "nncpp-dev-tf-locks"
+    dynamodb_table = get_env("LOCKS_TABLE")
   }
 }
 
