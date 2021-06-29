@@ -7,9 +7,11 @@ variable "vpc_availability_zones" {
 }
 
 variable "vpc_tag_name" {
-    default = "*"
+  type = string
+  default = "Application VPC"
 }
 
 variable "subnet_tag_name" {
-    default = "*"
+  type = string
+  default = "Private application *"
 }

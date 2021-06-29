@@ -103,10 +103,6 @@ variable "thin_egress_jwt_secret_name" {
   description = "Name of AWS secret where keys for the Thin Egress App JWT encode/decode are stored"
 }
 
-variable "token_secret" {
-  type = string
-}
-
 variable "urs_client_id" {
   type = string
 }
@@ -141,11 +137,6 @@ variable "deploy_distribution_s3_credentials_endpoint" {
 variable "distribution_url" {
   type    = string
   default = null
-}
-
-variable "ecs_cluster_instance_image_id" {
-  type        = string
-  description = "AMI ID of ECS instances"
 }
 
 variable "ems_datasource" {
@@ -286,4 +277,14 @@ variable "ems_deploy" {
   description = "If true, deploys the EMS reporting module"
   type        = bool
   default     = true
+}
+
+variable "cumulus_message_adapter_version" {
+  description = "Version of Cumulus Message Adapter to download"
+  type = string
+}
+
+variable "deploy_to_ngap" {
+  description = "true if deploying to an NGAP environment"
+  type = bool
 }

@@ -44,17 +44,17 @@ data "aws_region" "current" {}
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v8.1.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
-  cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
+  cumulus_message_adapter_lambda_layer_version_arn = aws_lambda_layer_version.cma_layer.arn
 
   prefix = local.common_vars.prefix
 
   # DO NOT CHANGE THIS VARIABLE UNLESS DEPLOYING OUTSIDE NGAP
-  deploy_to_ngap = true
+  deploy_to_ngap = var.deploy_to_ngap
 
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
+  ecs_cluster_instance_image_id   = var.deploy_to_ngap ? data.aws_ssm_parameter.ngap_ecs_image_id.value : data.aws_ssm_parameter.aws_ecs_image_id.value
   ecs_cluster_instance_subnet_ids = length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
@@ -112,7 +112,7 @@ module "cumulus" {
   dynamo_tables = var.data_persistence_outputs.dynamo_tables
 
   # Archive API settings
-  token_secret                = var.token_secret
+  token_secret                = random_string.token_secret.result
   archive_api_users           = var.api_users
   archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
