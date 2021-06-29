@@ -1,5 +1,5 @@
 variable "create_vpc" {
-  type = false
+  type = bool
 }
 
 variable "vpc_availability_zones" {

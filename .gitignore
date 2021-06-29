@@ -12,3 +12,4 @@ terraform.tf
 terraform.tfvars
 .terraform/
 common-vars.json
+terragrunt-debug.tfvars.json
