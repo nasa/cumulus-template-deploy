@@ -12,7 +12,7 @@ resource "null_resource" "fetch_CMA_release" {
 }
 
 resource "aws_s3_bucket_object" "cma_release" {
-  depends_on = [aws_s3_bucket.var_buckets, null_resource.fetch_CMA_release]
+  depends_on = [null_resource.fetch_CMA_release]
   bucket     = var.system_bucket
   key        = local.cma_zip_name
   source     = local.cma_zip_path

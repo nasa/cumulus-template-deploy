@@ -16,10 +16,12 @@ terraform {
 
 locals {
   tags                            = merge(var.tags, { Deployment = var.prefix })
-  elasticsearch_alarms            = lookup(var.data_persistence_outputs, "elasticsearch_alarms", [])
-  elasticsearch_domain_arn        = lookup(var.data_persistence_outputs, "elasticsearch_domain_arn", null)
-  elasticsearch_hostname          = lookup(var.data_persistence_outputs, "elasticsearch_hostname", null)
-  elasticsearch_security_group_id = lookup(var.data_persistence_outputs, "elasticsearch_security_group_id", "")
+  data_persistence_outputs = var.data_persistence_outputs != null ? var.data_persistence_outputs : data.terraform_remote_state.data_persistence[0].outputs
+  dynamo_tables = lookup(local.data_persistence_outputs, "dynamo_tables")
+  elasticsearch_alarms = lookup(local.data_persistence_outputs, "elasticsearch_alarms", [])
+  elasticsearch_domain_arn = lookup(local.data_persistence_outputs, "elasticsearch_domain_arn", null)
+  elasticsearch_hostname = lookup(local.data_persistence_outputs, "elasticsearch_hostname", null)
+  elasticsearch_security_group_id = lookup(local.data_persistence_outputs, "elasticsearch_security_group_id", "")
 }
 
 provider "aws" {
@@ -34,11 +36,12 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
-# data "terraform_remote_state" "data_persistence" {
-#   backend   = "s3"
-#   config    = var.data_persistence_remote_state_config
-#   workspace = terraform.workspace
-# }
+data "terraform_remote_state" "data_persistence" {
+  count = var.data_persistence_remote_state_config != null ? 1 : 0
+  backend   = "s3"
+  config    = var.data_persistence_remote_state_config
+  workspace = terraform.workspace
+}
 
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v8.1.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
@@ -53,7 +56,7 @@ module "cumulus" {
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id   = var.deploy_to_ngap ? data.aws_ssm_parameter.ngap_ecs_image_id.value : data.aws_ssm_parameter.aws_ecs_image_id.value
+  ecs_cluster_instance_image_id   = var.deploy_to_ngap ? data.aws_ssm_parameter.ngap_ecs_image_id[0].value : data.aws_ssm_parameter.aws_ecs_image_id[0].value
   ecs_cluster_instance_subnet_ids = length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
@@ -108,7 +111,7 @@ module "cumulus" {
   elasticsearch_hostname          = local.elasticsearch_hostname
   elasticsearch_security_group_id = local.elasticsearch_security_group_id
 
-  dynamo_tables = var.data_persistence_outputs.dynamo_tables
+  dynamo_tables = local.dynamo_tables
 
   # Archive API settings
   token_secret                = random_string.token_secret.result

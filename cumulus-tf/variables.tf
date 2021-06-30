@@ -1,4 +1,7 @@
 # Required
+variable "prefix" {
+  type = string
+}
 
 variable "cmr_client_id" {
   type = string
@@ -17,10 +20,6 @@ variable "cmr_provider" {
 }
 
 variable "cmr_username" {
-  type = string
-}
-
-variable "cumulus_message_adapter_lambda_layer_version_arn" {
   type = string
 }
 
@@ -64,8 +63,14 @@ variable "oauth_user_group" {
   default = "N/A"
 }
 
-variable "data_persistence_outputs" {
+variable "data_persistence_remote_state_config" {
   type = object({ bucket = string, key = string, region = string })
+  default = null
+}
+
+variable "data_persistence_outputs" {
+  type = any
+  default = null
 }
 
 variable "s3_replicator_config" {
