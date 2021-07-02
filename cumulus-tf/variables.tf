@@ -9,6 +9,11 @@ variable "deploy_to_ngap" {
   type = bool
 }
 
+variable "cumulus_message_adapter_version" {
+  description = "Version of Cumulus Message Adapter to download"
+  type = string
+}
+
 variable "cmr_environment" {
   type = string
 }
