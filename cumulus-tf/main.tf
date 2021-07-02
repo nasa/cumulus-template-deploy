@@ -56,7 +56,7 @@ module "cumulus" {
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id   = var.deploy_to_ngap ? data.aws_ssm_parameter.ngap_ecs_image_id[0].value : data.aws_ssm_parameter.aws_ecs_image_id[0].value
+  ecs_cluster_instance_image_id   = var.deploy_to_ngap ? data.aws_ssm_parameter.ngap_ecs_image_id[0].value : jsondecode(data.aws_ssm_parameter.aws_ecs_image_id[0].value).image_id
   ecs_cluster_instance_subnet_ids = length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
