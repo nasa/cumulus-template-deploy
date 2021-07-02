@@ -1,10 +1,14 @@
+# DO NOT CHANGE THIS VARIABLE UNLESS DEPLOYING OUTSIDE NGAP
+deploy_to_ngap = true
+
 region = "us-east-1"
 
 rds_connection_heartbeat = true
 
 # Replace 12345 with your actual AWS account ID
-cumulus_message_adapter_lambda_layer_version_arn = "arn:aws:lambda:us-east-1:12345:layer:Cumulus_Message_Adapter:4"
 permissions_boundary_arn                 = "arn:aws:iam::12345:policy/NGAPShRoleBoundary"
+
+# Optional - Otherwise a default AMI will be used
 ecs_cluster_instance_image_id            = "ami-12345abcde"
 
 # Replace all instances of PREFIX with your deployment prefix
@@ -47,8 +51,6 @@ urs_client_password = "password"
 api_users = [
   # URS Ids of authorized users
 ]
-
-token_secret = "asdf"
 
 # Name of secret in AWS secrets manager containing SSH keys for signing JWTs
 # See https://github.com/asfadmin/thin-egress-app#setting-up-the-jwt-cookie-secrets
