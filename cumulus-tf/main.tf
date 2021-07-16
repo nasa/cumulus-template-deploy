@@ -124,6 +124,7 @@ module "cumulus" {
   api_gateway_stage           = var.api_gateway_stage
 
   # Thin Egress App settings
+  # Remove if using Cognito
   # must match stage_name variable for thin-egress-app module
   tea_api_gateway_stage = local.tea_stage_name
 
@@ -131,6 +132,9 @@ module "cumulus" {
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
   tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
   tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
+
+  # Cumulus Distribution settings. Uncomment using Cognito.
+  # tea_external_api_endpoint = var.cumulus_distribution_url
 
   log_destination_arn          = var.log_destination_arn
   additional_log_groups_to_elk = var.additional_log_groups_to_elk
