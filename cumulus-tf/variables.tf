@@ -35,6 +35,21 @@ variable "cmr_oauth_provider" {
   default = "earthdata"
 }
 
+variable "csdap_client_id" {
+  type        = string
+  description = "The csdap client id"
+}
+
+variable "csdap_client_password" {
+  type        = string
+  description = "The csdap client password"
+}
+
+variable "csdap_host_url" {
+  type        = string
+  description = "The csdap host url"
+}
+
 variable "ecs_cluster_instance_subnet_ids" {
   type    = list(string)
   default = []
