@@ -43,7 +43,7 @@ data "terraform_remote_state" "data_persistence" {
 }
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v9.0.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v9.2.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
@@ -126,15 +126,9 @@ module "cumulus" {
   # Thin Egress App settings
   # Remove if using Cognito
   # must match stage_name variable for thin-egress-app module
-  tea_api_gateway_stage = local.tea_stage_name
 
-  tea_rest_api_id               = module.thin_egress_app.rest_api.id
-  tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
-  tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
-  tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
 
   # Cumulus Distribution settings. Uncomment the following line and remove/comment the above variables if using the Cumulus Distribution API instead of TEA.
-  # tea_external_api_endpoint = var.cumulus_distribution_url
 
   log_destination_arn          = var.log_destination_arn
   additional_log_groups_to_elk = var.additional_log_groups_to_elk
