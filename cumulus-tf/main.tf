@@ -133,7 +133,7 @@ module "cumulus" {
   tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
   tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
 
-  # Cumulus Distribution settings. Uncomment using Cognito.
+  # Cumulus Distribution settings. Uncomment the following line and remove/comment the above variables if using the Cumulus Distribution API instead of TEA.
   # tea_external_api_endpoint = var.cumulus_distribution_url
 
   log_destination_arn          = var.log_destination_arn
