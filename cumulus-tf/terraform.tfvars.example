@@ -118,3 +118,7 @@ deploy_distribution_s3_credentials_endpoint = false
 # additional_log_groups_to_elk = {
 #  "MyLogs" = "/aws/lambda/my-logs"
 # }
+
+# Optional. Uncomment if using Cumulus Distribution.
+# toggle this after deployed to put the correct port in. (and hosts and config)
+# cumulus_distribution_url = "cumulus distribution url"
