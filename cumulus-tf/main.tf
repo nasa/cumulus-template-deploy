@@ -23,18 +23,14 @@ provider "aws" {
   }
 }
 
-provider "aws" {
-  alias   = "usw2"
-  region  = "us-west-2"
-  profile = var.aws_profile
-}
-
 locals {
   tags                            = merge(var.tags, { Deployment = var.prefix })
   elasticsearch_alarms            = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_alarms", [])
   elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
   elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
   elasticsearch_security_group_id = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_security_group_id", "")
+  protected_bucket_names          = [for k, v in var.buckets : v.name if v.type == "protected"]
+  public_bucket_names             = [for k, v in var.buckets : v.name if v.type == "public"]
   rds_security_group              = lookup(data.terraform_remote_state.data_persistence.outputs, "rds_security_group", "")
   rds_credentials_secret_arn      = lookup(data.terraform_remote_state.data_persistence.outputs, "rds_user_access_secret_arn", "")
 }
@@ -48,10 +44,16 @@ data "terraform_remote_state" "data_persistence" {
   workspace = terraform.workspace
 }
 
+data "aws_lambda_function" "sts_credentials" {
+  function_name = "gsfc-ngap-sh-s3-sts-get-keys"
+}
+
+data "aws_lambda_function" "sts_policy_helper" {
+  function_name = "gsfc-ngap-sh-sts-policy-helper"
+}
+
 module "cumulus" {
-  # source = "https://github.com/nasa/cumulus/releases/download/v9.2.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
-  # TODO: Testing only
-  source = "../../cumulus/tf-modules/cumulus/"
+  source = "https://github.com/nasa/cumulus/releases/download/v9.2.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
@@ -125,20 +127,14 @@ module "cumulus" {
   # Remove if using Cumulus Distribution
   # must match stage_name variable for thin-egress-app module
   tea_api_gateway_stage = local.tea_stage_name
-  # tea_api_gateway_stage = local.tea_stage_name
 
   tea_rest_api_id               = module.thin_egress_app.rest_api.id
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
   tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
   tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
-  # tea_rest_api_id               = module.thin_egress_app.rest_api.id
-  # tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
-  # tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
-  # tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
 
   # Cumulus Distribution settings. Uncomment the following line and remove/comment the above variables if using the Cumulus Distribution API instead of TEA.
   # tea_external_api_endpoint = var.cumulus_distribution_url
-  tea_external_api_endpoint = var.cumulus_distribution_url
 
   log_destination_arn          = var.log_destination_arn
   additional_log_groups_to_elk = var.additional_log_groups_to_elk
