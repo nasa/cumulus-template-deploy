@@ -327,3 +327,9 @@ variable "ems_deploy" {
   type        = bool
   default     = true
 }
+
+variable "deploy_cumulus_distribution" {
+  description = "If true, does not deploy the TEA distribution API"
+  type        = bool
+  default     = false
+}

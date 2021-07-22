@@ -124,6 +124,8 @@ tea_distribution_url = "TEA distribution url"
 
 # Cumulus Distribution variables.
 
+deploy_cumulus_distribution = false
+
 # If using Cumulus Distribution, Toggle this after deployed to put the correct port in. (and hosts and config)
 # cumulus_distribution_url = "cumulus distribution url"
 
