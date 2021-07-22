@@ -53,7 +53,6 @@ data "aws_lambda_function" "sts_policy_helper" {
 }
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v9.2.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
 
@@ -65,7 +64,6 @@ module "cumulus" {
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
   ecs_cluster_instance_subnet_ids = length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
@@ -130,7 +128,6 @@ module "cumulus" {
 
   tea_rest_api_id               = module.thin_egress_app.rest_api.id
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
-  tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
   tea_internal_api_endpoint     = var.tea_distribution_url
   tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
 
