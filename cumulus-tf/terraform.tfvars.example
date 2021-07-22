@@ -119,9 +119,12 @@ deploy_distribution_s3_credentials_endpoint = false
 #  "MyLogs" = "/aws/lambda/my-logs"
 # }
 
+# If using TEA, Toggle this after deployed to put the correct port in. (and hosts and config)
+tea_distribution_url = "TEA distribution url"
+
 # Cumulus Distribution variables.
 
-# Optional. Toggle this after deployed to put the correct port in. (and hosts and config)
+# If using Cumulus Distribution, Toggle this after deployed to put the correct port in. (and hosts and config)
 # cumulus_distribution_url = "cumulus distribution url"
 
 # CSDAP configuration for cumulus distribution

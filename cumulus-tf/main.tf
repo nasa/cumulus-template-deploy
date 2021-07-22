@@ -131,6 +131,7 @@ module "cumulus" {
   tea_rest_api_id               = module.thin_egress_app.rest_api.id
   tea_rest_api_root_resource_id = module.thin_egress_app.rest_api.root_resource_id
   tea_internal_api_endpoint     = module.thin_egress_app.internal_api_endpoint
+  tea_internal_api_endpoint     = var.tea_distribution_url
   tea_external_api_endpoint     = module.thin_egress_app.api_endpoint
 
   # Cumulus Distribution settings. Uncomment the following line and remove/comment the above variables if using the Cumulus Distribution API instead of TEA.

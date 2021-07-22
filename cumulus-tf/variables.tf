@@ -163,6 +163,12 @@ variable "cumulus_distribution_url" {
   description = "The url of cumulus distribution API Gateway endpoint"
 }
 
+variable "tea_distribution_url" {
+  type        = string
+  default     = null
+  description = "The url of TEA API Gateway endpoint"
+}
+
 variable "deploy_distribution_s3_credentials_endpoint" {
   description = "Whether or not to include the S3 credentials endpoint in the Thin Egress App"
   type        = bool
