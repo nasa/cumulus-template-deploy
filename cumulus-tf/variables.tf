@@ -37,16 +37,19 @@ variable "cmr_oauth_provider" {
 
 variable "csdap_client_id" {
   type        = string
+  default     = null
   description = "The csdap client id"
 }
 
 variable "csdap_client_password" {
   type        = string
+  default     = null
   description = "The csdap client password"
 }
 
 variable "csdap_host_url" {
   type        = string
+  default     = null
   description = "The csdap host url"
 }
 
