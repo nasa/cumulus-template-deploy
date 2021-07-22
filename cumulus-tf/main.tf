@@ -44,13 +44,6 @@ data "terraform_remote_state" "data_persistence" {
   workspace = terraform.workspace
 }
 
-data "aws_lambda_function" "sts_credentials" {
-  function_name = "gsfc-ngap-sh-s3-sts-get-keys"
-}
-
-data "aws_lambda_function" "sts_policy_helper" {
-  function_name = "gsfc-ngap-sh-sts-policy-helper"
-}
 
 module "cumulus" {
 
