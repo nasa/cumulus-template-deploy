@@ -267,12 +267,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "ems_deploy" {
-  description = "If true, deploys the EMS reporting module"
-  type        = bool
-  default     = true
-}
-
 variable "deploy_cumulus_distribution" {
   description = "If true, does not deploy the TEA distribution API"
   type        = bool
