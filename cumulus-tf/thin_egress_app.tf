@@ -32,7 +32,7 @@ resource "aws_s3_bucket_object" "bucket_map_yaml" {
 }
 
 module "thin_egress_app" {
-  source = "s3::https://s3.amazonaws.com/asf.public.code/thin-egress-app/tea-terraform-build.100.zip"
+  source = "s3::https://s3.amazonaws.com/asf.public.code/thin-egress-app/tea-terraform-build.102.zip"
 
   auth_base_url              = var.urs_url
   bucket_map_file            = aws_s3_bucket_object.bucket_map_yaml.id
