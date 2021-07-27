@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 module "rds_cluster" {
-  source = "https://github.com/nasa/cumulus/releases/download/v9.0.0/terraform-aws-cumulus-rds.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v9.3.0/terraform-aws-cumulus-rds.zip"
   db_admin_username        = var.db_admin_username
   db_admin_password        = var.db_admin_password
   region                   = var.region

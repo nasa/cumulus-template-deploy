@@ -101,20 +101,24 @@ deploy_distribution_s3_credentials_endpoint = false
 # metrics_es_username = "user"
 # metrics_es_password = "password"
 
-## Optional. Required to send EMS ingest/distribution reports.
-# ems_host              = "ems-host.nasa.gov"
-# ems_port              = 22
-# ems_path              = "/"
-# ems_datasource        = "UAT"
-# ems_private_key       = "ems-private.pem"
-# ems_provider          = "CUMULUS"
-# ems_retention_in_days = 30
-# ems_submit_report     = true
-# ems_username          = "user"
-
 ## Optional. Required to send logs to the Metrics ELK stack
 # log_api_gateway_to_cloudwatch = false
 # log_destination_arn = "arn:aws:logs:us-east-1:1234567890:destination:LogsDestination"
 # additional_log_groups_to_elk = {
 #  "MyLogs" = "/aws/lambda/my-logs"
 # }
+
+# If using TEA, Toggle this after deployed to put the correct port in. (and hosts and config)
+tea_distribution_url = "TEA distribution url"
+
+# Cumulus Distribution variables.
+
+deploy_cumulus_distribution = false
+
+# If using Cumulus Distribution, Toggle this after deployed to put the correct port in. (and hosts and config)
+# cumulus_distribution_url = "cumulus distribution url"
+
+# CSDAP configuration for cumulus distribution
+# csdap_client_id = "csdap client id "
+# csdap_client_password = "csdap client password"
+# csdap_host_url = "csdap host url"

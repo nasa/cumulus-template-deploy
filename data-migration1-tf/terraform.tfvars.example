@@ -13,5 +13,3 @@ data_persistence_remote_state_config = {
   region = "us-east-1"
 }
 
-rds_security_group_id = "sg-security_group_id"
-rds_user_access_secret_arn = "secret_arn"
