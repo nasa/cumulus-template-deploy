@@ -4,6 +4,16 @@ variable "cmr_client_id" {
   type = string
 }
 
+variable "deploy_to_ngap" {
+  description = "true if deploying to an NGAP environment"
+  type = bool
+}
+
+variable "cumulus_message_adapter_version" {
+  description = "Version of Cumulus Message Adapter to download"
+  type = string
+}
+
 variable "cmr_environment" {
   type = string
 }
@@ -17,10 +27,6 @@ variable "cmr_provider" {
 }
 
 variable "cmr_username" {
-  type = string
-}
-
-variable "cumulus_message_adapter_lambda_layer_version_arn" {
   type = string
 }
 
@@ -131,10 +137,6 @@ variable "thin_egress_jwt_secret_name" {
   description = "Name of AWS secret where keys for the Thin Egress App JWT encode/decode are stored"
 }
 
-variable "token_secret" {
-  type = string
-}
-
 variable "urs_client_id" {
   type = string
 }
@@ -186,6 +188,7 @@ variable "distribution_url" {
 variable "ecs_cluster_instance_image_id" {
   type        = string
   description = "AMI ID of ECS instances"
+  default = null
 }
 
 variable "key_name" {
