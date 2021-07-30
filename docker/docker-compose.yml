@@ -1,0 +1,27 @@
+version: '2.3'
+
+services:
+  deploy:
+    build:
+      dockerfile: docker/Dockerfile
+      context: ../
+      args:
+        - AWS_ACCESS_KEY_ID
+        - AWS_ACCOUNT_ID
+        - AWS_REGION
+        - AWS_SECRET_ACCESS_KEY
+        - PREFIX
+        - EARTHDATA_CLIENT_ID
+        - EARTHDATA_CLIENT_PASSWORD
+        - SSH_KEY
+        - OPERATOR_API_USER
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_ACCOUNT_ID
+      - AWS_REGION
+      - AWS_SECRET_ACCESS_KEY
+      - PREFIX
+      - EARTHDATA_CLIENT_ID
+      - EARTHDATA_CLIENT_PASSWORD
+      - SSH_KEY
+      - OPERATOR_API_USER

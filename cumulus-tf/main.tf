@@ -47,7 +47,7 @@ data "terraform_remote_state" "data_persistence" {
 
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v9.3.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v9.0.1/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = aws_lambda_layer_version.cma_layer.arn
 
@@ -132,7 +132,7 @@ module "cumulus" {
   log_destination_arn          = var.log_destination_arn
   additional_log_groups_to_elk = var.additional_log_groups_to_elk
 
-  deploy_cumulus_distribution = var.deploy_cumulus_distribution
+  # deploy_cumulus_distribution = var.deploy_cumulus_distribution
   deploy_distribution_s3_credentials_endpoint = var.deploy_distribution_s3_credentials_endpoint
 
   tags = local.tags
