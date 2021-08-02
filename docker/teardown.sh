@@ -63,3 +63,6 @@ cd ../rds-cluster-tf
 
 aws s3 rb s3://$PREFIX-tf-state --force
 aws s3 rb s3://$PREFIX-internal --force
+aws s3 rb s3://$PREFIX-public
+aws s3 rb s3://$PREFIX-private
+aws s3 rb s3://$PREFIX-protected

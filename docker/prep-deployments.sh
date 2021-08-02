@@ -55,6 +55,7 @@ echo "
   provision_user_database = true
   permissions_boundary_arn = \"arn:aws:iam::$AWS_ACCOUNT_ID:policy/NGAPShNonProdRoleBoundary\"
   prefix     = \"$PREFIX\"
+  engine_version = \"10.serverless_14\"
   vpc_id=\"\"
   subnets=[\"\"]
 " >> terraform.tfvars
@@ -199,6 +200,18 @@ echo "
     internal = {
       name = \"$INTERNAL_BUCKET\"
       type = \"internal\"
+    }
+    private = {
+      name = \"$PREFIX-private\"
+      type = \"private\"
+    },
+    protected = {
+      name = \"$PREFIX-protected\"
+      type = \"protected\"
+    }
+    public = {
+      name = \"$PREFIX-public\"
+      type = \"public\"
     }
   }
   system_bucket = \"$INTERNAL_BUCKET\"

@@ -1,13 +1,14 @@
 #!/bin/bash
 set -e
 
-echo Using prefix $PREFIX
-INTERNAL_BUCKET=$PREFIX-internal
-TFSTATE_BUCKET=$PREFIX-tf-state
+echo Using prefix $prefix
 
 ### CREATE BUCKETS
-aws s3api create-bucket --bucket $TFSTATE_BUCKET
-aws s3api create-bucket --bucket $INTERNAL_BUCKET
+aws s3api create-bucket --bucket $PREFIX-tf-state
+aws s3api create-bucket --bucket $PREFIX-internal
+aws s3api create-bucket --bucket $PREFIX-public
+aws s3api create-bucket --bucket $PREFIX-private
+aws s3api create-bucket --bucket $PREFIX-protected
 
 ### CREATE JWT SECRET FOR TEA ###
 

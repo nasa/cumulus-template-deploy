@@ -23,7 +23,7 @@ data "terraform_remote_state" "data_persistence" {
 data "aws_region" "current" {}
 
 module "data_migration1" {
-  source = "https://github.com/nasa/cumulus/releases/download/v9.0.1/terraform-aws-cumulus-data-migrations1.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v9.3.0/terraform-aws-cumulus-data-migrations1.zip"
 
   prefix = var.prefix
 
