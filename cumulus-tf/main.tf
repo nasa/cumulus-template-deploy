@@ -67,7 +67,6 @@ module "cumulus" {
 
   rds_security_group         = local.rds_security_group
   rds_user_access_secret_arn = local.rds_credentials_secret_arn
-  rds_connection_heartbeat   = var.rds_connection_heartbeat
 
   urs_url             = var.urs_url
   urs_client_id       = var.urs_client_id

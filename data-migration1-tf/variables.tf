@@ -22,12 +22,6 @@ variable "permissions_boundary_arn" {
   default = null
 }
 
-variable "rds_connection_heartbeat" {
-  description = "If true, send a query to verify database connection is live on connection creation and retry on initial connection timeout.  Set to false if not using serverless RDS"
-  type    = bool
-  default = true
-}
-
 variable "region" {
   type    = string
   default = "us-east-1"
