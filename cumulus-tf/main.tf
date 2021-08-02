@@ -33,6 +33,7 @@ locals {
   public_bucket_names             = [for k, v in var.buckets : v.name if v.type == "public"]
   rds_security_group              = lookup(data.terraform_remote_state.data_persistence.outputs, "rds_security_group", "")
   rds_credentials_secret_arn      = lookup(data.terraform_remote_state.data_persistence.outputs, "rds_user_access_secret_arn", "")
+  ecs_cluster_instance_image_id = var.ecs_cluster_instance_image_id != null ? var.ecs_cluster_instance_image_id : (var.deploy_to_ngap ? data.aws_ssm_parameter.ngap_ecs_image_id[0].value : jsondecode(data.aws_ssm_parameter.aws_ecs_image_id[0].value).image_id)
 }
 
 data "aws_caller_identity" "current" {}
@@ -48,17 +49,16 @@ data "terraform_remote_state" "data_persistence" {
 module "cumulus" {
   source = "https://github.com/nasa/cumulus/releases/download/v9.3.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
-  cumulus_message_adapter_lambda_layer_version_arn = var.cumulus_message_adapter_lambda_layer_version_arn
+  cumulus_message_adapter_lambda_layer_version_arn = aws_lambda_layer_version.cma_layer.arn
 
   prefix = var.prefix
 
-  # DO NOT CHANGE THIS VARIABLE UNLESS DEPLOYING OUTSIDE NGAP
-  deploy_to_ngap = true
+  deploy_to_ngap = var.deploy_to_ngap
 
   vpc_id            = var.vpc_id
   lambda_subnet_ids = var.lambda_subnet_ids
 
-  ecs_cluster_instance_image_id   = var.ecs_cluster_instance_image_id
+  ecs_cluster_instance_image_id   = local.ecs_cluster_instance_image_id
   ecs_cluster_instance_subnet_ids = length(var.ecs_cluster_instance_subnet_ids) == 0 ? var.lambda_subnet_ids : var.ecs_cluster_instance_subnet_ids
   ecs_cluster_min_size            = 1
   ecs_cluster_desired_size        = 1
@@ -110,7 +110,7 @@ module "cumulus" {
   dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
 
   # Archive API settings
-  token_secret                = var.token_secret
+  token_secret                = random_string.token_secret.result
   archive_api_users           = var.api_users
   archive_api_port            = var.archive_api_port
   private_archive_api_gateway = var.private_archive_api_gateway
