@@ -140,6 +140,8 @@ sed -e 's/var.rds_user_access_secret_arn/lookup(data.terraform_remote_state.data
 
 ../../terraform init
 
+provider_kms_key=$(aws kms list-keys --max-items 1 | grep "KeyId" | sed -E 's/.*"([^"]+)",/\1/')
+
 echo "
   region = \"$AWS_REGION\"
   prefix     = \"$PREFIX\"
@@ -149,7 +151,7 @@ echo "
     key    = \"$DATA_PERSISTENCE_KEY\"
     region = \"$AWS_REGION\"
   }
-  provider_kms_key_id=\"6244f93b-12ae-4272-aba1-f3be53f67023\"
+  provider_kms_key_id=\"$provider_kms_key\"
   rds_user_access_secret_arn = \"\"
   vpc_id=\"\"
 " >> terraform.tfvars

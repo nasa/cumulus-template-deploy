@@ -57,7 +57,11 @@ _Before_ your first deployment, run the following:
 `sh build/deployment-one-time-setup.sh`
 
 Using your prefix, this will
-- Create buckets
+- Create buckets:
+  - <PREFIX>-internal
+  - <PREFIX>-private
+  - <PREFIX>-public
+  - <PREFIX>-protected
 - Create the TEA JWT secret
 
 You will not need to run this on repeat deployments.
@@ -115,7 +119,7 @@ Execute one-time setup steps for the deployment.
 
 ## teardown.sh
 
-Tears down all resources deployed by `deploy-all.sh`.
+Tears down all resources deployed by `deploy-all.sh` and `build/deployment-one-time-setup.sh`.
 
 ## print-connection-commands.sh
 
