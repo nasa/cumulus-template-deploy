@@ -11,6 +11,7 @@ This bare bones deployment does not include:
 ## Prerequisites
 
 - Docker
+- docker-compose (if running Linux)
 - Credentials to an NGAP AWS Account
 - SSH key (https://nasa.github.io/cumulus/docs/deployment/deployment-readme#set-up-ec2-key-pair-optional)
 - Earthdata Login username and password
@@ -46,9 +47,13 @@ The build command:
   - Generates the `terraform.tfvars` file based on environment variables
   - Runs `terraform init`
 
+After this runs, a bucket named <PREFIX>-tf-state will have been created in your AWS account.
+
 ### Initialize a bash shell in your container
 
 `docker-compose run deploy /bin/bash`
+
+This will create a shell running inside your docker container. All subsequent commands should be run from this shell, unless otherwise noted.
 
 ### Run one-time setup commands
 
@@ -66,6 +71,8 @@ Using your prefix, this will
 
 You will not need to run this on repeat deployments.
 
+Upon completion, you can validate that the above buckets were created in your AWS account.
+
 ### Deploy all
 
 `sh build/deploy-all.sh`
@@ -76,19 +83,40 @@ This deploys the following deployment layers in order:
 - Data migration
 - Cumulus
 
+Deployment output and any errors will be printed to the console.
+
 ### Connect to backend API
 
 `sh print-connection-commands.sh`
 
-This will print out something l
+This will print out something like:
+```
+# API Connection via tunneling
+## Create local port:
+aws ssm start-session --target i-000000000000 --document-name AWS-StartPortForwardingSession --parameters portNumber=22,localPortNumber=4343
+
+## Run in a separate terminal to create the tunnel:
+ssh -p 4343 -N -L 8000:abcdefghij.execute-api.us-east-1.amazonaws.com:443 ec2-user@localhost
+
+## Add to your /etc/hosts file:
+127.0.0.1       abcdefghij.execute-api.us-east-1.amazonaws.com
+
+## Test your endpoint
+curl https://abcdefghij.execute-api.us-east-1.amazonaws.com:8000/dev/version
+
+## Add the redirect API to your Earthdata Login application
+https://abcdefghij.execute-api.us-east-1.amazonaws.com:8000/dev/token
+
+## APIROOT for your dashboard
+APIROOT=https://abcdefghij.execute-api.us-east-1.amazonaws.com:8000/dev/
+```
 
 ## Inspect your deployment files
 
-_Outside_ of the Docker container run
+_Outside_ of the Docker container, in a separate terminal, run
 
 ```
-CONTAINER_ID=$(docker ps -alq)
-docker cp $CONTAINER_ID:/deploy ./deploy
+CONTAINER_ID=$(docker ps -alq) && docker cp $CONTAINER_ID:/deploy ./deploy
 ```
 
 This will copy all of the files used for deployment to a `deploy/` folder so you can view them. These files can be used to configure and update your deployment from your local machine.
@@ -98,6 +126,8 @@ This will copy all of the files used for deployment to a `deploy/` folder so you
 To save money and resources, when finished with your Cumulus deployment you can tear it down by running:
 
 `sh build/teardown.sh`
+
+Teardown output can be viewed in the console.
 
 # Scripts
 
