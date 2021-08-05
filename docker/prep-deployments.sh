@@ -45,11 +45,13 @@ sed -e 's/var.subnets/data.aws_subnet_ids.subnet_ids.ids/g' main.tf >> main.tf.t
 
 ../../terraform init
 
+prefix_no_dash=$(echo $PREFIX | sed -e 's/-//g')
+
 echo "
   cluster_identifier = \"$PREFIX-cumulus-rds-serverless\"
-  db_admin_username = \"$PREFIX"username"\"
+  db_admin_username = \"$prefix_no_dash"username"\"
   db_admin_password = \"$PREFIX-password\"
-  rds_user_password = \"$PREFIX"password"\"
+  rds_user_password = \"$prefix_no_dash"password"\"
   region = \"$AWS_REGION\"
   deletion_protection = false
   provision_user_database = true
