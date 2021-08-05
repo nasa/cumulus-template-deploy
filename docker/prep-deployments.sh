@@ -175,9 +175,12 @@ echo "terraform {
   }
 }" >> terraform.tf
 
-# Replace values in main.tf with the values coming from vpcConfig.tf
+# Replace values in main.tf and thin_egress_app.tf with the values coming from vpcConfig.tf
 sed -e 's/var.vpc_id/data.aws_vpc.application_vpcs.id/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
 sed -e 's/var.lambda_subnet_ids/data.aws_subnet_ids.subnet_ids.ids/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
+
+sed -e 's/var.vpc_id/data.aws_vpc.application_vpcs.id/g' thin_egress_app.tf >> thin_egress_app.tf.tmp && mv thin_egress_app.tf.tmp thin_egress_app.tf
+sed -e 's/var.lambda_subnet_ids/data.aws_subnet_ids.subnet_ids.ids/g' thin_egress_app.tf >> thin_egress_app.tf.tmp && mv thin_egress_app.tf.tmp thin_egress_app.tf
 
 ../../terraform init
 
