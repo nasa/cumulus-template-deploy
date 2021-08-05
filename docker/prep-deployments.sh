@@ -115,8 +115,6 @@ echo "
   subnet_ids=[\"\"]
 " >> terraform.tfvars
 
-# ../../terraform apply -auto-approve -input=false >> ../../output/data-persistence-deployment.txt
-
 cd ../..
 
 ### SETUP DATA MIGRATION ###
@@ -158,8 +156,6 @@ echo "
   vpc_id=\"\"
 " >> terraform.tfvars
 
-# ../../terraform apply -auto-approve -input=false >> ../../output/data-migration-deployment.txt
-
 cd ../..
 
 ### SETUP CUMULUS ###
@@ -168,9 +164,6 @@ echo Deploying Cumulus
 
 CUMULUS_KEY="$PREFIX/cumulus/terraform.tfstate"
 TEA_JWT_SECRET=$PREFIX"_jwt_secret_for_tea"
-
-# Get the latest CMA layer ARN
-# cma_layer=$(aws lambda list-layer-versions --layer-name $PREFIX-CMA-layer | grep "LayerVersionArn" -m1 | sed -E 's/.*"([^"]+)".*/\1/')
 
 cd deploy/cumulus-tf
 
@@ -185,7 +178,6 @@ echo "terraform {
 # Replace values in main.tf with the values coming from vpcConfig.tf
 sed -e 's/var.vpc_id/data.aws_vpc.application_vpcs.id/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
 sed -e 's/var.lambda_subnet_ids/data.aws_subnet_ids.subnet_ids.ids/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
-# sed -e 's/var.ecs_cluster_instance_image_id/data.aws_ssm_parameter.ecs_image_id.value/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
 
 ../../terraform init
 
