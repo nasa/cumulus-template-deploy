@@ -12,7 +12,7 @@ This bare bones deployment does not include:
 
 - Docker
 - docker-compose (if running Linux)
-- Credentials to an NGAP AWS Account
+- Credentials to an NGAP AWS Account (Long Term Access Keys)
 - SSH key (https://nasa.github.io/cumulus/docs/deployment/deployment-readme#set-up-ec2-key-pair-optional)
 - Earthdata Login username and password
 - Earthdata application client id and password
