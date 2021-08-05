@@ -2,6 +2,7 @@ version: '2.3'
 
 services:
   deploy:
+    image: deploy-cumulus
     build:
       dockerfile: docker/Dockerfile
       context: ../
