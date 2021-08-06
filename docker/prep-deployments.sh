@@ -152,7 +152,6 @@ echo "
     region = \"$AWS_REGION\"
   }
   provider_kms_key_id=\"$provider_kms_key\"
-  rds_user_access_secret_arn = \"\"
   vpc_id=\"\"
 " >> terraform.tfvars
 
