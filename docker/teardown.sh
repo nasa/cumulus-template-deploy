@@ -9,10 +9,9 @@ cd deploy/cumulus-tf
 
 ../../terraform destroy -auto-approve -input=false
 
-
 ### TEARDOWN TEA SECRET ###
 
-aws secretsmanager delete-secret --secret-id $PREFIX"_jwt_secret_for_tea"
+aws secretsmanager delete-secret --secret-id $PREFIX"_jwt_secret_for_tea" --force-delete-without-recovery
 
 ### TEARDOWN DATA MIGRATION ###
 
@@ -26,25 +25,25 @@ cd ../data-migration1-tf
 
 echo Tearing down Data Persistence
 
-cd ../data-persistence-tf
+# Use a separate directory with no configuration to work around prevent_destroy lifecycle config
+mkdir ../data-persistence-delete
+cd ../data-persistence-delete
 
-../../terraform destroy -auto-approve -input=false
+TFSTATE_BUCKET=$PREFIX-tf-state
+DATA_PERSISTENCE_KEY="$PREFIX/data-persistence/terraform.tfstate"
 
-# Manually delete the Dynamo tables
-aws dynamodb delete-table --table-name $PREFIX-AccessTokensTable
-aws dynamodb delete-table --table-name $PREFIX-AsyncOperationsTable
-aws dynamodb delete-table --table-name $PREFIX-CollectionsTable
-aws dynamodb delete-table --table-name $PREFIX-ExecutionsTable
-aws dynamodb delete-table --table-name $PREFIX-FilesTable
-aws dynamodb delete-table --table-name $PREFIX-GranulesTable
-aws dynamodb delete-table --table-name $PREFIX-PdrsTable
-aws dynamodb delete-table --table-name $PREFIX-ProvidersTable
-aws dynamodb delete-table --table-name $PREFIX-ReconciliationReportsTable
-aws dynamodb delete-table --table-name $PREFIX-RulesTable
-aws dynamodb delete-table --table-name $PREFIX-SemaphoresTable
+# Ensure remote state is configured for the deployment
+echo "terraform {
+  backend \"s3\" {
+    bucket = \"$TFSTATE_BUCKET\"
+    key    = \"$DATA_PERSISTENCE_KEY\"
+    region = \"$AWS_REGION\"
+  }
+}" >> terraform.tf
 
-# Manually delete ES domain
-aws es delete-elasticsearch-domain --domain-name $PREFIX-es-vpc
+# Initialize remote state and apply empty configuration
+../../terraform init
+../../terraform apply -auto-approve -input=false
 
 ### TEARDOWN RDS CLUSTER ###
 
@@ -61,3 +60,7 @@ aws s3 rb s3://$PREFIX-internal --force
 aws s3 rb s3://$PREFIX-public --force
 aws s3 rb s3://$PREFIX-private --force
 aws s3 rb s3://$PREFIX-protected --force
+
+### TEARDOWN CLEANUP ###
+
+rm -rf ../data-persistence-delete
