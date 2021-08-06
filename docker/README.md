@@ -95,7 +95,7 @@ This will print out something like:
 ## Create local port:
 aws ssm start-session --target i-000000000000 --document-name AWS-StartPortForwardingSession --parameters portNumber=22,localPortNumber=4343
 
-## Run in a separate terminal to create the tunnel:
+## Configure with path to keypair and run in a separate terminal to create the tunnel:
 ssh -p 4343 -N -L 8000:abcdefghij.execute-api.us-east-1.amazonaws.com:443 ec2-user@localhost -i path/to/keypair
 
 ## Add to your /etc/hosts file:
