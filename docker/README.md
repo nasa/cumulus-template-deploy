@@ -28,7 +28,7 @@ The deployment uses locally defined environment variables to generate all of the
 - AWS_SECRET_ACCESS_KEY
 - AWS_REGION
 - PREFIX (the deployment prefix you want to use, there are length limits so keep it on the shorter side)
-- EARTHDATA_CLIENT_ID
+- EARTHDATA_CLIENT_ID (from the Earthdata application)
 - EARTHDATA_CLIENT_PASSWORD
 - SSH_KEY (name of your key pair after following these steps: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html)
 - OPERATOR_API_USER (Your Earthdata Login Id, which will be used to access the API and dashboard)
