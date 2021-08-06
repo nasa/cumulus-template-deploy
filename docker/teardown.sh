@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo Cleaning up deployment for prefix $PREFIX
 
 ### TEARDOWN CUMULUS ###
