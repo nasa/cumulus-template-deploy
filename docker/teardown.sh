@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 echo Cleaning up deployment for prefix $PREFIX
 
 ### TEARDOWN CUMULUS ###
@@ -28,7 +26,6 @@ cd ../data-migration1-tf
 
 echo Tearing down Data Persistence
 
-set +e
 cd ../data-persistence-tf
 
 ../../terraform destroy -auto-approve -input=false
@@ -48,8 +45,6 @@ aws dynamodb delete-table --table-name $PREFIX-SemaphoresTable
 
 # Manually delete ES domain
 aws es delete-elasticsearch-domain --domain-name $PREFIX-es-vpc
-set -e
-
 
 ### TEARDOWN RDS CLUSTER ###
 
