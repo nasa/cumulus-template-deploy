@@ -17,7 +17,7 @@ echo "
 aws ssm start-session --target $ec2_instance_id --document-name AWS-StartPortForwardingSession --parameters portNumber=22,localPortNumber=4343
 
 ## Run in a separate terminal to create the tunnel:
-ssh -p 4343 -N -L 8000:$api_gateway:443 ec2-user@localhost
+ssh -p 4343 -N -L 8000:$api_gateway:443 ec2-user@localhost -i path/to/keypair
 
 ## Add to your /etc/hosts file:
 127.0.0.1       $api_gateway
