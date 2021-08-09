@@ -16,6 +16,7 @@ COPY docker/deployment-one-time-setup.sh /build/
 COPY docker/prep-deployments.sh /build/
 COPY docker/deploy-cumulus.sh /build/
 COPY docker/teardown.sh /build/
+COPY docker/teardown-one-time-setup.sh /build/
 COPY docker/deploy-all.sh /build/
 COPY docker/print-connection-commands.sh /
 

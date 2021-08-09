@@ -10,10 +10,6 @@ cd deploy/cumulus-tf
 
 ../../terraform destroy -auto-approve -input=false
 
-### TEARDOWN TEA SECRET ###
-
-aws secretsmanager delete-secret --secret-id $PREFIX"_jwt_secret_for_tea" --force-delete-without-recovery
-
 ### TEARDOWN DATA MIGRATION ###
 
 echo Tearing down Data Migration
@@ -53,14 +49,6 @@ echo Tearing down the RDS cluster
 cd ../rds-cluster-tf
 
 ../../terraform destroy -auto-approve -input=false
-
-### TEARDOWN BUCKETS ###
-
-aws s3 rb s3://$PREFIX-tf-state --force
-aws s3 rb s3://$PREFIX-internal --force
-aws s3 rb s3://$PREFIX-public --force
-aws s3 rb s3://$PREFIX-private --force
-aws s3 rb s3://$PREFIX-protected --force
 
 ### TEARDOWN CLEANUP ###
 

@@ -127,6 +127,10 @@ To save money and resources, when finished with your Cumulus deployment you can 
 
 `sh build/teardown.sh`
 
+then, upon success:
+
+`sh build/teardown-one-time-setup.sh`
+
 Teardown output can be viewed in the console.
 
 # Scripts
@@ -149,7 +153,11 @@ Execute one-time setup steps for the deployment.
 
 ## teardown.sh
 
-Tears down all resources deployed by `deploy-all.sh` and `build/deployment-one-time-setup.sh`.
+Tears down all resources deployed by `deploy-all.sh`.
+
+## teardown-one-time-setup.sh
+
+Tears down all resources deployed by `build/deployment-one-time-setup.sh`. This is separate from `teardown.sh` to make sure the teardown function is complete before tearing down buckets, particularly the tf-state bucket.
 
 ## print-connection-commands.sh
 
