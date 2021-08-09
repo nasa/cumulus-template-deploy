@@ -4,6 +4,16 @@ variable "cmr_client_id" {
   type = string
 }
 
+variable "deploy_to_ngap" {
+  description = "true if deploying to an NGAP environment"
+  type = bool
+}
+
+variable "cumulus_message_adapter_version" {
+  description = "Version of Cumulus Message Adapter to download"
+  type = string
+}
+
 variable "cmr_environment" {
   type = string
 }
@@ -20,13 +30,33 @@ variable "cmr_username" {
   type = string
 }
 
-variable "cumulus_message_adapter_lambda_layer_version_arn" {
-  type = string
+variable "rds_connection_heartbeat" {
+  description = "If true, send a query to verify database connection is live on connection creation and retry on initial connection timeout.  Set to false if not using serverless RDS"
+  type        = bool
+  default     = false
 }
 
 variable "cmr_oauth_provider" {
   type    = string
   default = "earthdata"
+}
+
+variable "csdap_client_id" {
+  type        = string
+  default     = null
+  description = "The csdap client id"
+}
+
+variable "csdap_client_password" {
+  type        = string
+  default     = null
+  description = "The csdap client password"
+}
+
+variable "csdap_host_url" {
+  type        = string
+  default     = null
+  description = "The csdap host url"
 }
 
 variable "ecs_cluster_instance_subnet_ids" {
@@ -107,10 +137,6 @@ variable "thin_egress_jwt_secret_name" {
   description = "Name of AWS secret where keys for the Thin Egress App JWT encode/decode are stored"
 }
 
-variable "token_secret" {
-  type = string
-}
-
 variable "urs_client_id" {
   type = string
 }
@@ -136,6 +162,18 @@ variable "buckets" {
   default = {}
 }
 
+variable "cumulus_distribution_url" {
+  type        = string
+  default     = null
+  description = "The url of cumulus distribution API Gateway endpoint"
+}
+
+variable "tea_distribution_url" {
+  type        = string
+  default     = null
+  description = "The url of TEA API Gateway endpoint"
+}
+
 variable "deploy_distribution_s3_credentials_endpoint" {
   description = "Whether or not to include the S3 credentials endpoint in the Thin Egress App"
   type        = bool
@@ -147,59 +185,10 @@ variable "distribution_url" {
   default = null
 }
 
-variable "ems_datasource" {
+variable "ecs_cluster_instance_image_id" {
   type        = string
-  description = "the data source of EMS reports"
-  default     = "UAT"
-}
-
-variable "ems_host" {
-  type        = string
-  description = "EMS host"
-  default     = "change-ems-host"
-}
-
-variable "ems_path" {
-  type        = string
-  description = "EMS host directory path for reports"
-  default     = "/"
-}
-
-variable "ems_port" {
-  type        = number
-  description = "EMS host port"
-  default     = 22
-}
-
-variable "ems_private_key" {
-  type        = string
-  description = "the private key file used for sending reports to EMS"
-  default     = "ems-private.pem"
-}
-
-variable "ems_provider" {
-  type        = string
-  description = "the provider used for sending reports to EMS"
-  default     = null
-}
-
-variable "ems_retention_in_days" {
-  type        = number
-  description = "the retention in days for reports and s3 server access logs"
-  default     = 30
-}
-
-variable "ems_submit_report" {
-  type        = bool
-  description = "toggle whether the reports will be sent to EMS"
-  default     = false
-}
-
-variable "ems_username" {
-  type        = string
-  description = "the username used for sending reports to EMS"
-  default     = null
-
+  description = "AMI ID of ECS instances"
+  default = null
 }
 
 variable "key_name" {
@@ -281,8 +270,8 @@ variable "tags" {
   default     = {}
 }
 
-variable "ems_deploy" {
-  description = "If true, deploys the EMS reporting module"
+variable "deploy_cumulus_distribution" {
+  description = "If true, does not deploy the TEA distribution API"
   type        = bool
-  default     = true
+  default     = false
 }

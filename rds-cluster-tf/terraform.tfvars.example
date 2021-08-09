@@ -1,0 +1,11 @@
+db_admin_username = "<user>"
+db_admin_password = "<password>"
+region      = "<region>"
+vpc_id      = "<VPC>"
+subnets     = ["<subnet1>", "<subnet2>"]
+deletion_protection = false
+cluster_identifier  = "<cluster_identifier"
+tags        = { "tag1" = "value" }
+provision_user_database = false
+prefix = "PREFIX"
+permissions_boundary_arn = "arn:aws:iam::XXXXXXXX:policy/SomeRoleBoundary"
