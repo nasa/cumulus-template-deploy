@@ -7,7 +7,7 @@ aws configure set region $AWS_REGION
 aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
-TF_VERSION=$(cat build/.terraform-version)
+TF_VERSION=$(tr -d '\n' < ../.terraform-version)
 
 echo Installing Terraform version ${TF_VERSION}
 
