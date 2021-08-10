@@ -19,7 +19,7 @@ aws s3api head-bucket --bucket $TFSTATE_BUCKET
 
 if [[ $? != 0 ]]; then
 set -e
-aws s3api create-bucket --bucket $TFSTATE_BUCKET
+aws s3api create-bucket --bucket $TFSTATE_BUCKET --create-bucket-configuration LocationConstraint=$AWS_REGION
 fi
 
 set -e
