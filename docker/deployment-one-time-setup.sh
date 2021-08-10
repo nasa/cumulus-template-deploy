@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo Using prefix $prefix
+echo Using prefix $PREFIX
 
 ### CREATE BUCKETS
 
