@@ -15,7 +15,7 @@ echo internal $INTERNAL_BUCKET
 
 # Create the tf state bucket if it does not exist
 set +e
-aws s3api head-bucket --bucket $TFSTATE_BUCKET
+aws s3api head-bucket --bucket $TFSTATE_BUCKET --create-bucket-configuration LocationConstraint=$AWS_REGION
 
 if [[ $? != 0 ]]; then
 set -e
