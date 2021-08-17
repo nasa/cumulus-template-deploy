@@ -23,7 +23,6 @@ This bare bones deployment does not include:
 
 The deployment uses locally defined environment variables to generate all of the variables used for deployments. Define the following variables:
 
-- AWS_ACCOUNT_ID
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - AWS_REGION
@@ -35,7 +34,10 @@ The deployment uses locally defined environment variables to generate all of the
 
 ### Build the docker container
 
-`docker-compose build`
+```
+cd docker
+docker-compose build
+```
 
 The build command:
 - Installs requirements (`requirements.sh`)
@@ -59,7 +61,7 @@ This will create a shell running inside your docker container. All subsequent co
 
 _Before_ your first deployment, run the following:
 
-`sh build/deployment-one-time-setup.sh`
+`bash build/deployment-one-time-setup.sh`
 
 Using your prefix, this will
 - Create buckets:
@@ -71,11 +73,27 @@ Using your prefix, this will
 
 You will not need to run this on repeat deployments.
 
-Upon completion, you can validate that the above buckets were created in your AWS account.
+Upon completion, you can validate that the above buckets were created in your AWS account. The created bucket locations will be printed to the console.
+
+i.e.
+```
+{
+    "Location": "http://prefix-internal.s3.amazonaws.com/"
+}
+{
+    "Location": "http://prefix-public.s3.amazonaws.com/"
+}
+{
+    "Location": "http://prefix-private.s3.amazonaws.com/"
+}
+{
+    "Location": "http://prefix-protected.s3.amazonaws.com/"
+}
+```
 
 ### Deploy all
 
-`sh build/deploy-all.sh`
+`bash build/deploy-all.sh`
 
 This deploys the following deployment layers in order:
 - RDS Cluster
@@ -87,7 +105,7 @@ Deployment output and any errors will be printed to the console.
 
 ### Connect to backend API
 
-`sh print-connection-commands.sh`
+`bash print-connection-commands.sh`
 
 This will print out something like:
 ```
@@ -119,17 +137,19 @@ _Outside_ of the Docker container, in a separate terminal, run
 CONTAINER_ID=$(docker ps -alq) && docker cp $CONTAINER_ID:/deploy ./deploy
 ```
 
+Note: this only works if the deployment container is the most recently started container. If you're working with other docker containers, you'll have to set `CONTAINER_ID` to the correct container id.
+
 This will copy all of the files used for deployment to a `deploy/` folder so you can view them. These files can be used to configure and update your deployment from your local machine.
 
 ## Teardown
 
 To save money and resources, when finished with your Cumulus deployment you can tear it down by running:
 
-`sh build/teardown.sh`
+`bash build/teardown.sh`
 
 then, upon success:
 
-`sh build/teardown-one-time-setup.sh`
+`bash build/teardown-one-time-setup.sh`
 
 Teardown output can be viewed in the console.
 
