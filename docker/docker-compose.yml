@@ -8,7 +8,6 @@ services:
       context: ../
       args:
         - AWS_ACCESS_KEY_ID
-        - AWS_ACCOUNT_ID
         - AWS_REGION
         - AWS_SECRET_ACCESS_KEY
         - PREFIX
@@ -18,7 +17,6 @@ services:
         - OPERATOR_API_USER
     environment:
       - AWS_ACCESS_KEY_ID
-      - AWS_ACCOUNT_ID
       - AWS_REGION
       - AWS_SECRET_ACCESS_KEY
       - PREFIX
