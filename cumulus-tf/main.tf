@@ -47,7 +47,7 @@ data "terraform_remote_state" "data_persistence" {
 
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v9.3.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v11.1.1/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = aws_lambda_layer_version.cma_layer.arn
 
