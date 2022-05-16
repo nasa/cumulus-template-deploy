@@ -8,18 +8,25 @@ aws configure set region $AWS_REGION
 aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity | grep "Account" | sed -E 's/.*"([^"]+)",/\1/')
+
 echo Using prefix $PREFIX
 INTERNAL_BUCKET=$PREFIX-internal
 TFSTATE_BUCKET=$PREFIX-tf-state
-echo internal $INTERNAL_BUCKET
 
 # Create the tf state bucket if it does not exist
 set +e
-aws s3api head-bucket --bucket $TFSTATE_BUCKET --create-bucket-configuration LocationConstraint=$AWS_REGION
+
+aws s3api head-bucket --bucket $TFSTATE_BUCKET
 
 if [[ $? != 0 ]]; then
-set -e
-aws s3api create-bucket --bucket $TFSTATE_BUCKET --create-bucket-configuration LocationConstraint=$AWS_REGION
+  echo Creating TF state bucket $TFSTATE_BUCKET
+  set -e
+  if [[ $AWS_REGION = "us-east-1" ]]; then
+    aws s3api create-bucket --bucket $TFSTATE_BUCKET
+  else
+    aws s3api create-bucket --bucket $TFSTATE_BUCKET --create-bucket-configuration LocationConstraint=$AWS_REGION
+  fi
 fi
 
 set -e

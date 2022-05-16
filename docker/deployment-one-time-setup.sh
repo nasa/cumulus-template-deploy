@@ -7,11 +7,17 @@ echo Using prefix $PREFIX
 
 echo Creating buckets
 
-aws s3api create-bucket --bucket $PREFIX-tf-state --create-bucket-configuration LocationConstraint=$AWS_REGION
-aws s3api create-bucket --bucket $PREFIX-internal --create-bucket-configuration LocationConstraint=$AWS_REGION
-aws s3api create-bucket --bucket $PREFIX-public --create-bucket-configuration LocationConstraint=$AWS_REGION
-aws s3api create-bucket --bucket $PREFIX-private --create-bucket-configuration LocationConstraint=$AWS_REGION
-aws s3api create-bucket --bucket $PREFIX-protected --create-bucket-configuration LocationConstraint=$AWS_REGION
+if [[ $AWS_REGION = "us-east-1" ]]; then
+    aws s3api create-bucket --bucket $PREFIX-internal
+    aws s3api create-bucket --bucket $PREFIX-public
+    aws s3api create-bucket --bucket $PREFIX-private
+    aws s3api create-bucket --bucket $PREFIX-protected
+else
+    aws s3api create-bucket --bucket $PREFIX-internal --create-bucket-configuration LocationConstraint=$AWS_REGION
+    aws s3api create-bucket --bucket $PREFIX-public --create-bucket-configuration LocationConstraint=$AWS_REGION
+    aws s3api create-bucket --bucket $PREFIX-private --create-bucket-configuration LocationConstraint=$AWS_REGION
+    aws s3api create-bucket --bucket $PREFIX-protected --create-bucket-configuration LocationConstraint=$AWS_REGION
+fi
 
 ### CREATE JWT SECRET FOR TEA ###
 
