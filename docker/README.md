@@ -129,7 +129,9 @@ https://abcdefghij.execute-api.us-east-1.amazonaws.com:8000/dev/token
 APIROOT=https://abcdefghij.execute-api.us-east-1.amazonaws.com:8000/dev/
 ```
 
-## Inspect your deployment files
+## Copy the deployment files to your local machine
+
+The Docker container is used to bootstrap an initial Cumulus deployment. After a successful deployment from the Docker container, you will generally be updating and deploying individual components (e.g. `cumulus-tf`, `data-persistence-tf`) outside of Docker. In this example you will perform subsequent deployment updates from your local machine.
 
 _Outside_ of the Docker container, in a separate terminal, run
 
@@ -139,7 +141,7 @@ CONTAINER_ID=$(docker ps -alq) && docker cp $CONTAINER_ID:/deploy ./deploy
 
 Note: this only works if the deployment container is the most recently started container. If you're working with other docker containers, you'll have to set `CONTAINER_ID` to the correct container id.
 
-This will copy all of the files used for deployment to a `deploy/` folder so you can view them. These files can be used to configure and update your deployment from your local machine.
+This will copy all of the files used for deployment to a `deploy/` folder so you can view and use them for future deployments. These files can be used to configure and update your deployment from your local machine.
 
 ## Teardown
 
