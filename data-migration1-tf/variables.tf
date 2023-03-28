@@ -38,3 +38,16 @@ variable "vpc_id" {
   default = null
 }
 
+variable "cloudwatch_log_retention_periods" {
+  type = map(number)
+  description = "retention periods for the respective cloudwatch log group, these values will be used instead of default retention days"
+  default = {
+    data-migration-1 = 10, #data-migration1 module
+  }
+}
+
+variable "default_log_retention_days" {
+  type = number
+  default = 15
+  description = "default value that user chooses for their log retention periods"
+}
