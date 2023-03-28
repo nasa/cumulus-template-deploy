@@ -5,3 +5,10 @@ rds_user_access_secret_arn = "arn:aws:secretsmanager:us-east-1:1234567890:secret
 rds_security_group = "sg-1234567890xxxxx"
 subnet_ids = ["subnet-12345"]
 vpc_id        = "vpc-12345"
+
+## Optional. These variables are for configuring the cloudwatch log group's retention periods
+# cloudwatch_log_retention_periods = {
+#   <lambda function or task name> = 365
+# }
+#
+# default_log_retention_days = 15
