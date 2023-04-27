@@ -204,29 +204,6 @@ variable "aws_profile" {
   default = null
 }
 
-variable "cloudwatch_log_retention_periods" {
-  type = map(number)
-  description = "retention periods for the respective cloudwatch log group, these values will be used instead of default retention days"
-  default = {
-    data-migration2 = 10,
-    DiscoverGranules = 10,           # ingest module
-    granuleFilesCacheUpdater = 10,   # archive module
-    ProvisionPostgresDatabase = 7,  # cumulus-rds-tf module
-    DistributionApiEndpoints = 7,   # cumulus_distribution module
-    EcsLogs = 7,                    # cumulus_ecs_service module
-    s3-credentials-endpoint = 7,    # distribution module
-    PrivateApiLambda = 7,           # archive module
-    HelloWorld = 7,
-    TeaCache = 7,                   # tea-map-cache module
-  }
-}
-
-variable "default_log_retention_days" {
-  type = number
-  default = 15
-  description = "default value that user chooses for their log retention periods"
-}
-
 variable "log_api_gateway_to_cloudwatch" {
   type        = bool
   default     = false

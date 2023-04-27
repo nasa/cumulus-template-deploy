@@ -115,9 +115,6 @@ module "cumulus" {
   private_archive_api_gateway = var.private_archive_api_gateway
   api_gateway_stage           = var.api_gateway_stage
 
-  default_log_retention_days = var.default_log_retention_days
-  cloudwatch_log_retention_periods = var.cloudwatch_log_retention_periods
-
   # Thin Egress App settings
   # Remove if using Cumulus Distribution
   # must match stage_name variable for thin-egress-app module

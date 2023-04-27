@@ -29,7 +29,4 @@ module "rds_cluster" {
   prefix                   = var.prefix
   permissions_boundary_arn = var.permissions_boundary_arn
   rds_user_password        = var.rds_user_password
-  
-  default_log_retention_days = var.default_log_retention_days
-  cloudwatch_log_retention_periods = var.cloudwatch_log_retention_periods
 }
