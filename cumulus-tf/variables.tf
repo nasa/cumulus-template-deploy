@@ -268,3 +268,34 @@ variable "deploy_cumulus_distribution" {
   type        = bool
   default     = false
 }
+
+variable "cloudwatch_log_retention_periods" {
+  type = map(number)
+  description = "retention periods for the respective cloudwatch log group, these values will be used instead of default retention days"
+  default = {
+    thin-egress-app-EgressLambda = 7
+    ApiEndpoints = 7
+    AsyncOperationEcsLogs = 7
+    DiscoverPdrs = 7
+    DistributionApiEndpoints = 7
+    EcsLogs = 7
+    granuleFilesCacheUpdater = 7
+    HyraxMetadataUpdates = 7
+    ParsePdr = 7
+    PostToCmr = 7
+    PrivateApiLambda = 7
+    publishExecutions = 7
+    publishGranules = 7
+    QueuePdrs = 7
+    QueueWorkflow = 7
+    replaySqsMessages = 7
+    SyncGranule = 7
+    UpdateCmrAccessConstraints = 7
+  }
+}
+
+variable "default_log_retention_days" {
+  type = number
+  default = 14
+  description = "default value that user chooses for their log retention periods"
+}
