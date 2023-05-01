@@ -268,3 +268,15 @@ variable "deploy_cumulus_distribution" {
   type        = bool
   default     = false
 }
+
+variable "cloudwatch_log_retention_periods" {
+  type = map(number)
+  description = "retention periods for the respective cloudwatch log group, these values will be used instead of default retention days"
+  default = {}
+}
+
+variable "default_log_retention_days" {
+  type = number
+  description = "default value that user chooses for their log retention periods"
+  default = 30
+}

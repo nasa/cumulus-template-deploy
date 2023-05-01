@@ -47,7 +47,7 @@ data "terraform_remote_state" "data_persistence" {
 
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v14.1.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v15.0.2/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = aws_lambda_layer_version.cma_layer.arn
 
@@ -107,6 +107,10 @@ module "cumulus" {
   elasticsearch_security_group_id = local.elasticsearch_security_group_id
 
   dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
+
+# optional
+# default_log_retention_days = var.default_log_retention_days
+# cloudwatch_log_retention_periods = var.cloudwatch_log_retention_periods
 
   # Archive API settings
   token_secret                = random_string.token_secret.result
