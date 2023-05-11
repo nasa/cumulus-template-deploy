@@ -124,46 +124,6 @@ echo "
 
 cd ../..
 
-### SETUP DATA MIGRATION ###
-
-echo Initializing data migration
-
-cd deploy/data-migration1-tf
-
-DB_MIGRATION_KEY="$PREFIX/db-migration/terraform.tfstate"
-
-echo "terraform {
-  backend \"s3\" {
-    bucket = \"$TFSTATE_BUCKET\"
-    key    = \"$DB_MIGRATION_KEY\"
-    region = \"$AWS_REGION\"
-  }
-}" >> terraform.tf
-
-# Replace values in main.tf with the values coming from vpcConfig.tf
-sed -e 's/var.vpc_id/data.aws_vpc.application_vpcs.id/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
-sed -e 's/var.lambda_subnet_ids/data.aws_subnet_ids.subnet_ids.ids/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
-sed -e 's/var.rds_user_access_secret_arn/lookup(data.terraform_remote_state.data_persistence.outputs, "rds_user_access_secret_arn", "")/g' main.tf >> main.tf.tmp && mv main.tf.tmp main.tf
-
-../../terraform init
-
-provider_kms_key=$(aws kms list-keys --max-items 1 | grep "KeyId" | sed -E 's/.*"([^"]+)",/\1/')
-
-echo "
-  region = \"$AWS_REGION\"
-  prefix     = \"$PREFIX\"
-  permissions_boundary_arn = \"arn:aws:iam::$AWS_ACCOUNT_ID:policy/NGAPShNonProdRoleBoundary\"
-  data_persistence_remote_state_config = {
-    bucket = \"$TFSTATE_BUCKET\"
-    key    = \"$DATA_PERSISTENCE_KEY\"
-    region = \"$AWS_REGION\"
-  }
-  provider_kms_key_id=\"$provider_kms_key\"
-  vpc_id=\"\"
-" >> terraform.tfvars
-
-cd ../..
-
 ### SETUP CUMULUS ###
 
 echo Deploying Cumulus
