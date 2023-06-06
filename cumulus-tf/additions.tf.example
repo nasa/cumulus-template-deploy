@@ -32,7 +32,7 @@ resource "aws_lambda_function" "bye_world" {
   role          = aws_iam_role.sample_role.arn
   # static configuration
   handler       = "index.handler"
-  runtime       = "nodejs10.x"
+  runtime       = "nodejs16.x"
   timeout       = 300
 
   # referencing an attribute (i.e. output) of the data source

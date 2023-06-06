@@ -108,6 +108,10 @@ module "cumulus" {
 
   dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
 
+# optional
+# default_log_retention_days = var.default_log_retention_days
+# cloudwatch_log_retention_periods = var.cloudwatch_log_retention_periods
+
   # Archive API settings
   token_secret                = random_string.token_secret.result
   archive_api_users           = var.api_users
