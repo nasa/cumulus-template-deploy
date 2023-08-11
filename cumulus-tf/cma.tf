@@ -11,7 +11,7 @@ resource "null_resource" "fetch_CMA_release" {
 
   provisioner "local-exec" {
     interpreter = ["bash", "-c"]
-    command     = "test ! -f ${local.cma_zip_path} && curl -sL -o ${local.cma_zip_path} ${local.cma_zip_url}"
+    command     = "(test ! -f ${local.cma_zip_path} && curl -sL -o ${local.cma_zip_path} ${local.cma_zip_url}) || true"
   }
 }
 
