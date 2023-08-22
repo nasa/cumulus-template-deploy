@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 3.14.1"
+      version = ">= 5.0.0"
     }
   }
 }
@@ -14,7 +14,7 @@ provider "aws" {
 data "aws_region" "current" {}
 
 module "rds_cluster" {
-  source = "https://github.com/nasa/cumulus/releases/download/v15.0.2/terraform-aws-cumulus-rds.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v17.0.0/terraform-aws-cumulus-rds.zip"
   db_admin_username        = var.db_admin_username
   db_admin_password        = var.db_admin_password
   region                   = var.region
