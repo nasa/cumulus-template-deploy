@@ -30,9 +30,6 @@ COPY docker/vpcConfigMultiAz.tf /deploy/rds-cluster-tf
 COPY data-persistence-tf/ /deploy/data-persistence-tf
 COPY docker/vpcConfig.tf /deploy/data-persistence-tf
 
-COPY data-migration1-tf/ /deploy/data-migration1-tf
-COPY docker/vpcConfig.tf /deploy/data-migration1-tf
-
 COPY cumulus-tf/ /deploy/cumulus-tf
 COPY docker/vpcConfig.tf /deploy/cumulus-tf
 

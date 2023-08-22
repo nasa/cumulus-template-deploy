@@ -10,14 +10,6 @@ cd deploy/cumulus-tf
 
 ../../terraform destroy -auto-approve -input=false
 
-### TEARDOWN DATA MIGRATION ###
-
-echo Tearing down Data Migration
-
-cd ../data-migration1-tf
-
-../../terraform destroy -auto-approve -input=false
-
 ### TEARDOWN DATA PERSISTENCE ###
 
 echo Tearing down Data Persistence
