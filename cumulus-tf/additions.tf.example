@@ -32,7 +32,7 @@ resource "aws_lambda_function" "bye_world" {
   role          = aws_iam_role.sample_role.arn
   # static configuration
   handler       = "index.handler"
-  runtime       = "nodejs16.x"
+  runtime       = "nodejs20.x"
   timeout       = 300
 
   # referencing an attribute (i.e. output) of the data source
@@ -102,7 +102,7 @@ resource "aws_iam_role" "sample_role" {
 }
 
 module "hello_and_bye_world_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v18.2.2/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v18.3.1/terraform-aws-cumulus-workflow.zip"
 
   prefix                                = var.prefix
   name                                  = "HelloAndByeWorldWorkflow"
