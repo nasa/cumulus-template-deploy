@@ -11,3 +11,5 @@ node_modules
 terraform.tf
 terraform.tfvars
 .terraform/
+.idea/
+.DS_Store
