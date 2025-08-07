@@ -1,5 +1,5 @@
 module "hello_world_workflow" {
-  source = "https://github.com/nasa/cumulus/releases/download/v18.4.0/terraform-aws-cumulus-workflow.zip"
+  source = "https://github.com/nasa/cumulus/releases/download/v20.2.0/terraform-aws-cumulus-workflow.zip"
 
   prefix          = var.prefix
   name            = "HelloWorldWorkflow"

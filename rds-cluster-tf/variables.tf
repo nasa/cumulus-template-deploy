@@ -51,7 +51,7 @@ variable "tags" {
 variable "engine_version" {
   description = "Postgres engine version for Serverless cluster"
   type        = string
-  default     = "11.13"
+  default     = "17.4"
 }
 
 ### Required for user/database provisioning
