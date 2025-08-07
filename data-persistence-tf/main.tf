@@ -22,7 +22,6 @@ module "data_persistence" {
 
   prefix                         = var.prefix
   subnet_ids                     = var.subnet_ids
-  include_elasticsearch          = var.include_elasticsearch
 
   vpc_id                         = var.vpc_id
   rds_security_group_id          = var.rds_security_group
