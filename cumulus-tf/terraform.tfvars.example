@@ -3,7 +3,7 @@ deploy_to_ngap = true
 
 region = "us-east-1"
 
-cumulus_message_adapter_version = "1.3.0"
+cumulus_message_adapter_version = "2.0.4"
 
 # Replace 12345 with your actual AWS account ID
 permissions_boundary_arn                 = "arn:aws:iam::12345:policy/NGAPShRoleBoundary"
