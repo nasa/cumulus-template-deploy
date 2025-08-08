@@ -24,11 +24,6 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-variable "include_elasticsearch" {
-  type    = bool
-  default = true
-}
-
 variable "permissions_boundary_arn" {
   type    = string
   default = null

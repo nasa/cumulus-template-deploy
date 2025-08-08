@@ -25,10 +25,6 @@ provider "aws" {
 
 locals {
   tags                            = merge(var.tags, { Deployment = var.prefix })
-  elasticsearch_alarms            = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_alarms", [])
-  elasticsearch_domain_arn        = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_domain_arn", null)
-  elasticsearch_hostname          = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_hostname", null)
-  elasticsearch_security_group_id = lookup(data.terraform_remote_state.data_persistence.outputs, "elasticsearch_security_group_id", "")
   protected_bucket_names          = [for k, v in var.buckets : v.name if v.type == "protected"]
   public_bucket_names             = [for k, v in var.buckets : v.name if v.type == "public"]
   rds_security_group              = lookup(data.terraform_remote_state.data_persistence.outputs, "rds_security_group", "")
@@ -47,7 +43,7 @@ data "terraform_remote_state" "data_persistence" {
 
 
 module "cumulus" {
-  source = "https://github.com/nasa/cumulus/releases/download/v19.1.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
+  source = "https://github.com/nasa/cumulus/releases/download/v20.2.0/terraform-aws-cumulus.zip//tf-modules/cumulus"
 
   cumulus_message_adapter_lambda_layer_version_arn = aws_lambda_layer_version.cma_layer.arn
 
@@ -100,11 +96,6 @@ module "cumulus" {
 
   system_bucket = var.system_bucket
   buckets       = var.buckets
-
-  elasticsearch_alarms            = local.elasticsearch_alarms
-  elasticsearch_domain_arn        = local.elasticsearch_domain_arn
-  elasticsearch_hostname          = local.elasticsearch_hostname
-  elasticsearch_security_group_id = local.elasticsearch_security_group_id
 
   dynamo_tables = data.terraform_remote_state.data_persistence.outputs.dynamo_tables
 
