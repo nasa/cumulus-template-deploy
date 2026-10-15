@@ -1,3 +1,6 @@
+# **Important**
+This repo has been deprecated and is no longer actively maintained.
+
 # Cumulus Template Deployment Project
 ## How To Deploy
 Documentation for how to use the Cumulus template project can be read online:
